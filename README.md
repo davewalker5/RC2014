@@ -1,4 +1,3 @@
-[![Build Status](https://github.com/davewalker5/RC2014/workflows/.NET%20Core%20CI%20Build/badge.svg)](https://github.com/davewalker5/RC2014/actions)
 [![GitHub issues](https://img.shields.io/github/issues/davewalker5/RC2014)](https://github.com/davewalker5/RC2014/issues)
 [![Coverage Status](https://coveralls.io/repos/github/davewalker5/RC2014/badge.svg?branch=master)](https://coveralls.io/github/davewalker5/RC2014?branch=master)
 [![Releases](https://img.shields.io/github/v/release/davewalker5/RC2014.svg?include_prereleases)](https://github.com/davewalker5/RC2014/releases)
