@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>SerialSender.Entities</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ProductVersion>1.0.0</ProductVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) Dave Walker 2024</Copyright>
+    <Owners>Dave Walker</Owners>
+    <Title>Serial Sender Domain Models</Title>
+    <Summary>Serial Sender Domain Models</Summary>
+    <PackageTags>SerialSender Serial Port Sender Writer Entities</PackageTags>
+    <Description>Serial Sender Domain Models/Entities</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageProjectUrl>https://github.com/davewalker5/RC2014</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
