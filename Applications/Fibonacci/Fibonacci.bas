@@ -5,14 +5,14 @@
 50 REM Initialise and print the first two numbers in the series
 60 LET A = 0
 70 LET B = 1
-80 PRINT A
-90 PRINT B
+80 PRINT "F( 0 ) = "; A
+90 PRINT "F( 1 ) = "; B
 100 REM Finish if the user only wanted 2 numbers
 110 IF N = 2 THEN GOTO 190
 120 REM Print the rest of the numbers in the series
 130 FOR I = 3 TO N
 140 LET C = A + B
-150 PRINT C
+150 PRINT "F(";I - 1;") = "; C
 160 LET A = B
 170 LET B = C
 180 NEXT I
