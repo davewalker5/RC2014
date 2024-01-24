@@ -19,7 +19,7 @@
 160 INPUT R$
 170 REM Initialise the decimal result
 180 LET R = 0
-500 REM Convert the units
+500 REM Convert the units, tens, hundreds and thousands in that order
 510 LET D = 1 : LET N = 9 : GOSUB 1000
 520 LET D = 2 : LET N = 9 : GOSUB 1000
 530 LET D = 3 : LET N = 9 : GOSUB 1000
