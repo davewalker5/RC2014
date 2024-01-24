@@ -6,16 +6,16 @@
 45 DATA "LX", 60, "XC", 90, "X", 10, "L", 50
 50 DATA "DCCC", 800, "CCC", 300, "DCC", 700, "CC", 200, "CD", 400
 55 DATA "DC", 600, "CM", 900, "C", 100, "D", 500
-60 DATA "MMMM", 4000, "MMM", 3000, "MM", 2000, "M", 1000
+60 DATA "MMM", 3000, "MM", 2000, "M", 1000
 70 REM Read the numerals into arrays
 80 DIM U$(9), T$(9), H$(9), M$(4)
 90 DIM U(9), T(9), H(9), M(4)
 100 FOR I = 1 TO 9 : READ U$(I), U(I) : NEXT I
 110 FOR I = 1 TO 9 : READ T$(I), T(I) : NEXT I
 120 FOR I = 1 TO 9 : READ H$(I), H(I) : NEXT I
-130 FOR I = 1 TO 4 : READ M$(I), M(I) : NEXT I
+130 FOR I = 1 TO 3 : READ M$(I), M(I) : NEXT I
 140 REM Prompt for the Roman Numeral to converted
-150 PRINT "Enter a Roman Numeral in the range I to MMMM"
+150 PRINT "Enter a Roman Numeral in the range I to MMMCMXCIX"
 160 INPUT R$
 170 REM Initialise the decimal result
 180 LET R = 0
@@ -23,7 +23,9 @@
 510 LET D = 1 : LET N = 9 : GOSUB 1000
 520 LET D = 2 : LET N = 9 : GOSUB 1000
 530 LET D = 3 : LET N = 9 : GOSUB 1000
-540 LET D = 4 : LET N = 4 : GOSUB 1000
+540 LET D = 4 : LET N = 3 : GOSUB 1000
+550 REM If there is anything left, the input was invalid
+560 IF R$ <> "" THEN PRINT "Invalid input" : GOTO 920
 900 REM Print the result
 910 PRINT "The decimal equivalent is "; R
 920 END
