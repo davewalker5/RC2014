@@ -2,7 +2,7 @@
 
 ## Overview
 
-The RC2014 Mini II kit doesn't include persistent storage so the program to run must be copied to it each time it is either reset or powered on from a powered off state.
+The RC2014 Mini II doesn't include persistent storage so the program to run must be copied to it each time it is either reset or powered on from a powered off state.
 
 The serial sender application is a C# application that can send the contents of a file containing commands or program source code to the serial port to which the RC2014 is connected.
 
@@ -18,34 +18,36 @@ The .NET 8 SDK should be installed from https://dotnet.microsoft.com/en-us/downl
 
 ### Building the Applications
 
-- Check out a working copy of the sender application 
+- Check out a working copy of the sender application
 - From the root folder of the working copy (the folder containing the .sln solution file), enter the following command:
 
 ```bash
-dotnet publish SerialSender\SerialSender.csproj -c Release -r win-x64 --self-contained -o \target\folder
+dotnet publish SerialSender\SerialSender.csproj -c Release -r <rid> --self-contained -o \target\folder
 ```
 
 - Replace "\target\folder" with the path to the folder to which the compiled application should be published
+- Replace <rid> with the runtime identifier for the system on which the application will be run
+- Further information on .NET RIDs is available at https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
 
 ### Application Settings
 
 - The connection properties are defined in the "appsettings.json" file in the "SerialSender" project
 - This will be copied to the output folder when the project is built and should be modified so the settings match the machine on which the sender will be run:
 
-| Setting | Default | Purpose |
-| --- | --- | --- |
-| PortName | COM3 | Name of the serial port to connect to |
-| Delay | 100 | Delay between sending each line, in ms |
-| LineEnding | \r\n | Line ending sent at the end of each line |
+| Setting    | Default | Purpose                                  |
+| ---------- | ------- | ---------------------------------------- |
+| PortName   | COM3    | Name of the serial port to connect to    |
+| Delay      | 100     | Delay between sending each line, in ms   |
+| LineEnding | \r\n    | Line ending sent at the end of each line |
 
 The remaining properties are set for the RC2014 Mini II and should not be changed.
 
 ## Transferring a Program
 
 - Clear the current program from the RC2014 by:
-    - Resetting it
-    - Using a terminal empulator to enter the NEW command (when running BASIC)
-    - Making sure the file to transer begins with an un-numbered line containing the NEW command (when runing BASIC)
+  - Resetting it
+  - Using a terminal empulator to enter the NEW command (when running BASIC)
+  - Making sure the file to transer begins with an un-numbered line containing the NEW command (when runing BASIC)
 - Make sure the terminal emulator is disconnected
 - Assuming the application has been compiled to \target\folder, per the instructions above, etner the following command:
 
