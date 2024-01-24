@@ -52,7 +52,7 @@ The remaining properties are set for the RC2014 Mini II and should not be change
 - Assuming the application has been compiled to \target\folder, per the instructions above, enter the following command:
 
 ```bash
-\target\folder\SerialSender.exe  -- \path\to\program.bas
+\target\folder\SerialSender.exe \path\to\program.bas
 ```
 
 - Replace "\path\to\program.bas" with the path to a file to send to the device
