@@ -8,7 +8,7 @@
 80 PRINT A
 90 PRINT B
 100 REM Finish if the user only wanted 2 numbers
-110 IF N = 2 THEN GOTO 240
+110 IF N = 2 THEN GOTO 190
 120 REM Print the rest of the numbers in the series
 130 FOR I = 3 TO N
 140 LET C = A + B
