@@ -49,7 +49,7 @@ The remaining properties are set for the RC2014 Mini II and should not be change
   - Using a terminal empulator to enter the NEW command (when running BASIC)
   - Making sure the file to transer begins with an un-numbered line containing the NEW command (when runing BASIC)
 - Make sure the terminal emulator is disconnected
-- Assuming the application has been compiled to \target\folder, per the instructions above, etner the following command:
+- Assuming the application has been compiled to \target\folder, per the instructions above, enter the following command:
 
 ```bash
 \target\folder\SerialSender.exe  -- \path\to\program.bas
