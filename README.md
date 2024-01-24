@@ -11,7 +11,7 @@ Utilities and applications for the RC2014 Mini II Z80-based Single Board Compute
 
 ## Getting Started
 
-Please see the [Wiki](https://github.com/davewalker5/RC2014/wiki) for configuration details and the user guide.
+Please see the individual README files in each part of the repo for information on each utility and application.
 
 ## Authors
 
