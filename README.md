@@ -7,7 +7,11 @@
 
 ## About
 
-Utilities and applications for the RC2014 Mini II Z80-based Single Board Computer (SBC)
+The RC2014 Mini II is a Zilog Z80-based 8-bit single board computer (SBC) that can boot into BASIC, Forth or Z80 assembler. Further information on the RC2014 and the related kits and upgrades are available at the following site:
+
+https://rc2014.co.uk
+
+This repository contains utilities and applications written for the RC2014 Mini II.
 
 ## Getting Started
 

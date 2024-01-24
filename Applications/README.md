@@ -1,4 +1,4 @@
-# Applications
+# Application Catalogue
 
 | Application   | Language | Description                                                                                 |
 | ------------- | -------- | ------------------------------------------------------------------------------------------- |
