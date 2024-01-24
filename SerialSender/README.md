@@ -22,11 +22,11 @@ The .NET 8 SDK should be installed from https://dotnet.microsoft.com/en-us/downl
 - From the root folder of the working copy (the folder containing the .sln solution file), enter the following command:
 
 ```bash
-dotnet publish SerialSender\SerialSender.csproj -c Release -r <rid> --self-contained -o \target\folder
+dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contained -o \target\folder
 ```
 
 - Replace "\target\folder" with the path to the folder to which the compiled application should be published
-- Replace <rid> with the runtime identifier for the system on which the application will be run
+- Replace "rid" with the runtime identifier for the system on which the application will be run
 - Further information on .NET RIDs is available at https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
 
 ### Application Settings
