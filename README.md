@@ -7,7 +7,7 @@
 
 ## About
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii.png" alt="RC2014 Mini II" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii.jpg" alt="RC2014 Mini II" width="600">
 
 _Assembled RC2014 Mini II_
 
@@ -17,7 +17,7 @@ https://rc2014.co.uk
 
 This repository contains utilities and applications written for the RC2014 Mini II.
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii-pc.png" alt="RC2014 Mini II Roman Numerals" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii-pc.jpg" alt="RC2014 Mini II Roman Numerals" width="600">
 
 _RC2014 Mini II Connected to a PC and running the Roman Numerals Application_
 
