@@ -7,11 +7,19 @@
 
 ## About
 
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii.png" alt="RC2014 Mini II" width="600">
+
+_Assembled RC2014 Mini II_
+
 The RC2014 Mini II is a Zilog Z80-based 8-bit single board computer (SBC) that can boot into BASIC, Forth or Z80 assembler. Further information on the RC2014 and the related kits and upgrades are available at the following site:
 
 https://rc2014.co.uk
 
 This repository contains utilities and applications written for the RC2014 Mini II.
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii-pc.png" alt="RC2014 Mini II Roman Numerals" width="600">
+
+_RC2014 Mini II Connected to a PC and running the Roman Numerals Application_
 
 ## Getting Started
 

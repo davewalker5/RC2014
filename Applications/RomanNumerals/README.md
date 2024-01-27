@@ -1,5 +1,9 @@
 # Roman Numeral to Decimal Converter
 
+<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/RomanNumerals/RomanNumerals.png" alt="Roman Numerals" width="600">
+
+_RC2014 Mini II Connected to a PC and running the Roman Numerals Application_
+
 This implementation is based on [this Gist](https://gist.github.com/davewalker5/4dee6b24ff02928d46a88a974b401766)
 
 ## Roman Numerals

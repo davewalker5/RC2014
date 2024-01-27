@@ -1,5 +1,7 @@
 # Fibonacci Series Calculator
 
+<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Fibonacci/Fibonacci.png" alt="Fibonacci Series Calculator" width="600">
+
 The Fibonacci Series is defined by the following relationship:
 
 F<sub>0</sub> = 0
