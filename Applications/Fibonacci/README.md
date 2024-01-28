@@ -26,3 +26,7 @@ The first 10 numbers in the series are:
 | F<sub>7</sub> | 13    |
 | F<sub>8</sub> | 21    |
 | F<sub>9</sub> | 34    |
+
+# References
+
+- [The Fibonacci Sequence](https://en.wikipedia.org/wiki/Fibonacci_sequence), Wikipedia

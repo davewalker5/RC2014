@@ -2,8 +2,6 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Applications/RomanNumerals/RomanNumerals.png" alt="Roman Numerals" width="600">
 
-This implementation is based on [this Gist](https://gist.github.com/davewalker5/4dee6b24ff02928d46a88a974b401766)
-
 ## Roman Numerals
 
 Using only characters with no additional annotations (such as bars above) the system of Roman numerals can represent numbers between 1 and 3,999 using combinations of the following:
@@ -41,3 +39,7 @@ Armed with this information, a parser can be constructed by:
 | 2    | MCMLX  | Tens      | LX    | 60      | 65            | MCM              |
 | 3    | MCM    | Hundreds  | CM    | 900     | 965           | M                |
 | 4    | M      | Thousands | M     | 1000    | 1965          | Empty            |
+
+# References
+
+- [C# Roman Numeral Parser](https://gist.github.com/davewalker5/4dee6b24ff02928d46a88a974b401766), Dave Walker, 2020
