@@ -12,10 +12,10 @@ $$ r1 = {a \times m2 \over m1 + m2} $$
 
 Where:
 
-- r<sub>1</sub> = the distance from the primary body to the barycenter
+- r<sub>1</sub> = the distance from the primary body to the barycenter (km)
 - a = the distance between the two bodies (km)
-- m<sub>1</sub> = mass of the primary body
-- m<sub>2</sub> = mass of the secondary body
+- m<sub>1</sub> = mass of the primary body (kg)
+- m<sub>2</sub> = mass of the secondary body (kg)
 
 # References
 
