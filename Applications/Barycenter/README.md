@@ -8,7 +8,7 @@ For the two body problem, it's expressed as a distance from the center of the pr
 
 It's calculated as follows:
 
-$$ r1 = {a \times m2 \over m1 + m2} $$
+$$ r_1 = {a \times m_2 \over m_1 + m_2} $$
 
 Where:
 
@@ -16,6 +16,28 @@ Where:
 - a = the distance between the two bodies (km)
 - m<sub>1</sub> = mass of the primary body (kg)
 - m<sub>2</sub> = mass of the secondary body (kg)
+
+For example, for the Earth-Moon system:
+
+- a = 388400
+- m<sub>1</sub> = 5.97 x 10<sup>24</sup> kg
+- m<sub>2</sub> = 0.079 x 10<sup>24</sup> kg
+
+This gives a value of 4643.59 km for r<sub>1</sub>.
+
+If the ratio of the masses is known rather than the absolute masses:
+
+$$ m_2 \over m_1 $$
+
+Then enter 1 as the mass of the primary body and the above ratio as the mess of the secondary body.
+
+For the Earth-Moon system:
+
+- a = 388400
+- m<sub>1</sub> = 1
+- m<sub>2</sub> = 0.0122278
+
+This, again, gives a value of 4643.59 km for r<sub>1</sub>.
 
 # References
 
