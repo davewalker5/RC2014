@@ -25,7 +25,7 @@ If the ratio of the masses is known rather than the absolute masses:
 
 $$ m_2 \over m_1 $$
 
-Then enter 1 as the mass of the primary body and the above ratio as the mess of the secondary body.
+Then enter 1 as the mass of the primary body and the above ratio as the mass of the secondary body.
 
 For the Earth-Moon system:
 
