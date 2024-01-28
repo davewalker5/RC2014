@@ -1,4 +1,4 @@
-# Barcyenter: The Two Body Problem
+# Barycenter for the Two Body Problem
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Barycenter/Barycenter.png" alt="Barycenter Calculator" width="600">
 
