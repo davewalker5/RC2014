@@ -17,9 +17,11 @@ For example, for the Earth-Moon system:
 
 - a = 388400
 - m<sub>1</sub> = 5.97 x 10<sup>24</sup> kg
-- m<sub>2</sub> = 0.079 x 10<sup>24</sup> kg
+- m<sub>2</sub> = 0.073 x 10<sup>24</sup> kg
 
-This gives a value of 4643.59 km for r<sub>1</sub>.
+This gives a value of 4691.91 km for r<sub>1</sub>.
+
+## Using the Ratio of Masses
 
 If the ratio of the masses is known rather than the absolute masses:
 
@@ -33,7 +35,7 @@ For the Earth-Moon system:
 - m<sub>1</sub> = 1
 - m<sub>2</sub> = 0.0122278
 
-This, again, gives a value of 4643.59 km for r<sub>1</sub>.
+This, again, gives a value of 4691.91 km for r<sub>1</sub>.
 
 # References
 

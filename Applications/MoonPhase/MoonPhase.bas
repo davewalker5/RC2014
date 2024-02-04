@@ -25,6 +25,6 @@
 250 IF AG >= 14.8 AND AG < 22.1 THEN PRINT "Full Moon"
 260 IF AG >= 22.1 AND AG < 29.5 THEN PRINT "Last Quarter: Waning Gibbous"
 270 IF AG >= 29.5 THEN PRINT "Last Quarter: Waning Crescent"
-280 PRINT "More (Y/N): ";: INPUT M$
+280 M$ = "" : PRINT "More (Y/N): ";: INPUT M$
 290 IF M$ = "Y" OR M$ = "y" THEN GOTO 10
 300 END

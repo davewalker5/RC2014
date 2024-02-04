@@ -28,8 +28,8 @@
 560 IF R$ <> "" THEN PRINT "Invalid input" : GOTO 920
 900 REM Print the result
 910 PRINT "The decimal equivalent is "; R
-920 PRINT "More (Y/N): ";: INPUT M$
-930 IF M$ = "Y" OR M$ = "y" THEN GOTO 10
+920 M$ = "" : PRINT "More (Y/N): ";: INPUT M$
+930 IF M$ = "Y" OR M$ = "y" THEN GOTO 150
 940 END
 1000 REM Find the numeral that matches the end of the current input string
 1010 FOR I = 1 TO N

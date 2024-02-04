@@ -16,6 +16,6 @@
 160 LET A = B
 170 LET B = C
 180 NEXT I
-190 PRINT "More (Y/N): ";: INPUT M$
+190 M$ = "" : PRINT "More (Y/N): ";: INPUT M$
 200 IF M$ = "Y" OR M$ = "y" THEN GOTO 10
 210 END
