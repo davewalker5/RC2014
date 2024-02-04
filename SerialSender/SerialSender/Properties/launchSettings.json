@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SerialSender": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Projects\\RC2014\\Applications\\Julian\\julian_notime.bas"
+    }
+  }
+}

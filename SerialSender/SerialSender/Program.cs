@@ -1,6 +1,7 @@
 ﻿using SerialSender.Entities.Communications;
 using SerialSender.Entities.Configuration;
 using SerialSender.Entities.Events;
+using SerialSender.Entities.Interfaces;
 using SerialSender.Logic;
 using SerialSender.Logic.Configuration;
 using System.Diagnostics;
@@ -11,6 +12,7 @@ namespace SerialSender
     public class Program
     {
         private static int _count = 0;
+        private static ISerialSenderAppSettings _settings = new ConfigReader<SerialSenderAppSettings>().Read("appsettings.json");
 
         public static void Main(string[] args)
         {
@@ -19,17 +21,16 @@ namespace SerialSender
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(assembly.Location);
             var title = $"Serial Port File Sender v{info.FileVersion}";
 
-            // Read the configuration settings
-            var settings = new ConfigReader<SerialSenderAppSettings>().Read("appsettings.json");
-
             // Log the startup messages
             Console.WriteLine($"{title}\n");
-            Console.WriteLine($"Serial port: {settings.PortName}");
-            Console.WriteLine($"Baud rate: {settings.BaudRate}");
-            Console.WriteLine($"Parity: {settings.Parity}");
-            Console.WriteLine($"Data bits: {settings.DataBits}");
-            Console.WriteLine($"Stop bits: {settings.StopBits}");
-            Console.WriteLine($"Delay: {settings.Delay} ms\n");
+            Console.WriteLine($"Serial port: {_settings.PortName}");
+            Console.WriteLine($"Baud rate: {_settings.BaudRate}");
+            Console.WriteLine($"Parity: {_settings.Parity}");
+            Console.WriteLine($"Data bits: {_settings.DataBits}");
+            Console.WriteLine($"Stop bits: {_settings.StopBits}");
+            Console.WriteLine($"Delay: {_settings.Delay} ms");
+            Console.WriteLine($"Send NEW command: {_settings.SendNewCommand}");
+            Console.WriteLine($"Verbose Output: {_settings.Verbose}\n");
 
             // Check the user's provided the name of a file to transfer
             if (args.Length != 1)
@@ -40,12 +41,12 @@ namespace SerialSender
             }
 
             // Create an instance of the serial port writer and subscribe to the "string written" event
-            var port = new SerialSenderSerialPort(settings);
-            var writer = new SerialPortWriter(port, settings);
+            var port = new SerialSenderSerialPort(_settings);
+            var writer = new SerialPortWriter(port, _settings);
             writer.StringWritten += OnStringWritten;
 
             // Send the file
-            Console.WriteLine($"Sending file {args[0]} to serial port {settings.PortName} at {settings.BaudRate} baud.");
+            Console.WriteLine($"Sending file {args[0]} to serial port {_settings.PortName} at {_settings.BaudRate} baud.");
             writer.Open();
             writer.WriteFile(args[0]);
             writer.Close();
@@ -65,7 +66,14 @@ namespace SerialSender
         private static void OnStringWritten(object sender, StringWrittenEventArgs e)
         {
             _count = e.Count;
-            Console.Write(".");
+            if (_settings.Verbose)
+            {
+                Console.WriteLine(e.Data);
+            }
+            else
+            {
+                Console.Write(".");
+            }
         }
     }
 }

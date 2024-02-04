@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Castle.DynamicProxy.Generators;
+using Moq;
 using SerialSender.Entities.Events;
 using SerialSender.Entities.Interfaces;
 using SerialSender.Logic;
@@ -29,10 +30,13 @@ namespace SerialSender.Tests
         /// <param name="expected"></param>
         private void ConfirmExpectedDataWasSent(List<string> expected)
         {
-            Assert.AreEqual(expected.Count, _dataSent.Count);
-            for (int i = 0; i < expected.Count; i++)
+            var expectedStrings = (_mockSettings.Object.SendNewCommand) ? expected.Prepend("NEW").ToList() : expected;
+
+            Assert.AreEqual(expectedStrings.Count, _dataSent.Count);
+
+            for (int i = 0; i < expectedStrings.Count; i++)
             {
-                Assert.AreEqual(expected[i], _dataSent[i]);
+                Assert.AreEqual(expectedStrings[i], _dataSent[i]);
             }
         }
 
@@ -94,6 +98,15 @@ namespace SerialSender.Tests
 
             var lines = File.ReadAllLines("HelloWorld.bas").ToList();
             ConfirmExpectedDataWasSent(lines);
+        }
+
+        [TestMethod]
+        public void NewCommandShouldBeSentFirstWhenEnabled()
+        {
+            var strings = Generators.GenerateRandomAlphanumericStrings(10, 10);
+            _mockSettings.Setup(s => s.SendNewCommand).Returns(true);
+            _writer.WriteStrings(strings);
+            ConfirmExpectedDataWasSent(strings);
         }
     }
 }

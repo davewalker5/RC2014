@@ -60,7 +60,10 @@ namespace SerialSender.Logic
         {
             var count = 0;
 
-            foreach (var str in strings)
+            // If required, send the NEW command first
+            var stringsToWrite = (_settings.SendNewCommand) ? strings.Prepend("NEW") : strings;
+
+            foreach (var str in stringsToWrite)
             {
                 // Write the next string
                 _serialPort.WriteLine($"{str}{_settings.LineEnding}");

@@ -34,13 +34,16 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 - The connection properties are defined in the "appsettings.json" file in the "SerialSender" project
 - This will be copied to the output folder when the project is built and should be modified so the settings match the machine on which the sender will be run:
 
-| Setting    | Default | Purpose                                  |
-| ---------- | ------- | ---------------------------------------- |
-| PortName   | COM3    | Name of the serial port to connect to    |
-| Delay      | 100     | Delay between sending each line, in ms   |
-| LineEnding | \r\n    | Line ending sent at the end of each line |
+| Setting        | Default | Purpose                                                                                        |
+| -------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| PortName       | COM3    | Name of the serial port to connect to                                                          |
+| Delay          | 100     | Delay between sending each line, in ms                                                         |
+| LineEnding     | \r\n    | Line ending sent at the end of each line                                                       |
+| SendNewCommand | true    | Send the NEW command before sending file contents                                              |
+| Verbose        | false   | Track progress by echoing the content of each line sent rather than using a progress indicator |
 
-The remaining properties are set for the RC2014 Mini II and should not be changed.
+- The remaining properties are set for the RC2014 Mini II and should not be changed
+- Note that "default" refers to the value in the appsettings.json file that is part of the repository
 
 ## Transferring a Program
 

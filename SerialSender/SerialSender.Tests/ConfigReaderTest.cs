@@ -2,7 +2,7 @@
 using SerialSender.Logic.Configuration;
 using System.IO.Ports;
 
-namespace BaseStationReader.Tests
+namespace SerialSender.Tests
 {
     [TestClass]
     public class ConfigReaderTest
@@ -19,6 +19,8 @@ namespace BaseStationReader.Tests
             Assert.AreEqual(StopBits.One, settings.StopBits);
             Assert.AreEqual(0, settings.Delay);
             Assert.AreEqual("\r\n", settings.LineEnding);
+            Assert.IsFalse(settings.SendNewCommand);
+            Assert.IsFalse(settings.Verbose);
         }
     }
 }

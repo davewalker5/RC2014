@@ -9,3 +9,6 @@
 90 IF M1 > M2 THEN LET M3 = M2
 100 R1 = A * M3 / (M1 + M2)
 110 PRINT "Barycenter is " R1 " km from the primary body"
+120 PRINT "More? ";: INPUT M$
+130 IF M$ = "Y" OR M$ = "y" THEN GOTO 10
+140 END

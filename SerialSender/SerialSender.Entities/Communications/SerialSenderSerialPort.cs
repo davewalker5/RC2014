@@ -1,4 +1,5 @@
 ﻿using SerialSender.Entities.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Ports;
 
 namespace SerialSender.Entities.Communications
@@ -6,6 +7,7 @@ namespace SerialSender.Entities.Communications
     /// <summary>
     /// Mockable wrapper around the SerialPort class
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class SerialSenderSerialPort : ISerialPort
     {
         private SerialPort _serialPort;

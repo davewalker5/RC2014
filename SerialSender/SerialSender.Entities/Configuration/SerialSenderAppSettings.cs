@@ -14,5 +14,7 @@ namespace SerialSender.Entities.Configuration
         public StopBits StopBits { get; set; }
         public int Delay { get; set; }
         public string LineEnding { get; set; }
+        public bool SendNewCommand { get; set; }
+        public bool Verbose { get; set; }
     }
 }

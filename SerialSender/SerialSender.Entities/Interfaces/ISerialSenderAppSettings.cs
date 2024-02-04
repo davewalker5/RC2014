@@ -11,5 +11,7 @@ namespace SerialSender.Entities.Interfaces
         string PortName { get; set; }
         StopBits StopBits { get; set; }
         string LineEnding { get; set; }
+        bool SendNewCommand { get; set; }
+        bool Verbose { get; set; }
     }
 }
