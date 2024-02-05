@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>Renumber.Entities</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ProductVersion>1.0.0</ProductVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) Dave Walker 2024</Copyright>
+    <Owners>Dave Walker</Owners>
+    <Title>BASIC Program Line Renumbering Domain Models</Title>
+    <Summary>BASIC Program Line Renumbering Domain Models</Summary>
+    <PackageTags>BASIC Line Number Renumber Domain Models Entities</PackageTags>
+    <Description>BASIC Program Line Renumbering Domain Models</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageProjectUrl>https://github.com/davewalker5/RC2014</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+</Project>
