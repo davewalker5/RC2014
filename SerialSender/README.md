@@ -49,7 +49,7 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 
 - Clear the current program from the RC2014 by:
   - Resetting it
-  - Using a terminal empulator to enter the NEW command (when running BASIC)
+  - Using a terminal emulator to enter the NEW command (when running BASIC)
   - Making sure the file to transer begins with an un-numbered line containing the NEW command (when runing BASIC)
 - Make sure the terminal emulator is disconnected
 - Assuming the application has been compiled to \target\folder, per the instructions above, enter the following command:
