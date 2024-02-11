@@ -3,6 +3,7 @@
 | Folder        | Language | Description                                                                                 |
 | ------------- | -------- | ------------------------------------------------------------------------------------------- |
 | ANSI          | BASIC    | Test program to test support for ANSI codes in the current terminal emulator                |
+| Automaton     | BASIC    | Nearest-neighbour 1-D cellular automaton                                                    |
 | Barycenter    | BASIC    | Calculate the barycenter for a simple two-body problem                                      |
 | BullsAndCows  | BASIC    | Implementation of the Bulls and Cows game                                                   |
 | DigitalIO     | BASIC    | A set of applications that use the RC2014 Digital I/O card                                  |
