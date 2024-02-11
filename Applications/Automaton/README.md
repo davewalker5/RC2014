@@ -6,7 +6,7 @@ _Rule 30 nearest neighbour one-dimensional cellular automaton_
 
 An implementation of the "rule 30" nearest-neighbour one-dimensional cellular automaton, also known as an "elementary cellular automaton".
 
-If the current cell and the cells to the left and right of it follow one of the patterns shown in the following table, with the status of the current cell indicated by the middle digit of each rule, the current cell will be alive in the next generation:
+If the current cell and the cells to the left and right of it follow one of the patterns shown in the following table, with the status of the current cell indicated by the middle digit of each pattern, the current cell will be alive in the next generation:
 
 | Generation         | Pattern 1 | Pattern 2 | Pattern 3 | Pattern 4 |
 | ------------------ | --------- | --------- | --------- | --------- |
