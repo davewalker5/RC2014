@@ -37,7 +37,14 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 | Setting        | Default | Purpose                                                                                                |
 | -------------- | ------- | ------------------------------------------------------------------------------------------------------ |
 | PortName       | COM3    | Name of the serial port to connect to                                                                  |
-| Delay          | 100     | Delay between sending each line, in ms                                                                 |
+| BaudRate       | 115200  | Transfer rate, in bits per second                                                                      |
+| Parity         | None    | Number of parity bits sent with each package of data, for error checking                               |
+| DataBits       | 8       | Number of data bits                                                                                    |
+| StopBits       | 1       | Number of stop bits sent after the data bits                                                           |
+| Handshake      | None    | Flow control handshake, one of None, XOnXOff, RequestToSend or RequestToSendXOnXOff                    |
+| BlockSize      | 10      | Number of characters to send before waiting for the block delay                                        |
+| BlockDelay     | 50      | Delay between each block of characters, in ms                                                          |
+| LineDelay      | 200     | Delay between each line, in ms                                                                         |
 | LineEnding     | \r\n    | Line ending sent at the end of each line                                                               |
 | SendNewCommand | true    | Send the NEW command before sending file contents (RC2014 must be configured to load BASIC on startup) |
 | Verbose        | false   | Track progress by echoing the content of each line sent rather than using a progress indicator         |
@@ -63,21 +70,41 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 - The output should look similar to the following:
 
 ```
-Serial Port File Sender v1.0.0.0
+Serial Port File Sender v1.2.0.0
 
 Serial port: COM3
 Baud rate: 115200
 Parity: None
 Data bits: 8
 Stop bits: One
-Delay: 100 ms
+Handshake: None
+Block Size: 10 characters
+Block Delay: 50 ms
+Line Delay: 200 ms
+Send NEW command: True
+Verbose Output: False
 
-Sending file RomanNumerals.bas to serial port COM3 at 115200 baud.
-.............................................
+Sending file morse_translate.bas to serial port COM3 at 115200 baud.
+......................................................
 
-45 lines of data sent
+54 lines of data sent
 ```
+
+## Example Settings
+
+The baud rate, parity and numbers of data and stop bits are determined by the hardware and the defaults, listed above, are approriate for the RC2014 Mini II. The block size, block delay and line delay implement simplistic flow control that avoids loss of data and corruption of the transferred program that occurs if the data is sent too quickly.
+
+Below are example settings for transferring programs to the RC2014 Mini II booted into BASIC both with and without the CP/M upgrade kit:
+
+| Setting        | Without the CP/M Upgrade | With the CP/M Upgrade |
+| -------------- | ------------------------ | --------------------- |
+| Handshake      | None                     | None                  |
+| BlockSize      | 10                       | 10                    |
+| BlockDelay     | 0                        | 60                    |
+| LineDelay      | 200                      | 250                   |
+| LineEnding     | \r\n                     | \r\n                  |
+| SendNewCommand | true                     | true                  |
 
 ## Troubleshooting
 
-If the data transferred to the RC2014 is corrupted or incomplete, experiment by increasing the "Delay" setting until the issue is resolved.
+If the data transferred to the RC2014 is corrupted or incomplete, experiment by changing the block size, block delay and line delay properties.

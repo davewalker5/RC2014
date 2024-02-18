@@ -12,9 +12,12 @@ namespace SerialSender.Entities.Configuration
         public Parity Parity { get; set; }
         public int DataBits { get; set; }
         public StopBits StopBits { get; set; }
-        public int Delay { get; set; }
+        public int BlockSize { get; set; }
+        public int BlockDelay { get; set; }
+        public int LineDelay { get; set; }
         public string LineEnding { get; set; }
         public bool SendNewCommand { get; set; }
         public bool Verbose { get; set; }
+        public Handshake Handshake { get; set; }
     }
 }

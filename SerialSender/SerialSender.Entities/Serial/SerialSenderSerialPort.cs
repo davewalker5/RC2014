@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Ports;
 
-namespace SerialSender.Entities.Communications
+namespace SerialSender.Entities.Serial
 {
     /// <summary>
     /// Mockable wrapper around the SerialPort class
@@ -14,7 +14,15 @@ namespace SerialSender.Entities.Communications
 
         public SerialSenderSerialPort(ISerialSenderAppSettings settings)
         {
-            _serialPort = new SerialPort(settings.PortName, settings.BaudRate, settings.Parity, settings.DataBits, settings.StopBits);
+            _serialPort = new()
+            {
+                PortName = settings.PortName,
+                BaudRate = settings.BaudRate,
+                Parity = settings.Parity,
+                DataBits = settings.DataBits,
+                StopBits = settings.StopBits,
+                Handshake = settings.Handshake
+            };
         }
 
         /// <summary>
@@ -37,6 +45,6 @@ namespace SerialSender.Entities.Communications
         /// Write a string to the serial port
         /// </summary>
         /// <param name="text"></param>
-        public void WriteLine(string text) => _serialPort.WriteLine(text);
+        public void Write(string text) => _serialPort.WriteLine(text);
     }
 }

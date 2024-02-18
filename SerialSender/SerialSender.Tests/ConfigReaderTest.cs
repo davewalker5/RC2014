@@ -17,9 +17,12 @@ namespace SerialSender.Tests
             Assert.AreEqual(Parity.None, settings.Parity);
             Assert.AreEqual(8, settings.DataBits);
             Assert.AreEqual(StopBits.One, settings.StopBits);
-            Assert.AreEqual(0, settings.Delay);
+            Assert.AreEqual(Handshake.None, settings.Handshake);
+            Assert.AreEqual(10, settings.BlockSize);
+            Assert.AreEqual(50, settings.BlockDelay);
+            Assert.AreEqual(200, settings.LineDelay);
             Assert.AreEqual("\r\n", settings.LineEnding);
-            Assert.IsFalse(settings.SendNewCommand);
+            Assert.IsTrue(settings.SendNewCommand);
             Assert.IsFalse(settings.Verbose);
         }
     }

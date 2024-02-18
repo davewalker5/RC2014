@@ -1,4 +1,4 @@
-﻿using SerialSender.Entities.Communications;
+﻿using SerialSender.Entities.Serial;
 using SerialSender.Entities.Configuration;
 using SerialSender.Entities.Events;
 using SerialSender.Entities.Interfaces;
@@ -28,7 +28,10 @@ namespace SerialSender
             Console.WriteLine($"Parity: {_settings.Parity}");
             Console.WriteLine($"Data bits: {_settings.DataBits}");
             Console.WriteLine($"Stop bits: {_settings.StopBits}");
-            Console.WriteLine($"Delay: {_settings.Delay} ms");
+            Console.WriteLine($"Handshake: {_settings.Handshake}");
+            Console.WriteLine($"Block Size: {_settings.BlockSize} characters");
+            Console.WriteLine($"Block Delay: {_settings.BlockDelay} ms");
+            Console.WriteLine($"Line Delay: {_settings.LineDelay} ms");
             Console.WriteLine($"Send NEW command: {_settings.SendNewCommand}");
             Console.WriteLine($"Verbose Output: {_settings.Verbose}\n");
 
@@ -47,9 +50,20 @@ namespace SerialSender
 
             // Send the file
             Console.WriteLine($"Sending file {args[0]} to serial port {_settings.PortName} at {_settings.BaudRate} baud.");
-            writer.Open();
-            writer.WriteFile(args[0]);
-            writer.Close();
+            try
+            {
+                writer.Open();
+                writer.WriteFile(args[0]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return;
+            }
+            finally
+            {
+                writer.Close();
+            }
 
             // Unsubscribe from the "string written" event
             writer.StringWritten -= OnStringWritten;

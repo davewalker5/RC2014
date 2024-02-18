@@ -18,12 +18,8 @@ namespace SerialSender.Logic
         /// <summary>
         /// Initializes a new instance of the SerialPortWriter class.
         /// </summary>
-        /// <param name="portName">The name of the serial port.</param>
-        /// <param name="baudRate">The baud rate at which the communications device operates.</param>
-        /// <param name="parity">One of the Parity values.</param>
-        /// <param name="dataBits">The data bits value.</param>
-        /// <param name="stopBits">One of the StopBits values.</param>
-        /// <param name="delay">The delay between writes to the serial port.</param>
+        /// <param name="port">The port instance to use to write data</param>
+        /// <param name="settings">The current application settings</param>
         public SerialPortWriter(ISerialPort port, ISerialSenderAppSettings settings)
         {
             _serialPort = port;
@@ -59,24 +55,37 @@ namespace SerialSender.Logic
         public void WriteStrings(IEnumerable<string> strings)
         {
             var count = 0;
+            var charCount = 0;
 
             // If required, send the NEW command first
-            var stringsToWrite = (_settings.SendNewCommand) ? strings.Prepend("NEW") : strings;
+            var stringsToWrite = _settings.SendNewCommand ? strings.Prepend("NEW") : strings;
 
             foreach (var str in stringsToWrite)
             {
-                // Write the next string
-                _serialPort.WriteLine($"{str}{_settings.LineEnding}");
+                foreach (var character in str)
+                {
+                    // Write the next character
+                    _serialPort.Write(character.ToString());
+
+                    charCount++;
+                    if ((_settings.BlockDelay > 0) && (charCount % _settings.BlockSize == 0))
+                    {
+                        // Wait for the specified delay to avoid swamping the receiver
+                        Thread.Sleep(_settings.BlockDelay);
+                    }
+                }
+
+                // Write the line ending after each string
+                _serialPort.Write(_settings.LineEnding);
+                if (_settings.LineDelay > 0)
+                {
+                    Thread.Sleep(_settings.LineDelay);
+                }
+
                 count++;
 
                 // Trigger the event notifying subscribers
                 OnStringWritten(new StringWrittenEventArgs(count, str));
-
-                // Wait for the specified delay to avoid swamping the receiver  
-                if (_settings.Delay > 0)
-                {
-                    Thread.Sleep(_settings.Delay);
-                }
             }
         }
 

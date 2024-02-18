@@ -76,7 +76,9 @@ namespace SerialSender.Tests
         public void WriteShouldWriteAllStringsToThePortWhenTheDelayIsZero()
         {
             var strings = Generators.GenerateRandomAlphanumericStrings(10, 10);
-            _mockSettings.Setup(s => s.Delay).Returns(0);
+            _mockSettings.Setup(s => s.BlockSize).Returns(10);
+            _mockSettings.Setup(s => s.BlockDelay).Returns(0);
+            _mockSettings.Setup(s => s.LineDelay).Returns(0);
             _writer.WriteStrings(strings);
             ConfirmExpectedDataWasSent(strings);
         }
@@ -85,7 +87,9 @@ namespace SerialSender.Tests
         public void WriteShouldWriteAllStringsToThePortWhenTheDelayIsNotZero()
         {
             var strings = Generators.GenerateRandomAlphanumericStrings(10, 10);
-            _mockSettings.Setup(s => s.Delay).Returns(1);
+            _mockSettings.Setup(s => s.BlockSize).Returns(10);
+            _mockSettings.Setup(s => s.BlockDelay).Returns(0);
+            _mockSettings.Setup(s => s.LineDelay).Returns(0);
             _writer.WriteStrings(strings);
             ConfirmExpectedDataWasSent(strings);
         }
@@ -93,7 +97,9 @@ namespace SerialSender.Tests
         [TestMethod]
         public void WriteFileShouldWriteAllLinesInTheFile()
         {
-            _mockSettings.Setup(s => s.Delay).Returns(1);
+            _mockSettings.Setup(s => s.BlockSize).Returns(10);
+            _mockSettings.Setup(s => s.BlockDelay).Returns(0);
+            _mockSettings.Setup(s => s.LineDelay).Returns(1);
             _writer.WriteFile("HelloWorld.bas");
 
             var lines = File.ReadAllLines("HelloWorld.bas").ToList();
