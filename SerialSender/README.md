@@ -43,13 +43,12 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 | StopBits       | 1       | Number of stop bits sent after the data bits                                                           |
 | Handshake      | None    | Flow control handshake, one of None, XOnXOff, RequestToSend or RequestToSendXOnXOff                    |
 | BlockSize      | 10      | Number of characters to send before waiting for the block delay                                        |
-| BlockDelay     | 50      | Delay between each block of characters, in ms                                                          |
-| LineDelay      | 200     | Delay between each line, in ms                                                                         |
+| BlockDelay     | 60      | Delay between each block of characters, in ms                                                          |
+| LineDelay      | 250     | Delay between each line, in ms                                                                         |
 | LineEnding     | \r\n    | Line ending sent at the end of each line                                                               |
 | SendNewCommand | true    | Send the NEW command before sending file contents (RC2014 must be configured to load BASIC on startup) |
 | Verbose        | false   | Track progress by echoing the content of each line sent rather than using a progress indicator         |
 
-- The remaining properties are set for the RC2014 Mini II and should not be changed
 - Note that "default" refers to the value in the appsettings.json file that is part of the repository
 
 ## Transferring a Program
