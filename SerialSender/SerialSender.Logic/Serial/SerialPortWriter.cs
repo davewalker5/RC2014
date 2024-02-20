@@ -1,6 +1,5 @@
 using SerialSender.Entities.Events;
 using SerialSender.Entities.Interfaces;
-using System.IO.Ports;
 
 namespace SerialSender.Logic
 {

@@ -1,6 +1,6 @@
 ﻿using SerialSender.Entities.Serial;
-using SerialSender.Entities.Configuration;
 using SerialSender.Entities.Events;
+using SerialSender.Entities.Exceptions;
 using SerialSender.Entities.Interfaces;
 using SerialSender.Logic;
 using SerialSender.Logic.Configuration;
@@ -12,64 +12,70 @@ namespace SerialSender
     public class Program
     {
         private static int _count = 0;
-        private static ISerialSenderAppSettings _settings = new ConfigReader<SerialSenderAppSettings>().Read("appsettings.json");
+        private static ISerialSenderAppSettings _settings = null;
 
         public static void Main(string[] args)
         {
+            SerialPortWriter writer = null;
+
             // Get the version number and application title
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(assembly.Location);
             var title = $"Serial Port File Sender v{info.FileVersion}";
 
-            // Log the startup messages
-            Console.WriteLine($"{title}\n");
-            Console.WriteLine($"Serial port: {_settings.PortName}");
-            Console.WriteLine($"Baud rate: {_settings.BaudRate}");
-            Console.WriteLine($"Parity: {_settings.Parity}");
-            Console.WriteLine($"Data bits: {_settings.DataBits}");
-            Console.WriteLine($"Stop bits: {_settings.StopBits}");
-            Console.WriteLine($"Handshake: {_settings.Handshake}");
-            Console.WriteLine($"Block Size: {_settings.BlockSize} characters");
-            Console.WriteLine($"Block Delay: {_settings.BlockDelay} ms");
-            Console.WriteLine($"Line Delay: {_settings.LineDelay} ms");
-            Console.WriteLine($"Send NEW command: {_settings.SendNewCommand}");
-            Console.WriteLine($"Verbose Output: {_settings.Verbose}\n");
-
-            // Check the user's provided the name of a file to transfer
-            if (args.Length != 1)
-            {
-                Console.WriteLine("Warning: No file name provided\n");
-                Console.WriteLine($"Usage: {AppDomain.CurrentDomain.FriendlyName} <filename>");
-                return;
-            }
-
-            // Create an instance of the serial port writer and subscribe to the "string written" event
-            var port = new SerialSenderSerialPort(_settings);
-            var writer = new SerialPortWriter(port, _settings);
-            writer.StringWritten += OnStringWritten;
-
-            // Send the file
-            Console.WriteLine($"Sending file {args[0]} to serial port {_settings.PortName} at {_settings.BaudRate} baud.");
             try
             {
+                // Read the application settings and parse the command line to yield the settings for
+                // this run
+                var builder = new SerialSenderSettingsBuilder();
+                builder.BuildSettings(args, "appsettings.json");
+                _settings = builder.Settings;
+
+                // Check the user's provided the name of a file to transfer
+                if (string.IsNullOrEmpty(builder.FileName))
+                {
+                    var message = "No file name provided";
+                    throw new MissingFileNameException(message);
+                }
+
+                // Log the startup messages
+                Console.WriteLine($"{title}\n");
+                Console.WriteLine($"File to send: {builder.FileName}");
+                Console.WriteLine($"Serial port: {_settings.PortName}");
+                Console.WriteLine($"Baud rate: {_settings.BaudRate}");
+                Console.WriteLine($"Parity: {_settings.Parity}");
+                Console.WriteLine($"Data bits: {_settings.DataBits}");
+                Console.WriteLine($"Stop bits: {_settings.StopBits}");
+                Console.WriteLine($"Handshake: {_settings.Handshake}");
+                Console.WriteLine($"Block Size: {_settings.BlockSize} characters");
+                Console.WriteLine($"Block Delay: {_settings.BlockDelay} ms");
+                Console.WriteLine($"Line Delay: {_settings.LineDelay} ms");
+                Console.WriteLine($"Send NEW command: {_settings.SendNewCommand}");
+                Console.WriteLine($"Verbose Output: {_settings.Verbose}\n\n");
+
+                // Create an instance of the serial port writer and subscribe to the "string written" event
+                var port = new SerialSenderSerialPort(_settings);
+                writer = new SerialPortWriter(port, _settings);
+                writer.StringWritten += OnStringWritten;
+
+                // Send the file
                 writer.Open();
                 writer.WriteFile(args[0]);
+
+                // Unsubscribe from the "string written" event
+                writer.StringWritten -= OnStringWritten;
+
+                // Log the completion message
+                Console.WriteLine($"\n\n{_count} lines of data sent");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return;
             }
             finally
             {
-                writer.Close();
+                writer!.Close();
             }
-
-            // Unsubscribe from the "string written" event
-            writer.StringWritten -= OnStringWritten;
-
-            // Log the completion message
-            Console.WriteLine($"\n\n{_count} lines of data sent");    
         }
 
         /// <summary>

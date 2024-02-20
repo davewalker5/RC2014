@@ -32,22 +32,23 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 ### Application Settings
 
 - The connection properties are defined in the "appsettings.json" file in the "SerialSender" project
+- The defaults can be overwritten using the command line arguments indicated in the table, below
 - This will be copied to the output folder when the project is built and should be modified so the settings match the machine on which the sender will be run:
 
-| Setting        | Default | Purpose                                                                                                |
-| -------------- | ------- | ------------------------------------------------------------------------------------------------------ |
-| PortName       | COM3    | Name of the serial port to connect to                                                                  |
-| BaudRate       | 115200  | Transfer rate, in bits per second                                                                      |
-| Parity         | None    | Number of parity bits sent with each package of data, for error checking                               |
-| DataBits       | 8       | Number of data bits                                                                                    |
-| StopBits       | 1       | Number of stop bits sent after the data bits                                                           |
-| Handshake      | None    | Flow control handshake, one of None, XOnXOff, RequestToSend or RequestToSendXOnXOff                    |
-| BlockSize      | 10      | Number of characters to send before waiting for the block delay                                        |
-| BlockDelay     | 60      | Delay between each block of characters, in ms                                                          |
-| LineDelay      | 250     | Delay between each line, in ms                                                                         |
-| LineEnding     | \r\n    | Line ending sent at the end of each line                                                               |
-| SendNewCommand | true    | Send the NEW command before sending file contents (RC2014 must be configured to load BASIC on startup) |
-| Verbose        | false   | Track progress by echoing the content of each line sent rather than using a progress indicator         |
+| Setting        | Default | CLI               | Purpose                                                                                                |
+| -------------- | ------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
+| PortName       | COM3    | --port, -p        | Name of the serial port to connect to                                                                  |
+| BaudRate       | 115200  | --baud, -b        | Transfer rate, in bits per second                                                                      |
+| Parity         | None    | --parity, -pa     | Number of parity bits sent with each package of data, for error checking                               |
+| DataBits       | 8       | --data, -d        | Number of data bits                                                                                    |
+| StopBits       | 1       | --stop, -st       | Number of stop bits sent after the data bits                                                           |
+| Handshake      | None    | --handshake, -h   | Flow control handshake, one of None, XOnXOff, RequestToSend or RequestToSendXOnXOff                    |
+| BlockSize      | 10      | --blocksize, -bs  | Number of characters to send before waiting for the block delay                                        |
+| BlockDelay     | 60      | --blockdelay, -bd | Delay between each block of characters, in ms                                                          |
+| LineDelay      | 250     | --linedelay, -ld  | Delay between each line, in ms                                                                         |
+| LineEnding     | \r\n    | --lineending, -le | Line ending sent at the end of each line                                                               |
+| SendNewCommand | true    | --sendnew, -sn    | Send the NEW command before sending file contents (RC2014 must be configured to load BASIC on startup) |
+| Verbose        | false   | --verbose, -v     | Track progress by echoing the content of each line sent rather than using a progress indicator         |
 
 - Note that "default" refers to the value in the appsettings.json file that is part of the repository
 
@@ -62,15 +63,16 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 - Assuming the application has been compiled to \target\folder, per the instructions above, enter the following command:
 
 ```bash
-\target\folder\SerialSender.exe \path\to\program.bas
+\target\folder\SerialSender.exe --send \path\to\program.bas
 ```
 
 - Replace "\path\to\program.bas" with the path to a file to send to the device
 - The output should look similar to the following:
 
 ```
-Serial Port File Sender v1.2.0.0
+Serial Port File Sender v1.3.0.0
 
+File to send: morse_translate.bas
 Serial port: COM3
 Baud rate: 115200
 Parity: None
@@ -83,7 +85,6 @@ Line Delay: 200 ms
 Send NEW command: True
 Verbose Output: False
 
-Sending file morse_translate.bas to serial port COM3 at 115200 baud.
 ......................................................
 
 54 lines of data sent
