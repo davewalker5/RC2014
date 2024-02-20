@@ -99,9 +99,9 @@ Below are example settings for transferring programs to the RC2014 Mini II boote
 | Setting        | Without the CP/M Upgrade | With the CP/M Upgrade |
 | -------------- | ------------------------ | --------------------- |
 | Handshake      | None                     | None                  |
-| BlockSize      | 10                       | 10                    |
-| BlockDelay     | 0                        | 60                    |
-| LineDelay      | 200                      | 250                   |
+| BlockSize      | 10                       | 1                     |
+| BlockDelay     | 0                        | 5                     |
+| LineDelay      | 200                      | 200                   |
 | LineEnding     | \r\n                     | \r\n                  |
 | SendNewCommand | true                     | true                  |
 

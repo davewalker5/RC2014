@@ -51,7 +51,7 @@ namespace SerialSender
                 Console.WriteLine($"Block Delay: {_settings.BlockDelay} ms");
                 Console.WriteLine($"Line Delay: {_settings.LineDelay} ms");
                 Console.WriteLine($"Send NEW command: {_settings.SendNewCommand}");
-                Console.WriteLine($"Verbose Output: {_settings.Verbose}\n\n");
+                Console.WriteLine($"Verbose Output: {_settings.Verbose}\n");
 
                 // Create an instance of the serial port writer and subscribe to the "string written" event
                 var port = new SerialSenderSerialPort(_settings);
@@ -60,7 +60,7 @@ namespace SerialSender
 
                 // Send the file
                 writer.Open();
-                writer.WriteFile(args[0]);
+                writer.WriteFile(builder.FileName);
 
                 // Unsubscribe from the "string written" event
                 writer.StringWritten -= OnStringWritten;
@@ -74,7 +74,7 @@ namespace SerialSender
             }
             finally
             {
-                writer!.Close();
+                if (writer != null) writer.Close();
             }
         }
 
