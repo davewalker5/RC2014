@@ -32,8 +32,8 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 ### Application Settings
 
 - The connection properties are defined in the "appsettings.json" file in the "SerialSender" project
+- This will be copied to the output folder when the project is built and should be modified so the settings match the machine on which the sender will be run
 - The defaults can be overwritten using the command line arguments indicated in the table, below
-- This will be copied to the output folder when the project is built and should be modified so the settings match the machine on which the sender will be run:
 
 | Setting        | Default | CLI               | Purpose                                                                                                |
 | -------------- | ------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
