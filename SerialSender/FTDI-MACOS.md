@@ -28,7 +28,7 @@ Available serial devices can be listed using the following command:
 ls -1 /dev/tty*
 ```
 
-Run this command once with the FTDI cable unplugged, redirecting the result to a file, and again with the FTDI cable plugged in, redirecting to a different file. Use the diff command to list the differences in the two files and they should include the name of the serial device.
+Run this command once with the FTDI cable unplugged and again with the FTDI cable plugged in and compare the output. The differences should include the name of the serial device.
 
 ## Connecting to the RC2014 Mini II
 
