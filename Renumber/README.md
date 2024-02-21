@@ -32,13 +32,14 @@ dotnet publish Renumber\Renumber.csproj -c Release -r rid --self-contained -o \t
 ### Application Settings
 
 - The renumbering parameters are defined in the "appsettings.json" file in the "Renumber" project
-- This will be copied to the output folder when the project is built and should be modified so match the required defaults:
+- This will be copied to the output folder when the project is built and should be modified so match the required defaults
+- The defaults can be overwritten using the command line arguments indicated in the table, below
 
-| Setting     | Default | Purpose                                                                                                                  |
-| ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
-| InPlace     | false   | If true, the renumbered file overwrites the original. If false, a backup file with the ".bak" extension is created first |
-| StartAt     | 10      | Initial line number in the renumbered file                                                                               |
-| IncrementBy | 10      | Increment in line number                                                                                                 |
+| Setting     | Default | CLI              | Purpose                                                                                                                  |
+| ----------- | ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| InPlace     | false   | --inplace, -i    | If true, the renumbered file overwrites the original. If false, a backup file with the ".bak" extension is created first |
+| StartAt     | 10      | --start, -s      | Initial line number in the renumbered file                                                                               |
+| IncrementBy | 10      | --increment, -in | Increment in line number                                                                                                 |
 
 - Note that "default" refers to the value in the appsettings.json file that is part of the repository
 
@@ -47,19 +48,19 @@ dotnet publish Renumber\Renumber.csproj -c Release -r rid --self-contained -o \t
 - Assuming the application has been compiled to \target\folder, per the instructions above, enter the following command:
 
 ```bash
-\target\folder\Renumber.exe \path\to\program.bas
+\target\folder\Renumber.exe --renumber \path\to\program.bas
 ```
 
 - Replace "\path\to\program.bas" with the path to a file to renumber
 - The output should look similar to the following:
 
 ```
-BASIC Renumbering Tool v1.0.0.0
+BASIC Renumbering Tool v1.1.0.0
 
+File to renumber: Barycenter.bas
 In-place renumbering: False
 Initial line number: 10
 Line number increment: 10
-Input file: .\Barycenter.bas
 
 Reading file: ..............
 14 lines read
