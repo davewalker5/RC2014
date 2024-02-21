@@ -32,7 +32,7 @@ dotnet publish Renumber\Renumber.csproj -c Release -r rid --self-contained -o \t
 ### Application Settings
 
 - The renumbering parameters are defined in the "appsettings.json" file in the "Renumber" project
-- This will be copied to the output folder when the project is built and should be modified so match the required defaults
+- This will be copied to the output folder when the project is built and should be modified to match the required defaults
 - The defaults can be overwritten using the command line arguments indicated in the table, below
 
 | Setting     | Default | CLI              | Purpose                                                                                                                  |
