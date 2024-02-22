@@ -4,6 +4,7 @@ using SerialSender.Entities.Exceptions;
 using SerialSender.Entities.Interfaces;
 using SerialSender.Logic;
 using SerialSender.Logic.Configuration;
+using SerialSender.Logic.Reader;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -50,8 +51,12 @@ namespace SerialSender
                 Console.WriteLine($"Block Size: {_settings.BlockSize} characters");
                 Console.WriteLine($"Block Delay: {_settings.BlockDelay} ms");
                 Console.WriteLine($"Line Delay: {_settings.LineDelay} ms");
-                Console.WriteLine($"Send NEW command: {_settings.SendNewCommand}");
+                Console.WriteLine($"Send reset command: {_settings.SendResetCommand}");
                 Console.WriteLine($"Verbose Output: {_settings.Verbose}\n");
+
+                // Read the file
+                var reader = new SourceFileReader(new FileWrapper());
+                reader.Read(builder.FileName);
 
                 // Create an instance of the serial port writer and subscribe to the "string written" event
                 var port = new SerialSenderSerialPort(_settings);
@@ -60,7 +65,7 @@ namespace SerialSender
 
                 // Send the file
                 writer.Open();
-                writer.WriteFile(builder.FileName);
+                writer.WriteStrings(reader.Lines, reader.FileType);
 
                 // Unsubscribe from the "string written" event
                 writer.StringWritten -= OnStringWritten;

@@ -33,7 +33,7 @@ namespace SerialSender.Logic.Configuration
             parser.Add(CommandLineOptionType.BlockDelay, false, "--blockdelay", "-bd", "Delay in milliseconds between sending each block", 1, 1);
             parser.Add(CommandLineOptionType.LineDelay, false, "--linedelay", "-ld", "Delay in milliseconds between sending each line", 1, 1);
             parser.Add(CommandLineOptionType.LineEnding, false, "--lineending", "-le", "Line ending sent at the end of each line (quoted string)", 1, 1);
-            parser.Add(CommandLineOptionType.SendNewCommand, false, "--sendnew", "-sn", "Send a NEW command before sending the file", 1, 1);
+            parser.Add(CommandLineOptionType.SendResetCommand, false, "--sendreset", "-sr", "Send a NEW or RESET command before sending the file", 1, 1);
             parser.Add(CommandLineOptionType.Verbose, false, "--verbose", "-v", "Verbose output", 1, 1);
             parser.Parse(args);
 
@@ -72,8 +72,8 @@ namespace SerialSender.Logic.Configuration
             values = parser.GetValues(CommandLineOptionType.LineEnding);
             if (values != null) Settings.LineEnding = values[0];
     
-            values = parser.GetValues(CommandLineOptionType.SendNewCommand);
-            if (values != null) Settings.SendNewCommand = bool.Parse(values[0]);
+            values = parser.GetValues(CommandLineOptionType.SendResetCommand);
+            if (values != null) Settings.SendResetCommand = bool.Parse(values[0]);
             
             values = parser.GetValues(CommandLineOptionType.Verbose);
             if (values != null) Settings.Verbose = bool.Parse(values[0]);

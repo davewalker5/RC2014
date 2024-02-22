@@ -23,7 +23,7 @@ namespace SerialSender.Tests
             Assert.AreEqual(50, builder.Settings.BlockDelay);
             Assert.AreEqual(200, builder.Settings.LineDelay);
             Assert.AreEqual("\r\n", builder.Settings.LineEnding);
-            Assert.IsTrue(builder.Settings.SendNewCommand);
+            Assert.IsTrue(builder.Settings.SendResetCommand);
             Assert.IsFalse(builder.Settings.Verbose);
         }
 
@@ -127,12 +127,12 @@ namespace SerialSender.Tests
         }
 
         [TestMethod]
-        public void OverrideSendNewCommandTest()
+        public void OverrideSendResetCommandTest()
         {
-            var args = new string[] { "--sendnew", "false" };
+            var args = new string[] { "--sendreset", "false" };
             var builder = new SerialSenderSettingsBuilder();
             builder.BuildSettings(args, "appsettings.json");
-            Assert.IsFalse(builder.Settings.SendNewCommand);
+            Assert.IsFalse(builder.Settings.SendResetCommand);
         }
 
         [TestMethod]

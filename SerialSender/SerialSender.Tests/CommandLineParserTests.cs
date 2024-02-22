@@ -2,7 +2,7 @@ using SerialSender.Entities.Configuration;
 using SerialSender.Entities.Exceptions;
 using SerialSender.Logic.Configuration;
 
-namespace MusicCatalogue.Tests
+namespace SerialSender.Tests
 {
     [TestClass]
     public class CommandLineParserTest

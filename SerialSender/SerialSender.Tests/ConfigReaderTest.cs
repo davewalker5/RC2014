@@ -22,7 +22,7 @@ namespace SerialSender.Tests
             Assert.AreEqual(50, settings.BlockDelay);
             Assert.AreEqual(200, settings.LineDelay);
             Assert.AreEqual("\r\n", settings.LineEnding);
-            Assert.IsTrue(settings.SendNewCommand);
+            Assert.IsTrue(settings.SendResetCommand);
             Assert.IsFalse(settings.Verbose);
         }
     }

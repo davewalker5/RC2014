@@ -1,5 +1,6 @@
 using SerialSender.Entities.Events;
 using SerialSender.Entities.Interfaces;
+using SerialSender.Entities.Reader;
 
 namespace SerialSender.Logic
 {
@@ -51,13 +52,28 @@ namespace SerialSender.Logic
         /// Writes a collection of strings to the serial port.
         /// </summary>
         /// <param name="strings">Strings to write</param>
-        public void WriteStrings(IEnumerable<string> strings)
+        /// <param name="fileType">The type of file being written</param>
+        public void WriteStrings(IEnumerable<string> strings, SourceFileType fileType)
         {
             var count = 0;
             var charCount = 0;
 
             // If required, send the NEW command first
-            var stringsToWrite = _settings.SendNewCommand ? strings.Prepend("NEW") : strings;
+            IEnumerable<string> stringsToWrite = strings;
+            if (_settings.SendResetCommand)
+            {
+                switch (fileType)
+                {
+                    case SourceFileType.Basic:
+                        stringsToWrite = strings.Prepend("NEW");
+                        break;
+                    case SourceFileType.Assembly:
+                        stringsToWrite = strings.Prepend("RESET");
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             foreach (var str in stringsToWrite)
             {
@@ -87,16 +103,6 @@ namespace SerialSender.Logic
                 OnStringWritten(new StringWrittenEventArgs(count, str));
             }
         }
-
-        /// <summary>
-        /// Write all lines in the specified file to the serial port.
-        /// </summary>
-        /// <param name="path"></param>
-        public void WriteFile(string path)
-        {
-            var lines = File.ReadAllLines(path);
-            WriteStrings(lines);
-        }   
 
         /// <summary>
         /// Invoke the event handler method to notify subscribers that the next

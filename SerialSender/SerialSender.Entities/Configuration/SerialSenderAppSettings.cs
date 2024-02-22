@@ -16,7 +16,7 @@ namespace SerialSender.Entities.Configuration
         public int BlockDelay { get; set; }
         public int LineDelay { get; set; }
         public string LineEnding { get; set; }
-        public bool SendNewCommand { get; set; }
+        public bool SendResetCommand { get; set; }
         public bool Verbose { get; set; }
         public Handshake Handshake { get; set; }
     }
