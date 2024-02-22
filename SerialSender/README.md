@@ -93,7 +93,7 @@ JP $8003
 ```
 
 - The first four lines write the zero-terminated data to be printed into memory starting at location 8100
-- Note that the \<ESC\> placeholder is replaced with \x1B when sent, which is an escape character and breaks out of the memory editor
+- Note that the ESC placeholder, enclosed in angle brackets, is replaced with \x1B when sent, which is an escape character and breaks out of the memory editor
 - The remaining lines send the assembly program, writing it from memory location 8000 onwards
 
 ## Transferring a Program
