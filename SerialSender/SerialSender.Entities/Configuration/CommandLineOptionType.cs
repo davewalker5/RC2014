@@ -14,7 +14,7 @@
         BlockDelay,
         LineDelay,
         LineEnding,
-        SendNewCommand,
+        SendResetCommand,
         Verbose
     }
 }

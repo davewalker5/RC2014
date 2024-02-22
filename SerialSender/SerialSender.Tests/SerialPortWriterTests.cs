@@ -2,6 +2,7 @@
 using Moq;
 using SerialSender.Entities.Events;
 using SerialSender.Entities.Interfaces;
+using SerialSender.Entities.Reader;
 using SerialSender.Logic;
 
 namespace SerialSender.Tests
@@ -30,7 +31,7 @@ namespace SerialSender.Tests
         /// <param name="expected"></param>
         private void ConfirmExpectedDataWasSent(List<string> expected)
         {
-            var expectedStrings = (_mockSettings.Object.SendNewCommand) ? expected.Prepend("NEW").ToList() : expected;
+            var expectedStrings = (_mockSettings.Object.SendResetCommand) ? expected.Prepend("NEW").ToList() : expected;
 
             Assert.AreEqual(expectedStrings.Count, _dataSent.Count);
 
@@ -79,7 +80,7 @@ namespace SerialSender.Tests
             _mockSettings.Setup(s => s.BlockSize).Returns(10);
             _mockSettings.Setup(s => s.BlockDelay).Returns(0);
             _mockSettings.Setup(s => s.LineDelay).Returns(0);
-            _writer.WriteStrings(strings);
+            _writer.WriteStrings(strings, SourceFileType.Basic);
             ConfirmExpectedDataWasSent(strings);
         }
 
@@ -90,28 +91,16 @@ namespace SerialSender.Tests
             _mockSettings.Setup(s => s.BlockSize).Returns(10);
             _mockSettings.Setup(s => s.BlockDelay).Returns(0);
             _mockSettings.Setup(s => s.LineDelay).Returns(0);
-            _writer.WriteStrings(strings);
+            _writer.WriteStrings(strings, SourceFileType.Basic);
             ConfirmExpectedDataWasSent(strings);
-        }
-
-        [TestMethod]
-        public void WriteFileShouldWriteAllLinesInTheFile()
-        {
-            _mockSettings.Setup(s => s.BlockSize).Returns(10);
-            _mockSettings.Setup(s => s.BlockDelay).Returns(0);
-            _mockSettings.Setup(s => s.LineDelay).Returns(1);
-            _writer.WriteFile("HelloWorld.bas");
-
-            var lines = File.ReadAllLines("HelloWorld.bas").ToList();
-            ConfirmExpectedDataWasSent(lines);
         }
 
         [TestMethod]
         public void NewCommandShouldBeSentFirstWhenEnabled()
         {
             var strings = Generators.GenerateRandomAlphanumericStrings(10, 10);
-            _mockSettings.Setup(s => s.SendNewCommand).Returns(true);
-            _writer.WriteStrings(strings);
+            _mockSettings.Setup(s => s.SendResetCommand).Returns(true);
+            _writer.WriteStrings(strings, SourceFileType.Basic);
             ConfirmExpectedDataWasSent(strings);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using SerialSender.Entities.Events;
+using SerialSender.Entities.Reader;
 
 namespace SerialSender.Entities.Interfaces
 {
@@ -7,7 +8,6 @@ namespace SerialSender.Entities.Interfaces
         event EventHandler<StringWrittenEventArgs> StringWritten;
         void Close();
         void Open();
-        void WriteStrings(IEnumerable<string> strings);
-        void WriteFile(string path);
+        void WriteStrings(IEnumerable<string> strings, SourceFileType fileType);
     }
 }
