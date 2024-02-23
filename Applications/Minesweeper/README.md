@@ -1,6 +1,6 @@
 # Minesweeper
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Minesweeper/Minesweeper.png" alt="Minesweeper" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/minesweeper/Applications/Minesweeper/Minesweeper.png" alt="Minesweeper" width="600">
 
 | Filename             | Content                                  |
 | -------------------- | ---------------------------------------- |
