@@ -2,9 +2,10 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/minesweeper/Applications/Minesweeper/Minesweeper.png" alt="Minesweeper" width="600">
 
-| Filename             | Content                                  |
-| -------------------- | ---------------------------------------- |
-| minesweeper_text.bas | Text-based implementation of Minesweeper |
+| Filename             | Content                                           |
+| -------------------- | ------------------------------------------------- |
+| minesweeper_text.bas | Text-based implementation of Minesweeper          |
+| minesweeper_ansi.bas | Version that uses ANSI escape codes to add colour |
 
 ## References
 

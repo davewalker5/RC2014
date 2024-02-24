@@ -84,15 +84,16 @@
 
 3000 REM Display the board
 3010 PRINT "" : PRINT NR; " of "; CB; " cells revealed" : PRINT ""
-3020 PRINT "    1  2  3  4  5  6  7  8  9"
-3030 FOR I = 1 TO SZ
-3040 PRINT I;
-3050 FOR J = 1 TO SZ
-3060 GOSUB 4000
-3070 NEXT J
-3080 PRINT ""
-3090 NEXT I
-3100 RETURN
+3020 PRINT "     1  2  3  4  5  6  7  8  9 "
+3030 PRINT "   +---------------------------"
+3040 FOR I = 1 TO SZ
+3050 PRINT I;"|";
+3060 FOR J = 1 TO SZ
+3070 GOSUB 4000
+3080 NEXT J
+3090 PRINT ""
+3100 NEXT I
+3110 RETURN
 
 4000 REM Display the cell at I, J using text-only
 4010 IF R(I, J) = 0 THEN PRINT "   "; : GOTO 4050
