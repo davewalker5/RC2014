@@ -34,7 +34,7 @@
 580 RETURN
 700 REM Game over (player lost)
 710 GOSUB 4650 : REM Reveal the whole board
-720 PRINT "" : PRINT "Game over! You trod on a mine!"
+720 PRINT "" : PRINT "Game over! You picked a square with a mine!"
 730 RETURN
 1000 REM Clear the board by setting each cell to 0 and clearing
 1010 REM the revealed board
@@ -169,7 +169,7 @@
 6430 GOSUB 6100
 6440 RETURN
 6500 REM Print the proximity value at I, J
-6510 PRINT CHR$(27);"[47m";
+6510 PRINT CHR$(27);"[40m";
 6520 IF B(I, J) = 1 THEN PRINT CHR$(27);"[94m";
 6530 IF B(I, J) = 2 THEN PRINT CHR$(27);"[92m";
 6540 IF B(I, J) > 2 THEN PRINT CHR$(27);"[91m";
