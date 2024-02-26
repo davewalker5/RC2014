@@ -11,7 +11,7 @@ Cells are represented as follows:
 
 | Contents                     | Text Version | ANSI Version                |
 | ---------------------------- | ------------ | --------------------------- |
-| Non-reveled cell             | Blank        | White square                |
+| Non-revealed cell            | Blank        | White square                |
 | Empty revealed cell          | .            | Green square                |
 | Empty cell next to 1 mine    | 1            | Blue 1 on black background  |
 | Empty cell next to 2 mines   | 2            | Green 2 on black background |
