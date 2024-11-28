@@ -26,7 +26,7 @@ Please see the individual README files in each part of the repo for information 
 
 ## Authors
 
-- **Dave Walker** - _Initial work_ - [LinkedIn](https://www.linkedin.com/in/davewalker5/)
+- **Dave Walker** - _Initial work_
 
 ## Feedback
 
