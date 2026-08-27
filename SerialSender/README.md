@@ -153,6 +153,16 @@ Below are example settings for transferring different file types:
 
 If the data transferred to the RC2014 is corrupted or incomplete, experiment by changing the block size, block delay and line delay properties.
 
+## Running on macOS
+
+The default serial port, `COM3`, is a Windows device name. On macOS, set `PortName` in `appsettings.json` to the device name assigned to the FTDI cable, typically `/dev/tty.usbserial-XXXX`, where `XXXX` is the cable's serial number. Alternatively, override the setting with the `--port` or `-p` command-line option:
+
+```bash
+SerialSender --port /dev/tty.usbserial-AB80DARE --send /path/to/program.bas
+```
+
+To find the device name, compare the output of `ls -1 /dev/tty*` with the FTDI cable disconnected and connected. Make sure any terminal application, such as picocom or Screen, has been closed before running SerialSender so that the serial port is available.
+
 ## References
 
 - [Small Computer Monitor Tutorial](https://smallcomputercentral.files.wordpress.com/2018/05/scmon-v1-0-tutorial-e1-0-0.pdf), Stephen C. Cousins, Edition 1.0.0
