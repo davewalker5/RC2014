@@ -4,7 +4,9 @@
 
 _Rule 30 nearest neighbour one-dimensional cellular automaton_
 
-An implementation of nearest-neighbour one-dimensional cellular automata, also known as "elementary cellular automata". Each generation in this class of automaton consists of a single row of cells each of which may be in one of two possible states, alive (1) or dead (0).
+Original BASIC implementations of nearest-neighbour one-dimensional cellular automata, also known as "elementary cellular automata", using the mathematical transition rules described in the references below.
+
+Each generation in this class of automaton consists of a single row of cells each of which may be in one of two possible states, alive (1) or dead (0).
 
 This folder contains both hard-coded "rule 30" implementations (see the references for more information) and a generic implementation where the rules for calculating the next generation are configurable.
 
@@ -32,7 +34,7 @@ Pattern 1 can therefore be expressed as:
 | automaton_ansi.bas    | 30   | Uses ANSI colour codes to output the state of each generation                                               |
 | automaton_text.bas    | 30   | Uses plain text to output the state of each generation                                                      |
 
-Both implementations require the terminal emulator to use a fixed-width font to ensure proper alignment of the output.
+All implementations require the terminal emulator to use a fixed-width font to ensure proper alignment of the output.
 
 ## References
 
