@@ -12,4 +12,5 @@
 | MoonPhase     | BASIC    | Calculate the phase of the moon on a specified date                                         |
 | MorseCode     | BASIC    | Morse Code translator and separate sender to send morse code to the Digital IO card         |
 | RomanNumerals | BASIC    | Given a Roman numeral representing a number between 1 and 3999, show the decimal equivalent |
+| Memory        | BASIC    | Memory game using the buttons and LEDs on the RC2014 Digital I/O card                       |
 | StackAndQueue | BASIC    | Demonstration implementations of a stack and a FIFO queue                                   |
