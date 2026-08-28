@@ -2,7 +2,7 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Animal/animal.png" alt="Animal Guessing Game" width="600">
 
-Animal is a simple guessing game for Microsoft BASIC. The player thinks of an animal and answers a series of yes-or-no questions while the computer tries to identify it.
+Animal is a simple guessing game. The player thinks of an animal and answers a series of yes-or-no questions while the computer tries to identify it.
 
 The game begins knowing only about a fish. When it cannot identify an animal, it asks the player for its name and for a question that can be used to recognise it. The new animal and question are added to the game's knowledge for subsequent rounds.
 
