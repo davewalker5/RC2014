@@ -2,6 +2,7 @@
 
 | Folder        | Language | Description                                                                                 |
 | ------------- | -------- | ------------------------------------------------------------------------------------------- |
+| Animal        | BASIC    | Animal guessing game                                                                        |
 | ANSI          | BASIC    | Test program to test support for ANSI codes in the current terminal emulator                |
 | Automaton     | BASIC    | Nearest-neighbour 1-D cellular automaton                                                    |
 | Barycenter    | BASIC    | Calculate the barycenter for a simple two-body problem                                      |

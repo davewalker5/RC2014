@@ -11,7 +11,7 @@ Memory is a memory game for the RC2014 Digital I/O card. The computer displays a
 
 The application requires:
 
-- An RC2014 Mini II running Microsoft BASIC
+- An RC2014 Mini II running BASIC
 - An RC2014 Digital I/O card configured to use port 0
 - A serial terminal for instructions and scores
 
