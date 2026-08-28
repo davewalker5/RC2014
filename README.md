@@ -14,15 +14,15 @@ The RC2014 Mini II is a Zilog Z80-based 8-bit single board computer (SBC) that c
 
 https://rc2014.co.uk
 
-This repository contains utilities and applications written for the RC2014 Mini II.
+This repository contains utilities and programs written for the RC2014 Mini II.
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii-pc.jpg" alt="RC2014 Mini II Roman Numerals" width="600">
 
-_RC2014 Mini II Connected to a PC and running the Roman Numerals Application_
+_RC2014 Mini II Connected to a PC and running the Roman Numerals Program_
 
 ## Getting Started
 
-Please see the individual README files in each part of the repo for information on each utility and application.
+Please see the individual README files in each part of the repo for information on each utility and program.
 
 ## Authors
 
