@@ -1,6 +1,6 @@
 # Minefield
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Minefield/Minefield.png" alt="Minefield" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Minefield/Minefield.png" alt="Minefield" width="600">
 
 An original BASIC implementation of the traditional minesweeper puzzle for the RC2014. It is not affiliated with or endorsed by Microsoft.
 

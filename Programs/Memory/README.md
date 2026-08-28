@@ -1,15 +1,15 @@
 # Memory
 
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Memory/memory.gif" alt="Memory" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Memory/memory.gif" alt="Memory" width="600">
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Memory/memory.png" alt="Memory" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Memory/memory.png" alt="Memory" width="600">
 
 Memory is a memory game for the RC2014 Digital I/O card. The computer displays an increasingly long sequence using four LEDs. The player must repeat the sequence using the corresponding buttons.
 
 ## Hardware
 
-The application requires:
+The program requires:
 
 - An RC2014 Mini II running BASIC
 - An RC2014 Digital I/O card configured to use port 0

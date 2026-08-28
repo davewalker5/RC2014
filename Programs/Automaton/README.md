@@ -1,6 +1,6 @@
 # Cellular Automaton
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Automaton/automaton.png" alt="Rule 30 Automaton" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Automaton/automaton.png" alt="Rule 30 Automaton" width="600">
 
 _Rule 30 nearest neighbour one-dimensional cellular automaton_
 

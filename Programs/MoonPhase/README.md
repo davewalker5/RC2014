@@ -1,8 +1,8 @@
 # Moon Phase Calculator
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/MoonPhase/MoonPhase.png" alt="Moon Phase Calculator" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/MoonPhase/MoonPhase.png" alt="Moon Phase Calculator" width="600">
 
-This application uses the following method to calculate the phase of the moon using the following method:
+This  uses the following method to calculate the phase of the moon using the following method:
 
 1. Calculate the Julian date for the date entered
 2. Subtract the Julian date for a known reference date when there was a New Moon

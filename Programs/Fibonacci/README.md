@@ -1,6 +1,6 @@
 # Fibonacci Series Calculator
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Fibonacci/Fibonacci.png" alt="Fibonacci Series Calculator" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Fibonacci/Fibonacci.png" alt="Fibonacci Series Calculator" width="600">
 
 The Fibonacci Series is defined by the following relationship:
 

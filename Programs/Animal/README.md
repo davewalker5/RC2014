@@ -1,6 +1,6 @@
 # Animal Guessing Game
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Animal/animal.png" alt="Animal Guessing Game" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Animal/animal.png" alt="Animal Guessing Game" width="600">
 
 Animal is a simple guessing game. The player thinks of an animal and answers a series of yes-or-no questions while the computer tries to identify it.
 

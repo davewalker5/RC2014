@@ -1,6 +1,6 @@
 # Bulls and Cows
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/BullsAndCows/bullscows.png" alt="Bulls and Cows" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/BullsAndCows/bullscows.png" alt="Bulls and Cows" width="600">
 
 An original BASIC implementation of the traditional number-based Bulls and Cows code-breaking game.
 

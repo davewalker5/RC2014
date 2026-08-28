@@ -1,6 +1,6 @@
 # ANSI Colour Code Test
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/ANSI/ansi.png" alt="ANSI Code Test" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/ANSI/ansi.png" alt="ANSI Code Test" width="600">
 
 This program tests the standard ANSI colour codes for changing colour and applying effects when printing text.
 

@@ -1,10 +1,10 @@
 # Morse Code Translator
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/MorseCode/morse.gif" alt="Morse Code Sender" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/MorseCode/morse.gif" alt="Morse Code Sender" width="600">
 
 _Digital I/O card mounted on the RC2014 Mini II running the Morse Code sender program. The message is "Hi" (.... ..) and the animation repeats in a loop_
 
-Two Morse Code applications are included:
+Two Morse Code programs are included:
 
 | Filename            | Description                                                                                   |
 | ------------------- | --------------------------------------------------------------------------------------------- |
@@ -26,3 +26,4 @@ In the text-based output, a single space corresponds to 1 time unit.
 - [International Morse Code](https://morsecode.world/international/morse2.html), Morse Code World, Stephen C. Phillips
 - [Recommendation ITU-R M.1677-1](https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf), International Telecommunications Union, 2009
 - [Recommendation ITU-R M.1172](https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1172-0-199510-I!!PDF-E.pdf), International Telecommunications Union
+- [RC2014 Digital I/O](https://rc2014.co.uk/modules/digital-io/), RC2014
