@@ -1,22 +1,35 @@
-# Minesweeper
+# Minefield
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Minesweeper/Minesweeper.png" alt="Minesweeper" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Applications/Minefield/Minefield.png" alt="Minefield" width="600">
 
-| Filename             | Content                                           |
-| -------------------- | ------------------------------------------------- |
-| minesweeper_text.bas | Text-based implementation of Minesweeper          |
-| minesweeper_ansi.bas | Version that uses ANSI escape codes to add colour |
+An original BASIC implementation of the traditional minesweeper puzzle for the RC2014. It is not affiliated with or endorsed by Microsoft.
+
+## Requirements
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Display
 
 Cells are represented as follows:
 
 | Contents                     | Text Version | ANSI Version                |
 | ---------------------------- | ------------ | --------------------------- |
-| Non-revealed cell            | Blank        | White square                |
+| Non-reveled cell             | Blank        | White square                |
 | Empty revealed cell          | .            | Green square                |
 | Empty cell next to 1 mine    | 1            | Blue 1 on black background  |
 | Empty cell next to 2 mines   | 2            | Green 2 on black background |
 | Empty cell next to > 2 mines | n            | Red n on black background   |
 | Mine                         | \*           | White \* on red background  |
+
+## Implementations
+
+| Filename           | Content                                           |
+| ------------------ | ------------------------------------------------- |
+| minefield_text.bas | Text-based implementation of Minefield            |
+| minefield_ansi.bas | Version that uses ANSI escape codes to add colour |
 
 ## References
 
