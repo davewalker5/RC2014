@@ -26,3 +26,4 @@ In the text-based output, a single space corresponds to 1 time unit.
 - [International Morse Code](https://morsecode.world/international/morse2.html), Morse Code World, Stephen C. Phillips
 - [Recommendation ITU-R M.1677-1](https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf), International Telecommunications Union, 2009
 - [Recommendation ITU-R M.1172](https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1172-0-199510-I!!PDF-E.pdf), International Telecommunications Union
+- [RC2014 Digital I/O](https://rc2014.co.uk/modules/digital-io/), RC2014
