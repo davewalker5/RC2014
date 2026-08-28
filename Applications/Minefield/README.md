@@ -24,7 +24,7 @@ Cells are represented as follows:
 | Empty cell next to > 2 mines | n            | Red n on black background   |
 | Mine                         | \*           | White \* on red background  |
 
-## Implementations
+## Program Files
 
 | Filename           | Content                                           |
 | ------------------ | ------------------------------------------------- |
