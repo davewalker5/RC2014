@@ -10,6 +10,13 @@ Each generation in this class of automaton consists of a single row of cells eac
 
 This folder contains both hard-coded "rule 30" implementations (see the references for more information) and a generic implementation where the rules for calculating the next generation are configurable.
 
+## Requirements
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
 ## Example - Rule 30
 
 For the rule 30 automaton, if the current cell and the cells to the left and right of it follow one of the patterns shown in the following table in the current generation, with the status of the current cell indicated by the middle digit of each pattern, the current cell will be alive in the next generation:
