@@ -30,6 +30,18 @@ Load the required program, from the table above, into BASIC and enter `RUN`
 
 The Digital I/O card is an additional kit plugging into the 40 pin bus header of the RC2014 Mini II and providing 8 lines of digial input via keys mounted on the card and 8 lines of digital output via LEDs, also mounted on the card (see the references for details).
 
+## Implementation Notes
+
+### Using a Different I/O Port
+
+To use a Digital I/O card configured for port `P` instead of port 0:
+
+- In `keypress.bas`, replace every `INP(0)` with `INP(P)`, and replace `OUT 0, B` with `OUT P, B`.
+- In `led.bas`, replace `OUT 0, LED(I)` with `OUT P, LED(I)`.
+- `pattern.bas` does not access the Digital I/O card directly, so it requires no change.
+
+For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
+
 ## References
 
 - [RC2014 Digital I/O](https://rc2014.co.uk/modules/digital-io/), RC2014

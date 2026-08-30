@@ -54,6 +54,8 @@ The delay values are BASIC loop counts rather than exact units of time. They may
 
 ## Implementation Notes
 
+### Program Implementation Details
+
 - Sequence values are stored as the single-bit values 1, 2, 4, and 8
 - A stored value can therefore be written directly to the LED output port and compared directly with the button input port
 - The program waits for all buttons to be released after each press with a short additional delay providing simple debouncing
@@ -61,6 +63,10 @@ The delay values are BASIC loop counts rather than exact units of time. They may
 - The time taken to press the initial start button determines how many random values are discarded before the game begins in order to vary the sequence without requiring a real-time clock
 - The output port is cleared after each input, after each display pattern, before replay, and before the program ends
 - Timing is approximate because the base RC2014 has no accurate timer available to BASIC
+
+### Using a Different I/O Port
+
+To use a Digital I/O card configured for port `P` instead of port 0, replace every `INP(0)` in `memory.bas` with `INP(P)`, and replace every `OUT 0, value` statement with `OUT P, value`. For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
 
 ## Acknowledgements
 

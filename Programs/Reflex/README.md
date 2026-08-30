@@ -66,6 +66,8 @@ All delay and response values are BASIC loop or polling counts, not milliseconds
 
 ## Implementation Notes
 
+### Program Implementation Details
+
 - Target LEDs are stored as single-bit byte values, so the same value can be written to the output port and compared directly with the input port.
 - Both programs vary the deterministic `RND` sequence using the time taken to press the start or arm button.
 - The reaction timer checks the input throughout its random delay to detect false starts.
@@ -75,6 +77,15 @@ All delay and response values are BASIC loop or polling counts, not milliseconds
 - Both programs clear all LEDs before replay and before exiting.
 
 Timing is intentionally described as approximate because the standard RC2014 Mini II configuration does not provide an accurate application timer to BASIC. Final delay calibration and complete verification should be performed on the physical machine.
+
+### Using a Different I/O Port
+
+To use a Digital I/O card configured for port `P` instead of port 0, make the following changes in both `reaction_timer.bas` and `button_reflex.bas`:
+
+- Replace every `INP(0)` with `INP(P)`.
+- Replace every `OUT 0, value` statement with `OUT P, value`.
+
+For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
 
 ## Reference
 

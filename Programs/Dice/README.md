@@ -14,7 +14,7 @@ The program requires:
 - An RC2014 Digital I/O card configured to use port 0
 - A serial terminal for instructions and results
 
-No other expansion hardware is required.
+No other expansion hardware is required. The implementation notes include details on how to change the programs to use a card configured for a different port.
 
 ## Program Files
 
@@ -55,11 +55,17 @@ These values are BASIC loop counts, not exact time units. Adjust them if the ani
 
 ## Implementation Notes
 
+### Dice Randomness and Program Control
+
 - D6 and D8 results use `1 + INT(RND(1) * N)`; the random-byte mode uses `INT(RND(1) * 256)`
 - The program counts while waiting for a button and discards that many random values before each roll
 - This allows the timing of the player's press to vary the otherwise deterministic random sequence without a real-time clock
 - The rolling animation uses every LED. The final result remains visible until another mode is selected
 - Choosing Quit clears the output port before the program ends
+
+### Using a Different I/O Port
+
+To use a Digital I/O card configured for port `P` instead of port 0, replace every `INP(0)` in `dice.bas` with `INP(P)`, and replace every `OUT 0, value` statement with `OUT P, value`. For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
 
 ## References
 
