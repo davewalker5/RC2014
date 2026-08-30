@@ -14,6 +14,7 @@
 | Fibonacci     | BASIC    | Calculate numbers in the Fibonacci series                                                   |
 | Life          | BASIC    | Conway's Game of Life on a configurable grid                                                |
 | Logic         | BASIC    | Truth-table and Digital I/O demonstrations of common logic gates                            |
+| MoonDescent   | BASIC    | Turn-based lunar descent simulation with limited fuel                                       |
 | Memory        | BASIC    | Memory game using the buttons and LEDs on the RC2014 Digital I/O card                       |
 | Minefield     | BASIC    | An original implementation of the traditional minesweeper puzzle                            |
 | CavernStalker | BASIC    | Text-only cave hunting adventure game                                                       |
