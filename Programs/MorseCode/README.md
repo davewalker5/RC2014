@@ -39,6 +39,14 @@ The following timing rules are used to determine the lengths of dots, dashes and
 
 In the text-based output, a single space corresponds to 1 time unit.
 
+## Implementation Notes
+
+### Using a Different I/O Port
+
+To use a Digital I/O card configured for port `P` instead of port 0, replace every `INP(0)` in `morse_sender.bas` with `INP(P)`, and replace every `OUT 0, value` statement with `OUT P, value`. For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
+
+`morse_translate.bas` does not access the Digital I/O card directly, so it requires no change.
+
 ## References
 
 - [International Morse Code](https://morsecode.world/international/morse2.html), Morse Code World, Stephen C. Phillips
