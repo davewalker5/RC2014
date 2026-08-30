@@ -6,6 +6,7 @@
 | ANSI          | BASIC    | Test program to test support for ANSI codes in the current terminal emulator                |
 | Automaton     | BASIC    | Nearest-neighbour 1-D cellular automaton                                                    |
 | Barycenter    | BASIC    | Calculate the barycenter for a simple two-body problem                                      |
+| BaseConverter | BASIC    | Converts byte values between binary, octal, decimal and hexadecimal                         |
 | BLackjack     | BASIC    | Text-only implementation of the card game for the RC2014                                    |
 | BullsAndCows  | BASIC    | Implementation of the Bulls and Cows game                                                   |
 | Dice          | BASIC    | Electronic coin, D6, D8 and random byte using the RC2014 Digital I/O card                   |
