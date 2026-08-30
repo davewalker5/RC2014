@@ -4,12 +4,30 @@
 
 _Digital I/O card mounted on the RC2014 Mini II running the Morse Code sender program. The message is "Hi" (.... ..) and the animation repeats in a loop_
 
-Two Morse Code programs are included:
+Morse code utilities for the RC2014.
+
+## Hardware
+
+The program requires:
+
+- An RC2014 Mini II running BASIC
+- An RC2014 Digital I/O card configured to use port 0
+- A serial terminal for instructions and results
+
+No other expansion hardware is required.
+
+## Program Files
 
 | Filename            | Description                                                                                   |
 | ------------------- | --------------------------------------------------------------------------------------------- |
 | morse_translate.bas | Prompt for a message then convert it to morse code using the rules outlined below             |
 | morse_sender.bas    | As per the translator but uses the Digital I/O card to display the resulting code on the LEDs |
+
+## Running the Program
+
+Load the required program, from the table above, into BASIC and enter `RUN`
+
+## Timing Rules
 
 The following timing rules are used to determine the lengths of dots, dashes and spaces:
 

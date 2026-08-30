@@ -10,12 +10,28 @@ Each generation in this class of automaton consists of a single row of cells eac
 
 This folder contains both hard-coded "rule 30" implementations (see the references for more information) and a generic implementation where the rules for calculating the next generation are configurable.
 
-## Requirements
+## Hardware
+
+The program requires:
 
 - An RC2014 computer running BASIC
 - A serial terminal
 
 No additional hardware is required.
+
+## Program Files
+
+| File                  | Rule | Description                                                                                                 |
+| --------------------- | ---- | ----------------------------------------------------------------------------------------------------------- |
+| automaton_generic.bas | Any  | Configurable patterns in the DATA statements. Uses ANSI colour codes to output the state of each generation |
+| automaton_ansi.bas    | 30   | Uses ANSI colour codes to output the state of each generation                                               |
+| automaton_text.bas    | 30   | Uses plain text to output the state of each generation                                                      |
+
+All implementations require the terminal emulator to use a fixed-width font to ensure proper alignment of the output.
+
+## Running the Program
+
+Load the required program file from the list, above, into BASIC and enter `RUN`
 
 ## Example - Rule 30
 
@@ -32,16 +48,6 @@ All other combinations result in the current cell being dead in the next generat
 Pattern 1 can therefore be expressed as:
 
 > If the cell to the left of the current cell is alive and the current cell and cell to the right are dead in the current generation, then in the next generation the current cell will be alive
-
-## Program Files
-
-| File                  | Rule | Description                                                                                                 |
-| --------------------- | ---- | ----------------------------------------------------------------------------------------------------------- |
-| automaton_generic.bas | Any  | Configurable patterns in the DATA statements. Uses ANSI colour codes to output the state of each generation |
-| automaton_ansi.bas    | 30   | Uses ANSI colour codes to output the state of each generation                                               |
-| automaton_text.bas    | 30   | Uses plain text to output the state of each generation                                                      |
-
-All implementations require the terminal emulator to use a fixed-width font to ensure proper alignment of the output.
 
 ## References
 

@@ -4,14 +4,27 @@
 
 An original BASIC implementation of the traditional minesweeper puzzle for the RC2014. It is not affiliated with or endorsed by Microsoft.
 
-## Requirements
+## Hardware
+
+The program requires:
 
 - An RC2014 computer running BASIC
 - A serial terminal
 
 No additional hardware is required.
 
-## Display
+## Program Files
+
+| Filename           | Content                                           |
+| ------------------ | ------------------------------------------------- |
+| minefield_text.bas | Text-based implementation of Minefield            |
+| minefield_ansi.bas | Version that uses ANSI escape codes to add colour |
+
+## Running the Program
+
+Load the selected program file, from the table above, into BASIC and enter `RUN`
+
+## Appearance
 
 Cells are represented as follows:
 
@@ -23,13 +36,6 @@ Cells are represented as follows:
 | Empty cell next to 2 mines   | 2            | Green 2 on black background |
 | Empty cell next to > 2 mines | n            | Red n on black background   |
 | Mine                         | \*           | White \* on red background  |
-
-## Program Files
-
-| Filename           | Content                                           |
-| ------------------ | ------------------------------------------------- |
-| minefield_text.bas | Text-based implementation of Minefield            |
-| minefield_ansi.bas | Version that uses ANSI escape codes to add colour |
 
 ## References
 

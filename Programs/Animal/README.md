@@ -6,16 +6,24 @@ Animal is a simple guessing game. The player thinks of an animal and answers a s
 
 The game begins knowing only about a fish. When it cannot identify an animal, it asks the player for its name and for a question that can be used to recognise it. The new animal and question are added to the game's knowledge for subsequent rounds.
 
-## Requirements
+## Hardware
+
+The program requires:
 
 - An RC2014 computer running BASIC
 - A serial terminal
 
 No additional hardware is required.
 
-## Playing the Game
+## Program Files
 
-1. Load and run `animal.bas`
+| File       | Description                                |
+| ---------- | ------------------------------------------ |
+| animal.bas | Implementation of the animal guessing game |
+
+## Running the Program
+
+1. Load `animal.bas` into BASIC and enter `RUN`
 2. Think of an animal and answer `Y` when prompted
 3. Answer each question with `Y` or `N`
 4. If the computer guesses correctly, answer `Y` and choose whether to play again
@@ -34,13 +42,6 @@ Questions should:
 - Have `Y` as the correct answer for the new animal
 - Describe a useful characteristic rather than name the animal directly
 - Be short enough to read comfortably in the terminal
-
-## Files
-
-| Filename     | Content                          |
-| ------------ | -------------------------------- |
-| `animal.bas` | Animal guessing game source code |
-| `animal.png` | Example game session             |
 
 ## Acknowledgements
 

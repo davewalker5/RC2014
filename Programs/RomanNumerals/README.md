@@ -2,6 +2,27 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/RomanNumerals/RomanNumerals.png" alt="Roman Numerals" width="600">
 
+Convert Roman numerals to their decimal equivalent.
+
+## Hardware
+
+The program requires:
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Program Files
+
+| File              | Description                                   |
+| ----------------- | --------------------------------------------- |
+| RomanNumerals.bas | Implementation of the Roman numeral converter |
+
+## Running the Program
+
+Load `RomanNumerals.bas` into BASIC and enter `RUN`
+
 ## Roman Numerals
 
 Using only characters with no additional annotations (such as bars above) the system of Roman numerals can represent numbers between 1 and 3,999 using combinations of the following:
@@ -20,7 +41,7 @@ Using only characters with no additional annotations (such as bars above) the sy
 
 For example, the number 1,965 is represented as MCMLXV, which is the concatenation of the numerals for 1000, 900, 60 and 5.
 
-# Parser
+## Parser
 
 Armed with this information, a parser can be constructed by:
 
@@ -31,7 +52,7 @@ Armed with this information, a parser can be constructed by:
 - Repeat the process for tens, then hundreds and thousands
 - At the end of the process, the string should be zero length - if not, then there is a formatting issue with the string
 
-# Worked Example
+## Worked Example
 
 | Step | String | Detect    | Found | Decimal | Running Total | Resulting String |
 | ---- | ------ | --------- | ----- | ------- | ------------- | ---------------- |

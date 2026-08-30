@@ -4,7 +4,29 @@
 
 This program tests the standard ANSI colour codes for changing colour and applying effects when printing text.
 
-The terminal emulator used to connect to the RC2014 must be configured to handle ANSI codes for the program to work.
+## Hardware
+
+The program requires:
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Program Files
+
+| File          | Description                             |
+| ------------- | --------------------------------------- |
+| ansi_test.bas | Implementation of the ANSI test program |
+
+## Running the Program
+
+- The terminal emulator used to connect to the RC2014 must be configured to handle ANSI codes for the program to work.
+- Load `ansi_test.bas` into BASIC and enter `RUN`.
+
+## ANSI Codes
+
+### Colour Codes
 
 The following table summarises the colour codes:
 
@@ -19,6 +41,8 @@ The following table summarises the colour codes:
 | <span style="color:Cyan">Cyan</span>       | 36         | 46         | 96                |
 | <span style="color:White">White</span>     | 37         | 47         | 97                |
 
+### Effects
+
 The following table summarises the codes used to apply effects:
 
 | Effect        | On  | Off |
@@ -30,3 +54,7 @@ The following table summarises the codes used to apply effects:
 | Overline      | 53  | 55  |
 
 To reset all effects, send code 0.
+
+## References
+
+- [ANSI Tools](https://ansi.tools)

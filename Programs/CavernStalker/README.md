@@ -2,18 +2,30 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/CavernStalker/cavernstalker.png" alt="Cavern Stalker" width="600">
 
-_Cavern Stalker_ is a text adventure for RC2014 BASIC. A dangerous creature is loose in a twenty-chamber cavern, alongside hidden abysses and troublesome Gloomwings. Read the environmental clues, choose your route carefully and stop the creature before your five launcher bolts are gone.
+_Cavern Stalker_ is a text adventure for RC2014 BASIC.
 
-## Requirements
+## Hardware
+
+The program requires:
 
 - An RC2014 computer running BASIC
 - A serial terminal
 
 No extra hardware is needed.
 
-## Running the game
+## Program Files
+
+| File              | Description                                 |
+| ----------------- | ------------------------------------------- |
+| cavernstalker.bas | Implementation of the 'Cavern Stalker' game |
+
+## Running the Program
 
 Load `cavernstalker.bas` into BASIC and enter `RUN`.
+
+## Playing the Game
+
+A dangerous creature is loose in a twenty-chamber cavern, alongside hidden abysses and troublesome Gloomwings. Read the environmental clues, choose your route carefully and stop the creature before your five launcher bolts are gone.
 
 Each chamber has three exits. At every turn you may:
 

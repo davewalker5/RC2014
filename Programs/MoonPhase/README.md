@@ -2,7 +2,28 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/MoonPhase/MoonPhase.png" alt="Moon Phase Calculator" width="600">
 
-This  uses the following method to calculate the phase of the moon using the following method:
+Calculate the phase of the moon for a specified date.
+
+## Hardware
+
+The program requires:
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Program Files
+
+| Filename      | Content                                     |
+| ------------- | ------------------------------------------- |
+| MoonPhase.bas | Implementation of the moon phase calculator |
+
+Load `MoonPhase` into BASIC and enter `RUN`
+
+## Lunar Phase Calculation
+
+The following method is used to calculate the phase of the moon:
 
 1. Calculate the Julian date for the date entered
 2. Subtract the Julian date for a known reference date when there was a New Moon
