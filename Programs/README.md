@@ -12,6 +12,7 @@
 | DigitalIO     | BASIC    | A set of programs that use the RC2014 Digital I/O card                                      |
 | Fibonacci     | BASIC    | Calculate numbers in the Fibonacci series                                                   |
 | Life          | BASIC    | Conway's Game of Life on a configurable grid                                                |
+| Logic         | BASIC    | Truth-table and Digital I/O demonstrations of common logic gates                            |
 | Memory        | BASIC    | Memory game using the buttons and LEDs on the RC2014 Digital I/O card                       |
 | Minefield     | BASIC    | An original implementation of the traditional minesweeper puzzle                            |
 | CavernStalker | BASIC    | Text-only cave hunting adventure game                                                       |
