@@ -1,6 +1,5 @@
 # Memory
 
-
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Memory/memory.gif" alt="Memory" width="600">
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Memory/memory.png" alt="Memory" width="600">
@@ -15,15 +14,24 @@ The program requires:
 - An RC2014 Digital I/O card configured to use port 0
 - A serial terminal for instructions and scores
 
-The four buttons and LEDs whose byte values are 1, 2, 4, and 8 are used. These correspond to the lowest four bits of the Digital I/O port. The program does not depend on whether those bits appear on the left or right of the physical card.
+The four buttons and LEDs whose byte values are 1, 2, 4, and 8 are used. These correspond to the lowest four bits of the Digital I/O port.
+
+## Program Files
+
+| File       | Description                                |
+| ---------- | ------------------------------------------ |
+| memory.bas | Implementation of the memory game |
+
+## Running the Program
+
+1. Load `memory.bas` into BASIC and enter `RUN`
 
 ## Playing the Game
 
-1. Run `memory.bas`.
-2. Press any button on the Digital I/O card when prompted
-3. Watch the sequence displayed on the four game LEDs
-4. Repeat the sequence using the corresponding buttons
-5. Press only one button at a time
+1. Press any button on the Digital I/O card when prompted
+2. Watch the sequence displayed on the four game LEDs
+3. Repeat the sequence using the corresponding buttons
+4. Press only one button at a time
 
 The first round contains one value. One new random value is added after every successful round. The game finishes when the player enters an incorrect value or completes the maximum sequence of 20 values.
 

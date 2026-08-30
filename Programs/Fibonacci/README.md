@@ -2,6 +2,29 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Fibonacci/Fibonacci.png" alt="Fibonacci Series Calculator" width="600">
 
+Calculate and display the Fibonacci Series.
+
+## Hardware
+
+The program requires:
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Program Files
+
+| File          | Description                                       |
+| ------------- | ------------------------------------------------- |
+| Fibonacci.bas | Implementation of the Fibonacci series calculator |
+
+## Running the Program
+
+Load `Fibonacci.bas` into BASIC and enter `RUN`
+
+## The Mathematics
+
 The Fibonacci Series is defined by the following relationship:
 
 F<sub>0</sub> = 0

@@ -15,5 +15,6 @@
 | CavernStalker | BASIC    | Text-only cave hunting adventure game                                                       |
 | MoonPhase     | BASIC    | Calculate the phase of the moon on a specified date                                         |
 | MorseCode     | BASIC    | Morse Code translator and separate sender to send morse code to the Digital IO card         |
+| Reflex        | BASIC    | Reaction timer and multi-round reflex game using the RC2014 Digital I/O card                |
 | RomanNumerals | BASIC    | Given a Roman numeral representing a number between 1 and 3999, show the decimal equivalent |
 | StackAndQueue | BASIC    | Demonstration implementations of a stack and a FIFO queue                                   |

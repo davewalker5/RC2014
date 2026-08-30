@@ -1,6 +1,5 @@
 # Electronic Dice
 
-
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Dice/dice.gif" alt="Memory" width="600">
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Dice/dice.png" alt="Memory" width="600">
@@ -17,9 +16,19 @@ The program requires:
 
 No other expansion hardware is required.
 
+## Program Files
+
+| File     | Description                           |
+| -------- | ------------------------------------- |
+| dice.bas | Implementation of the electronic dice |
+
+## Running the Program
+
+Load `dice.bas` into BASIC and enter `RUN`
+
 ## Using the Dice
 
-Run `dice.bas`, then press exactly one of these Digital I/O buttons:
+When prompted, press one of these Digital I/O buttons:
 
 | Button Number | Button Value | Mode        | LED Result                                           |
 | ------------- | ------------ | ----------- | ---------------------------------------------------- |

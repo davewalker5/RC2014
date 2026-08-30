@@ -1,9 +1,28 @@
 # Stacks and Queues
 
+Demonstration implementations of stacks and queues in RC2014 BASIC.
+
+## Hardware
+
+The program requires:
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Program Files
+
 | Program   | Description                                                    |
 | --------- | -------------------------------------------------------------- |
 | stack.bas | Implementation of a simple stack with N-dimensioned values     |
 | queue.bas | Implementation a a simple FIFO queue with N-dimensioned values |
+
+## Running the Program
+
+Load the required program from the table, above, into BASIC and enter `RUN`.
+
+## Implementation Notes
 
 As listed, the programs are configured with N = 2 and expect the value to be enqueued or pushed to be in variable V, which is a 2-dimentional array:
 

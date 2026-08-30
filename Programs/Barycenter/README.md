@@ -2,6 +2,31 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Barycenter/Barycenter.png" alt="Barycenter Calculator" width="600">
 
+Calculate the common centre of mass of two or more bodies orbiting one another.
+
+## Hardware
+
+The program requires:
+
+- An RC2014 computer running BASIC
+- A serial terminal
+
+No additional hardware is required.
+
+## Program Files
+
+| File           | Description                                          |
+| -------------- | ---------------------------------------------------- |
+| Barycenter.bas | Implementation of the barycenter calculation program |
+
+## Running the Program
+
+Load `Barycenter.bas` into BASIC and enter `RUN`
+
+## Mathematics
+
+### Barycenter
+
 A barycenter is defined as the common centre of mass of two or more bodies orbiting one another. For the two body problem, it's expressed as a distance from the center of the primary body (the one with the higher mass) and is calculated as follows:
 
 $$ r_1 = {a \times m_2 \over m_1 + m_2} $$
@@ -21,7 +46,7 @@ For example, for the Earth-Moon system:
 
 This gives a value of 4691.91 km for r<sub>1</sub>.
 
-## Using the Ratio of Masses
+### Using the Ratio of Masses
 
 If the ratio of the masses is known rather than the absolute masses:
 

@@ -4,12 +4,25 @@
 
 An original BASIC implementation of the traditional number-based Bulls and Cows code-breaking game.
 
-## Requirements
+## Hardware
+
+The program requires:
 
 - An RC2014 computer running BASIC
 - A serial terminal
 
 No additional hardware is required.
+
+## Program Files
+
+| File           | Description                                |
+| -------------- | ------------------------------------------ |
+| bullscows.bas  | Implementation of the Bulls and Cows game  |
+| rand_check.bas | Random number generation randomness tester |
+
+## Running the Program
+
+Load `bullscows.bas` into BASIC and enter `RUN`.
 
 ## References
 
