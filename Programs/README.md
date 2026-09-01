@@ -12,6 +12,7 @@
 | Dice          | BASIC    | Electronic coin, D6, D8 and random byte using the RC2014 Digital I/O card                   |
 | DigitalIO     | BASIC    | A set of programs that use the RC2014 Digital I/O card                                      |
 | Fibonacci     | BASIC    | Calculate numbers in the Fibonacci series                                                   |
+| GreatCircle   | BASIC    | Calculate great circle distances manually or from a position to selected airports           |
 | Life          | BASIC    | Conway's Game of Life on a configurable grid                                                |
 | Logic         | BASIC    | Truth-table and Digital I/O demonstrations of common logic gates                            |
 | MoonDescent   | BASIC    | Turn-based lunar descent simulation with limited fuel                                       |
