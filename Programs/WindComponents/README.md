@@ -71,8 +71,6 @@ Runway heading and wind direction must be at least 0 and less than 360 degrees. 
 
 The wind direction follows the aviation convention: it states where the wind is coming from. Runway headings and wind directions must use the same reference, normally magnetic values taken from an aerodrome chart and an aviation weather report.
 
-The program still requires transfer and verification on a physical RC2014 Mini II.
-
 ## References
 
 - [FAA Airplane Flying Handbook, Chapter 9: Approaches and Landings](https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/airplane_handbook/10_afh_ch9.pdf), crosswind component chart
