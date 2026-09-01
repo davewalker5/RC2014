@@ -1,9 +1,5 @@
 # Bearing Calculators
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Bearings/initial_bearing.png" alt="Bearing Between Start and End Points" width="600">
-
-<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Bearings/airport_bearing_distance.png" alt="Airport-to-Airport Bearing and Distance" width="600">
-
 Calculate the initial great-circle bearing between entered positions, or calculate the bearing and distance between two built-in airports.
 
 These programs are educational and recreational. They are not suitable for operational flight planning or navigation.
@@ -28,7 +24,11 @@ No additional hardware is required.
 
 Load either BASIC file and enter `RUN`.
 
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Bearings/initial_bearing.png" alt="Bearing Between Start and End Points" width="600">
+
 For `initial_bearing.bas`, enter two positions in decimal degrees. Latitudes must be from -90 to 90 and longitudes from -180 to 180. North and east are positive; south and west are negative.
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Bearings/airport_bearing_distance.png" alt="Airport-to-Airport Bearing and Distance" width="600">
 
 For `airport_bearing_distance.bas`, enter the three-letter uppercase IATA codes of the departure and destination airports. The program displays the available codes. Its 19-airport list and coordinates are identical to those in `Programs/GreatCircle/airports.bas`.
 

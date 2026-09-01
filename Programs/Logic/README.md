@@ -22,7 +22,11 @@ The Digital I/O program additionally requires an RC2014 Digital I/O card configu
 
 Load the required `.bas` file into BASIC and enter `RUN`.
 
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Logic/logic_text.png" alt="Text-based Logic Gate Demonstration" width="600">
+
 `logic_text.bas` prints the complete truth tables and then returns to BASIC. In each table, `A` and `B` are inputs and `Q` is the result.
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Logic/logic_io.png" alt="Digital I/O Logic Gate Demonstration" width="600">
 
 For `logic_io.bas`, hold button 0 to make input A true and hold button 1 to make input B true. The LEDs update whenever either input changes. Press button 7 to finish; the program clears all LEDs before returning to BASIC.
 
