@@ -1,0 +1,5 @@
+IATA,ICAO,Name,Latitude,Longitude,Distance (nm),Runway,Position,Magnetic heading,Direction of travel
+LHR,EGLL,London Heathrow Airport,51.470748,-0.459909,0.077,09L,Northern runway,089,Eastbound
+LHR,EGLL,London Heathrow Airport,51.470748,-0.459909,0.077,09R,Southern runway,090,Eastbound
+LHR,EGLL,London Heathrow Airport,51.470748,-0.459909,0.077,27L,Southern runway,269,Westbound
+LHR,EGLL,London Heathrow Airport,51.470748,-0.459909,0.077,27R,Northern runway,270,Westbound
