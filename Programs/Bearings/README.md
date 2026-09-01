@@ -62,8 +62,6 @@ The airport program reads the `DATA` table from the beginning for each lookup an
 
 An initial bearing is undefined when both positions are identical or exactly antipodal. The programs report this rather than displaying an arbitrary direction.
 
-The programs still require transfer and verification on a physical RC2014 Mini II, including a final check of available memory.
-
 ## References
 
 - [Calculate distance and bearing between two Latitude/Longitude points](https://www.movable-type.co.uk/scripts/latlong.html), Movable Type Scripts
