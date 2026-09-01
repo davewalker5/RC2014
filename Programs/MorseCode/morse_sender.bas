@@ -59,28 +59,28 @@
 590 RETURN
 600 REM Dots are 1 time unit long
 610 PRINT ".";
-620 OUT 0, 255
+620 OUT 1, 255
 630 U = 1 : GOSUB 860
-640 OUT 0, 0
+640 OUT 1, 0
 650 RETURN
 660 REM Dashes are 3 time units long
 670 PRINT "-";
-680 OUT 0, 255
+680 OUT 1, 255
 690 U = 3 : GOSUB 860
-700 OUT 0, 0
+700 OUT 1, 0
 710 RETURN
 720 REM Spaces between . or - within a word are 1 time unit long
-730 OUT 0, 0
+730 OUT 1, 0
 740 U = 1 : GOSUB 860
 750 RETURN
 760 REM Spaces between characters are 3 time units long
 770 PRINT "   ";
-780 OUT 0, 0
+780 OUT 1, 0
 790 U = 4 : GOSUB 860
 800 RETURN
 810 REM Spaces between words are 7 time units long
 820 PRINT "      "
-830 OUT 0, 0
+830 OUT 1, 0
 840 U = 7 : GOSUB 860
 850 RETURN
 860 REM Wait for "U" units of time

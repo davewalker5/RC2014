@@ -11,7 +11,7 @@ Morse code utilities for the RC2014.
 The program requires:
 
 - An RC2014 Mini II running BASIC
-- An RC2014 Digital I/O card configured to use port 0
+- An RC2014 Digital I/O card configured to use port 1
 - A serial terminal for instructions and results
 
 No other expansion hardware is required.
@@ -43,7 +43,7 @@ In the text-based output, a single space corresponds to 1 time unit.
 
 ### Using a Different I/O Port
 
-To use a Digital I/O card configured for port `P` instead of port 0, replace every `INP(0)` in `morse_sender.bas` with `INP(P)`, and replace every `OUT 0, value` statement with `OUT P, value`. For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
+To use a Digital I/O card configured for port `P` instead of port 1, replace every `INP(1)` in `morse_sender.bas` with `INP(P)`, and replace every `OUT 1, value` statement with `OUT P, value`. For example, for a card configured for port 0, use `INP(0)` and `OUT 0, value`.
 
 `morse_translate.bas` does not access the Digital I/O card directly, so it requires no change.
 

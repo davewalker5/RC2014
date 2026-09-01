@@ -11,7 +11,7 @@ The terminal-only program requires:
 - An RC2014 Mini II running BASIC
 - A serial terminal for instructions and results
 
-The Digital I/O program additionally requires an RC2014 Digital I/O card configured to use port 0.
+The Digital I/O program additionally requires an RC2014 Digital I/O card configured to use port 1.
 
 ## Program Files
 
@@ -40,7 +40,7 @@ Both versions deliberately accept values from 0 through 255 so every result fits
 
 The output routine uses repeated division and the digit string `0123456789ABCDEF`. It does not rely on dialect-specific binary, octal, or hexadecimal formatting functions.
 
-To use a Digital I/O card configured for a port other than 0, change `IP = 0` on line 20 of `base_converter_io.bas` to the required port number.
+To use a Digital I/O card configured for a port other than 0, change `IP = 1` on line 20 of `base_converter_io.bas` to the required port number.
 
 ## References
 

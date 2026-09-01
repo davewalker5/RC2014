@@ -1,5 +1,5 @@
 10 REM Configuration
-20 LET IP = 0 : REM Digital I/O port
+20 LET IP = 1 : REM Digital I/O port
 30 LET MX = 255 : REM Largest value accepted
 40 LET DG$ = "0123456789ABCDEF"
 100 REM Display instructions

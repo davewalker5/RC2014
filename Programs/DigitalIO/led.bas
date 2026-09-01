@@ -16,7 +16,7 @@
 300 REM Display the pattern repeatedly, with a pause
 310 REM between each byte
 320 FOR I = 1 TO N
-330 OUT 0, LED(I)
+330 OUT 1, LED(I)
 340 FOR X = 1 TO 150 : NEXT X
 350 NEXT I
 360 GOTO 320

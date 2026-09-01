@@ -1,5 +1,5 @@
 10 REM Larson scanner - three-LED eye sweeps left and right
-20 OP = 0 : DL = 100
+20 OP = 1 : DL = 100
 30 PRINT "LARSON SCANNER"
 40 PRINT "DEFAULT DELAY IS "; DL
 50 INPUT "DELAY LOOP COUNT (1-5000)"; D

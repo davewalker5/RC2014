@@ -9,7 +9,7 @@ The terminal-only program requires:
 - An RC2014 Mini II running BASIC
 - A serial terminal for instructions and results
 
-The Digital I/O program additionally requires an RC2014 Digital I/O card configured to use port 0.
+The Digital I/O program additionally requires an RC2014 Digital I/O card configured to use port 1.
 
 ## Program Files
 
@@ -51,7 +51,7 @@ Buttons and LEDs are separate electrical lines, so a button and an LED may use t
 
 Microsoft BASIC on the RC2014 does not provide an `XOR` keyword. For one-bit inputs the programs calculate XOR as `(A OR B) - (A AND B)`. NOT is calculated as `1 - A` or `1 - B` so its result remains the Boolean value 0 or 1.
 
-To use a Digital I/O card configured for a port other than 0, change `IP = 0` on line 20 of `logic_io.bas` to the required port number.
+To use a Digital I/O card configured for a port other than 1, change `IP = 1` on line 20 of `logic_io.bas` to the required port number.
 
 ## References
 
