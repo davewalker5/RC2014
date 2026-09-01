@@ -38,24 +38,24 @@
 610 PRINT "You completed all "; MX; " rounds!"
 620 GOSUB 5500
 700 REM Ask whether to play again
-710 OUT 0, 0
+710 OUT 1, 0
 720 PRINT ""
 730 PRINT "Play again? (Y/N) ";
 740 INPUT M$
 750 IF M$ = "Y" OR M$ = "y" THEN GOTO 200
 760 IF M$ <> "N" AND M$ <> "n" THEN GOTO 730
-770 OUT 0, 0
+770 OUT 1, 0
 780 END
 1000 REM Wait for a start press and vary the random sequence
 1010 PRINT "Press any button on the digital I/O card to start"
 1020 LET SD = 1
-1030 LET K = INP(0)
+1030 LET K = INP(1)
 1040 IF K <> 0 THEN GOTO 1080
 1050 LET SD = SD + 1
 1060 IF SD > 100 THEN LET SD = 1
 1070 GOTO 1030
 1080 REM Wait for all buttons to be released
-1090 LET X = INP(0) : IF X <> 0 THEN GOTO 1090
+1090 LET X = INP(1) : IF X <> 0 THEN GOTO 1090
 1100 REM Advance RND by an amount based on the start delay
 1110 FOR I = 1 TO SD
 1120 LET R = RND(1)
@@ -67,50 +67,50 @@
 2020 RETURN
 3000 REM Display the sequence from 1 to RN
 3010 PRINT "Round "; RN ; ": Sequence length " ; RN ; 
-3020 OUT 0, 0
+3020 OUT 1, 0
 3030 LET U = GP : GOSUB 6000
 3040 FOR I = 1 TO RN
-3050 OUT 0, SQ(I)
+3050 OUT 1, SQ(I)
 3060 LET U = DL : GOSUB 6000
-3070 OUT 0, 0
+3070 OUT 1, 0
 3080 LET U = GP : GOSUB 6000
 3090 NEXT I
 3100 RETURN
 4000 REM Read one valid button press into K
 4010 LET IV = 0
-4020 LET K = INP(0) : IF K = 0 THEN GOTO 4020
+4020 LET K = INP(1) : IF K = 0 THEN GOTO 4020
 4030 IF K = 1 THEN GOTO 4110
 4040 IF K = 2 THEN GOTO 4110
 4050 IF K = 4 THEN GOTO 4110
 4060 IF K = 8 THEN GOTO 4110
 4070 REM More than one or an unsupported button was pressed
 4080 LET IV = 1
-4090 OUT 0, 255 : GOTO 4110
+4090 OUT 1, 255 : GOTO 4110
 4110 REM Wait for all buttons to be released
-4120 LET X = INP(0) : IF X <> 0 THEN GOTO 4120
-4130 OUT 0, 0
+4120 LET X = INP(1) : IF X <> 0 THEN GOTO 4120
+4130 OUT 1, 0
 4140 LET U = DB : GOSUB 6000
 4150 RETURN
 5000 REM Display the incorrect-answer pattern three times
 5010 FOR I = 1 TO 3
-5020 OUT 0, 255
+5020 OUT 1, 255
 5030 LET U = DL : GOSUB 6000
-5040 OUT 0, 0
+5040 OUT 1, 0
 5050 LET U = GP : GOSUB 6000
 5060 NEXT I
 5070 RETURN
 5500 REM Display the completed-game pattern twice
 5510 FOR J = 1 TO 2
 5520 FOR I = 0 TO 3
-5530 OUT 0, 2 ^ I
+5530 OUT 1, 2 ^ I
 5540 LET U = GP : GOSUB 6000
 5550 NEXT I
 5560 FOR I = 3 TO 0 STEP -1
-5570 OUT 0, 2 ^ I
+5570 OUT 1, 2 ^ I
 5580 LET U = GP : GOSUB 6000
 5590 NEXT I
 5600 NEXT J
-5610 OUT 0, 0
+5610 OUT 1, 0
 5620 RETURN
 6000 REM Wait for U approximate delay units
 6010 FOR Z = 1 TO U : NEXT Z

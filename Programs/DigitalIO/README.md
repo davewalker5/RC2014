@@ -11,7 +11,7 @@ The programs demonstrate direct input and output and include an LED Animation Su
 The programs require:
 
 - An RC2014 Mini II running BASIC
-- An RC2014 Digital I/O card configured to use port 0
+- An RC2014 Digital I/O card configured to use port 1
 - A serial terminal for instructions and results
 
 No other expansion hardware is required.
@@ -53,14 +53,14 @@ The Digital I/O card is an additional kit plugging into the 40-pin bus header of
 
 ### Using a Different I/O Port
 
-To use a Digital I/O card configured for port `P` instead of port 0:
+To use a Digital I/O card configured for port `P` instead of port 1:
 
-- In `keypress.bas`, replace every `INP(0)` with `INP(P)`, and replace `OUT 0, B` with `OUT P, B`.
-- In `led.bas`, replace `OUT 0, LED(I)` with `OUT P, LED(I)`.
-- In each LED Animation Suite file, change `OP = 0` on line 20 to the required port number.
+- In `keypress.bas`, replace every `INP(1)` with `INP(P)`, and replace `OUT 1, B` with `OUT P, B`.
+- In `led.bas`, replace `OUT 1, LED(I)` with `OUT P, LED(I)`.
+- In each LED Animation Suite file, change `OP = 1` on line 20 to the required port number.
 - `pattern.bas` does not access the Digital I/O card directly, so it requires no change.
 
-For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
+For example, for a card configured for port 0, use `INP(0)` and `OUT 0, value`.
 
 ## References
 

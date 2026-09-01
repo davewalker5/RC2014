@@ -11,7 +11,7 @@ Memory is a memory game for the RC2014 Digital I/O card. The computer displays a
 The program requires:
 
 - An RC2014 Mini II running BASIC
-- An RC2014 Digital I/O card configured to use port 0
+- An RC2014 Digital I/O card configured to use port 1
 - A serial terminal for instructions and scores
 
 The four buttons and LEDs whose byte values are 1, 2, 4, and 8 are used. These correspond to the lowest four bits of the Digital I/O port.
@@ -66,7 +66,7 @@ The delay values are BASIC loop counts rather than exact units of time. They may
 
 ### Using a Different I/O Port
 
-To use a Digital I/O card configured for port `P` instead of port 0, replace every `INP(0)` in `memory.bas` with `INP(P)`, and replace every `OUT 0, value` statement with `OUT P, value`. For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
+To use a Digital I/O card configured for port `P` instead of port 1, replace every `INP(1)` in `memory.bas` with `INP(P)`, and replace every `OUT 1, value` statement with `OUT P, value`. For example, for a card configured for port 0, use `INP(0)` and `OUT 0, value`.
 
 ## Acknowledgements
 

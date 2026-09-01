@@ -1,5 +1,5 @@
 10 REM Pseudo-random patterns from an eight-bit LFSR
-20 OP = 0 : DL = 100
+20 OP = 1 : DL = 100
 30 PRINT "PSEUDO-RANDOM LED PATTERNS"
 40 PRINT "DEFAULT DELAY IS "; DL
 50 INPUT "DELAY LOOP COUNT (1-5000)"; D

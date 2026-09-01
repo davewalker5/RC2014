@@ -7,7 +7,7 @@ Reflex games for the RC2014 with Digital I/O card.
 Both programs require:
 
 - An RC2014 Mini II running BASIC
-- An RC2014 Digital I/O card configured to use port 0
+- An RC2014 Digital I/O card configured to use port 1
 - A serial terminal for instructions and scores
 
 All eight buttons and LEDs are used. Each LED has a corresponding button with the same byte value: 1, 2, 4, 8, 16, 32, 64, or 128. Press only one button at a time.
@@ -80,12 +80,12 @@ Timing is intentionally described as approximate because the standard RC2014 Min
 
 ### Using a Different I/O Port
 
-To use a Digital I/O card configured for port `P` instead of port 0, make the following changes in both `reaction_timer.bas` and `button_reflex.bas`:
+To use a Digital I/O card configured for port `P` instead of port 1, make the following changes in both `reaction_timer.bas` and `button_reflex.bas`:
 
-- Replace every `INP(0)` with `INP(P)`.
-- Replace every `OUT 0, value` statement with `OUT P, value`.
+- Replace every `INP(1)` with `INP(P)`.
+- Replace every `OUT 1, value` statement with `OUT P, value`.
 
-For example, for a card configured for port 1, use `INP(1)` and `OUT 1, value`.
+For example, for a card configured for port 0, use `INP(0)` and `OUT 0, value`.
 
 ## Reference
 

@@ -12,7 +12,7 @@
 180 PRINT "  Number 3 - Value 8   - generate a random byte"
 190 PRINT "  Number 7 - Value 128 - quit"
 200 PRINT ""
-210 OUT 0, 0
+210 OUT 1, 0
 300 REM Wait for a mode button and use its timing as entropy
 310 PRINT "Press a button to choose the mode";
 320 GOSUB 1000
@@ -42,40 +42,40 @@
 620 LET V = R : PRINT "D8: "; R
 630 GOTO 700
 640 LET V = R : PRINT "BYTE: "; R
-700 OUT 0, V
+700 OUT 1, V
 710 GOTO 300
 800 REM Clear the LEDs before leaving the program
-810 OUT 0, 0
+810 OUT 1, 0
 820 PRINT "Done"
 830 END
 1000 REM Wait for one button press and return its byte value in K
 1010 LET SD = 1
-1020 LET K = INP(0)
+1020 LET K = INP(1)
 1030 IF K <> 0 THEN GOTO 1070
 1040 LET SD = SD + 1
 1050 IF SD > 100 THEN LET SD = 1
 1060 GOTO 1020
-1070 LET X = INP(0) : IF X <> 0 THEN GOTO 1070
+1070 LET X = INP(1) : IF X <> 0 THEN GOTO 1070
 1080 LET U = DB : GOSUB 4000
 1090 RETURN
 2000 REM Show a rolling animation across all eight LEDs
 2010 PRINT "ROLLING..."
 2020 FOR J = 1 TO 2
 2030 FOR I = 0 TO 7
-2040 OUT 0, 2 ^ I
+2040 OUT 1, 2 ^ I
 2050 LET U = DL : GOSUB 4000
 2060 NEXT I
 2070 FOR I = 7 TO 0 STEP -1
-2080 OUT 0, 2 ^ I
+2080 OUT 1, 2 ^ I
 2090 LET U = DL : GOSUB 4000
 2100 NEXT I
 2110 NEXT J
-2120 OUT 0, 0
+2120 OUT 1, 0
 2130 RETURN
 3000 REM Flash all LEDs to indicate an invalid button choice
-3010 OUT 0, 255
+3010 OUT 1, 255
 3020 LET U = DL * 3 : GOSUB 4000
-3030 OUT 0, 0
+3030 OUT 1, 0
 3040 RETURN
 4000 REM Wait for U approximate delay units
 4010 FOR Z = 1 TO U : NEXT Z

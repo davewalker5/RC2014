@@ -1,5 +1,5 @@
 10 REM Configuration
-20 LET IP = 0 : REM Digital I/O port
+20 LET IP = 1 : REM Digital I/O port
 30 LET PV = -1 : REM Previous input state
 40 REM Display instructions and LED assignments
 50 PRINT ""
