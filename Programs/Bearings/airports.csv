@@ -1,0 +1,20 @@
+IATA,ICAO,Name,Latitude,Longitude,Distance (nm)
+LHR,EGLL,London Heathrow Airport,51.470748,-0.459909,0.077
+LCY,EGLC,London City Airport,51.505299,0.055278,19.449
+LGW,EGKK,London Gatwick Airport,51.148744,-0.185739,21.929
+LTN,EGGW,London Luton Airport,51.874699,-0.368333,24.511
+STN,EGSS,London Stansted Airport,51.884998,0.235,35.948
+SOU,EGHI,Southampton Airport,50.950298,-1.3568,45.921
+BOH,EGHH,Bournemouth Airport,50.780483,-1.839576,66.419
+BHX,EGBB,Birmingham Airport,52.453899,-1.74803,75.822
+BRS,EGGD,Bristol Airport,51.382326,-2.716453,84.564
+EMA,EGNX,East Midlands Airport,52.8311,-1.32806,87.694
+MAN,EGCC,Manchester Airport,53.349375,-2.279521,130.970
+LPL,EGGP,Liverpool John Lennon Airport,53.334863,-2.849637,142.034
+LBA,EGNM,Leeds Bradford Airport,53.865898,-1.66057,150.285
+CDG,LFPG,Charles De Gaulle International Airport,49.00896,2.554117,187.737
+BRU,EBBR,Brussels Airport,50.901402,4.48444,189.220
+AMS,EHAM,Amsterdam Airport Schiphol,52.308601,4.76389,200.026
+EIN,EHEH,Eindhoven Airport,51.4500999451,5.37452983856,218.280
+NCL,EGNT,Newcastle International Airport,55.037958,-1.689577,218.669
+DUB,EIDW,Dublin Airport,53.428713,-6.262121,242.523

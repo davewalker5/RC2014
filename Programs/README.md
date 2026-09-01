@@ -4,6 +4,14 @@ A growing collection of programs for the RC2014, ranging from games and
 simulations to mathematics, computing demonstrations, hardware experiments
 and practical utilities.
 
+## Aviation
+
+
+| Folder      | Language | Description                                                                       |
+| ----------- | -------- | --------------------------------------------------------------------------------- |
+| Bearings    | BASIC    | Calculate initial bearings and airport-to-airport bearings and distances          |
+| GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports |
+
 ## Games & Simulations
 
 | Folder        | Language | Description                                                                  |
