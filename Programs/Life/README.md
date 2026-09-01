@@ -51,8 +51,6 @@ For display, an entire row is assembled in a string before it is printed. This c
 
 There is no artificial delay between generations. The actual update rate depends on the RC2014 and BASIC configuration. The program stops early when a generation is identical to the preceding generation. Oscillators continue until the requested generation count is reached.
 
-Final timing, terminal behaviour, and memory use should be verified on the physical RC2014 Mini II.
-
 ## Acknowledgements and Attribution
 
 The Game of Life was devised by British mathematician John Horton Conway and introduced to a wide audience by Martin Gardner in his October 1970 *Mathematical Games* column in *Scientific American*. This program gratefully acknowledges Conway's creation and Gardner's account.
