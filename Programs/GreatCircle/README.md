@@ -48,8 +48,6 @@ Distance is $3440.065c$ nautical miles, using a mean Earth radius of 3440.065 na
 
 Small floating-point rounding errors can place the haversine intermediate just outside its valid range of zero to one. Both programs clamp it to that range before calculating the angular distance.
 
-The programs still require transfer and verification on a physical RC2014 Mini II, including a final check of available memory.
-
 ## References
 
 - [Great-circle distance](https://en.wikipedia.org/wiki/Great-circle_distance), Wikipedia
