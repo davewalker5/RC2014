@@ -76,7 +76,7 @@ All delay and response values are BASIC loop or polling counts, not milliseconds
 - Multiple simultaneous buttons produce a byte value different from the single target and are treated as a wrong response.
 - Both programs clear all LEDs before replay and before exiting.
 
-Timing is intentionally described as approximate because the standard RC2014 Mini II configuration does not provide an accurate application timer to BASIC. Final delay calibration and complete verification should be performed on the physical machine.
+Timing is intentionally described as approximate because the standard RC2014 Mini II configuration does not provide an accurate application timer to BASIC.
 
 ### Using a Different I/O Port
 
