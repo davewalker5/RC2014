@@ -8,7 +8,7 @@ and practical utilities.
 
 | Folder         | Language | Description                                                                       |
 | -------------- | -------- | --------------------------------------------------------------------------------- |
-| Atmosphere     | BASIC    | Calculate ISA conditions and estimate pressure altitude                           |
+| Atmosphere     | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                 |
 | Bearings       | BASIC    | Calculate initial bearings and airport-to-airport bearings and distances          |
 | GreatCircle    | BASIC    | Calculate great circle distances manually or from a position to selected airports |
 | WindComponents | BASIC    | Calculate headwind, tailwind, and crosswind components                            |
@@ -32,7 +32,7 @@ and practical utilities.
 
 | Folder      | Language | Description                                                                       |
 | ----------- | -------- | --------------------------------------------------------------------------------- |
-| Atmosphere  | BASIC    | Calculate ISA conditions and estimate pressure altitude                           |
+| Atmosphere  | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                 |
 | Automaton   | BASIC    | Nearest-neighbour 1-D cellular automaton                                          |
 | Barycenter  | BASIC    | Calculate the barycenter for a simple two-body problem                            |
 | Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                         |
