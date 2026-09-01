@@ -1,6 +1,6 @@
 # Atmospheric Calculators
 
-Calculate International Standard Atmosphere (ISA) conditions for an altitude, or estimate pressure altitude from field elevation and QNH.
+Calculate International Standard Atmosphere (ISA) conditions, pressure altitude, or density altitude.
 
 This program is educational and recreational. It is not suitable for operational flight planning, navigation, or aircraft performance calculations.
 
@@ -15,10 +15,11 @@ No additional hardware is required.
 
 ## Program Files
 
-| File                    | Description                                                |
-| ----------------------- | ---------------------------------------------------------- |
-| `isa_atmosphere.bas`    | Calculates standard temperature, pressure, and air density |
-| `pressure_altitude.bas` | Estimates pressure altitude from field elevation and QNH   |
+| File                    | Description                                                    |
+| ----------------------- | -------------------------------------------------------------- |
+| `density_altitude.bas`  | Estimates density altitude from pressure altitude and temperature |
+| `isa_atmosphere.bas`    | Calculates standard temperature, pressure, and air density     |
+| `pressure_altitude.bas` | Estimates pressure altitude from field elevation and QNH       |
 
 ## Running the Programs
 
@@ -52,6 +53,18 @@ Pressure altitude is higher than field elevation when QNH is below standard pres
 
 Pilots use pressure altitude when calculating aircraft performance and when referring to flight levels with the standard pressure setting selected. It also provides the starting point for density altitude, which additionally accounts for non-standard temperature. Actual aircraft performance depends on the applicable aircraft data and current conditions, not this educational calculator.
 
+### Density Altitude
+
+Density altitude expresses actual air density as an equivalent altitude in the standard atmosphere. In practical terms, it describes the altitude at which an aircraft would experience similar air density under ISA conditions.
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Atmosphere/density_altitude.png" alt="Density Altitude Calculation" width="600">
+
+Enter pressure altitude in feet between -2,000 and 36,089, followed by outside-air temperature in degrees Celsius between -80 and 60. The program displays the ISA temperature at that pressure altitude and the estimated density altitude, rounded to the nearest foot.
+
+When the outside-air temperature is above ISA temperature, density altitude is higher than pressure altitude because warm air is less dense. When it is below ISA temperature, density altitude is lower. A high density altitude can reduce aerodynamic and engine performance, making take-off runs longer and climb performance poorer.
+
+For example, at a pressure altitude of 5,000 feet the ISA temperature is approximately 5.1 degrees Celsius. If the actual outside-air temperature is 25 degrees Celsius, the calculated density altitude is approximately 7,389 feet. The aircraft therefore encounters air density resembling ISA conditions at a considerably higher altitude.
+
 ## Mathematics
 
 ### ISA Atmosphere
@@ -84,6 +97,18 @@ $$h_p = E + (1013.25 - Q) \times 29.53$$
 
 Standard pressure is $1013.25\ \mathrm{hPa}$. A lower QNH therefore adds to pressure altitude, while a higher QNH subtracts from it.
 
+### Density Altitude
+
+The ISA temperature $T_{ISA}$ at pressure altitude $h_p$ in feet is estimated using the standard tropospheric lapse rate of approximately $1.9812$ degrees Celsius per 1,000 feet:
+
+$$T_{ISA} = 15 - 0.0019812h_p$$
+
+For outside-air temperature $T_{OAT}$ in degrees Celsius, the common rule-of-thumb density-altitude formula is:
+
+$$h_d = h_p + 120(T_{OAT} - T_{ISA})$$
+
+Each degree Celsius above ISA temperature therefore adds approximately 120 feet to density altitude. Each degree below ISA subtracts approximately 120 feet.
+
 ## Verification
 
 ### ISA Atmosphere
@@ -115,6 +140,20 @@ Representative values calculated from the documented approximation are:
 
 Results are rounded to the nearest foot.
 
+### Density Altitude
+
+Representative values calculated from the documented approximation are:
+
+| Pressure altitude (feet) | Outside temperature (C) | ISA temperature (C) | Density altitude (feet) |
+| ------------------------ | ----------------------- | ------------------- | ----------------------- |
+| 0                        | 15                      | 15.0                | 0                       |
+| 0                        | 30                      | 15.0                | 1,800                   |
+| 5,000                    | 25                      | 5.1                 | 7,389                   |
+| 10,000                   | 0                       | -4.8                | 10,577                  |
+| 10,000                   | -20                     | -4.8                | 8,177                   |
+
+Results are rounded to the nearest foot. The displayed ISA temperature is rounded to the nearest 0.1 degree Celsius after the density-altitude calculation.
+
 ## Implementation Notes
 
 ### ISA Atmosphere
@@ -128,6 +167,12 @@ ISA values describe an idealised standard atmosphere, not observed weather. The 
 The pressure-altitude calculation is a rule-of-thumb estimate based on QNH, not an exact conversion of measured station pressure through the full ISA model. It assumes the entered pressure is a correctly determined QNH setting and does not account for non-standard temperature, humidity, or local weather variation.
 
 The accepted input limits catch likely entry errors; they do not define safe aircraft or altimeter operating limits.
+
+### Density Altitude
+
+The program uses a widely taught rule-of-thumb rather than calculating air density directly from pressure, temperature, and humidity. It does not account for humidity and should not replace an aircraft flight manual, approved performance data, or an operational flight-planning method.
+
+The ISA temperature calculation is limited to the troposphere. The accepted temperature and altitude ranges catch likely input errors and are not aircraft operating limits.
 
 ## References
 
