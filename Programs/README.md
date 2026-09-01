@@ -6,12 +6,12 @@ and practical utilities.
 
 ## Aviation
 
-
 | Folder         | Language | Description                                                                       |
 | -------------- | -------- | --------------------------------------------------------------------------------- |
 | Bearings       | BASIC    | Calculate initial bearings and airport-to-airport bearings and distances          |
 | GreatCircle    | BASIC    | Calculate great circle distances manually or from a position to selected airports |
 | WindComponents | BASIC    | Calculate headwind, tailwind, and crosswind components                            |
+| WindCorrection | BASIC    | Calculate wind correction, ground track, and groundspeed                          |
 
 ## Games & Simulations
 
