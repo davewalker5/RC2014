@@ -6,13 +6,14 @@ and practical utilities.
 
 ## Aviation
 
-| Folder         | Language | Description                                                                       |
-| -------------- | -------- | --------------------------------------------------------------------------------- |
-| Atmosphere     | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                 |
-| Bearings       | BASIC    | Calculate initial bearings and airport-to-airport bearings and distances          |
-| GreatCircle    | BASIC    | Calculate great circle distances manually or from a position to selected airports |
-| WindComponents | BASIC    | Calculate headwind, tailwind, and crosswind components                            |
-| WindCorrection | BASIC    | Calculate wind correction, ground track, and groundspeed                          |
+| Folder            | Language | Description                                                                       |
+| ----------------- | -------- | --------------------------------------------------------------------------------- |
+| AviationConverter | BASIC    | Convert common aviation distances, altitudes, speeds, and temperatures            |
+| Atmosphere        | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                 |
+| Bearings          | BASIC    | Calculate initial bearings and airport-to-airport bearings and distances          |
+| GreatCircle       | BASIC    | Calculate great circle distances manually or from a position to selected airports |
+| WindComponents    | BASIC    | Calculate headwind, tailwind, and crosswind components                            |
+| WindCorrection    | BASIC    | Calculate wind correction, ground track, and groundspeed                          |
 
 ## Games & Simulations
 
@@ -55,9 +56,10 @@ and practical utilities.
 
 ## Utilities & Converters
 
-| Folder        | Language | Description                                                                                 |
-| ------------- | -------- | ------------------------------------------------------------------------------------------- |
-| ANSI          | BASIC    | Test program to test support for ANSI codes in the current terminal emulator                |
-| BaseConverter | BASIC    | Converts byte values between binary, octal, decimal and hexadecimal                         |
-| MorseCode     | BASIC    | Morse Code translator and separate sender to send morse code to the Digital IO card         |
-| RomanNumerals | BASIC    | Given a Roman numeral representing a number between 1 and 3999, show the decimal equivalent |
+| Folder            | Language | Description                                                                                 |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------- |
+| ANSI              | BASIC    | Test program to test support for ANSI codes in the current terminal emulator                |
+| AviationConverter | BASIC    | Convert common aviation distances, altitudes, speeds, and temperatures                      |
+| BaseConverter     | BASIC    | Converts byte values between binary, octal, decimal and hexadecimal                         |
+| MorseCode         | BASIC    | Morse Code translator and separate sender to send morse code to the Digital IO card         |
+| RomanNumerals     | BASIC    | Given a Roman numeral representing a number between 1 and 3999, show the decimal equivalent |
