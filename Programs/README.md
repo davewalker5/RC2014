@@ -50,9 +50,10 @@ and practical utilities.
 
 ## Hardware & Digital I/O
 
-| Folder    | Language | Description                                            |
-| --------- | -------- | ------------------------------------------------------ |
-| DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card |
+| Folder    | Language | Description                                             |
+| --------- | -------- | ------------------------------------------------------- |
+| DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card  |
+| LCD       | BASIC    | A set of programs that use the RC2014 LCD Driver Module |
 
 ## Utilities & Converters
 
