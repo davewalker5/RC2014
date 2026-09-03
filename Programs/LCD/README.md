@@ -16,6 +16,7 @@ The programs require:
 | ---------------------- | --------------------------------------------------------------------- |
 | `static_message.bas`   | Displays a fixed message across both lines                            |
 | `scrolling_ticker.bas` | Scrolls a message from right to left across the first line repeatedly |
+| `hardware_ticker.bas`  | Scrolls a message using the LCD controller's hardware display shift   |
 | `custom_glyph.bas`     | Demonstrates defining and displaying a custom 5-by-8 glyph            |
 | `animated_glyph.bas`   | Animates a two-frame custom glyph in a fixed display position         |
 | `moving_glyph.bas`     | Moves an animated two-frame custom glyph across the first line        |
@@ -33,6 +34,14 @@ Run `static_message.bas`, then enter the message to display when prompted. The p
 Run `scrolling_ticker.bas`, then enter the message to scroll when prompted. The message enters from the right of the first line, moves left one character at a time, and disappears at the left. It then starts again and continues until the program is interrupted.
 
 The delay between movements defaults to 100 loop iterations. Change `DL` on line 60 of `scrolling_ticker.bas` to adjust the speed: a larger value scrolls more slowly, while a smaller value scrolls more quickly.
+
+### Hardware News Ticker
+
+Run `hardware_ticker.bas` to place a message in the LCD controller's hidden display memory and reveal it using hardware display-shift commands. Unlike `scrolling_ticker.bas`, it does not redraw every visible character for each frame.
+
+Set `DR` on line 70 to configure the direction. Use `DR=1` to make the text enter from the right and move left, or `DR=-1` to make it enter from the left and move right. Change `DL` on line 60 to adjust the speed.
+
+The program assumes the usual 40 display-memory positions per controller line. With a 16-character visible display, messages are therefore limited to 24 characters. Change `W` on line 40 for another visible width. The second display line should be left blank because a hardware display shift affects the entire display rather than one line independently.
 
 ### Custom Glyphs
 
@@ -84,6 +93,10 @@ Character LCD controllers do not normally place the second display line immediat
 ## Scrolling News Ticker
 
 The scrolling ticker sends command 128 (`0x80`) before each frame to return to the start of the first line. It writes exactly `W` characters per frame, adding spaces before and after the message so the text enters and leaves a blank display cleanly. Rewriting the visible line also avoids relying on the LCD controller's internal display-shift behaviour, which can vary with display geometry.
+
+## Hardware News Ticker
+
+The hardware ticker stores its message outside the visible window in the first line's 40-character display-memory range. Command 24 (`0x18`) shifts the display left and command 28 (`0x1C`) shifts it right. Command 2 returns the shifted display window home between repetitions without rewriting the message. Hardware shifting moves both display lines together, and its address behaviour may vary on displays with a different geometry or controller implementation.
 
 ## Custom Glyphs
 
