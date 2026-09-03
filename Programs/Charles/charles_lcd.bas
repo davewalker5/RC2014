@@ -1,0 +1,329 @@
+10 REM Charles the Feisty Octopus - Phase 6 LCD version
+20 REM LCD mood, comments, animation, and terminal interaction
+30 LET DL = 50 : REM Approximate delay between animation frames
+40 LET DI = 2 : REM Simulation ticks between action prompts
+50 LET MI = 10 : LET SI = 15 : REM Message and event intervals
+60 LET NH = 160 : REM Hunger threshold
+70 LET NB = 80 : REM Boredom threshold
+80 LET NE = 80 : REM Low-energy threshold
+90 LET CH = 200 : REM Cross hunger threshold
+100 LET CM = 80 : LET FI = 180 : REM Cross and feisty thresholds
+110 PRINT
+120 PRINT "CHARLES THE FEISTY OCTOPUS"
+130 PRINT "=========================="
+140 PRINT
+170 PRINT "FEED, PLAY, PET OR ANNOY CHARLES. ";
+180 PRINT "CHOOSE WAIT TO LET TIME PASS."
+190 PRINT "CHARLES LIVES ON THE LCD. USE DEBUG OR QUIT."
+200 PRINT
+210 DIM SN$(6), ME$(6, 3)
+220 REM Each mood record contains its name followed by three messages
+230 DATA "CONTENT","THIS IS NICE","CHARLES HAPPY","ALL IS WELL"
+240 DATA "HUNGRY","NEED CRAB","FEED ME","WHERE IS CRAB?"
+250 DATA "BORED","CHARLES BORED","DO SOMETHING","PLAY WITH ME"
+260 DATA "SLEEPY","CHARLES SLEEPY","ZZZ...","NAP REQUIRED"
+270 DATA "CROSS","NO.","GO AWAY","CHARLES CROSS"
+280 DATA "FEISTY","YOU ARE A FISH","OCTOPUS WINS","ABSOLUTELY NOT"
+290 LET LR = 218 : LET LD = 219 : LET GP = 15 : LET MD = -1
+300 REM Initialise Charles's needs on a zero-to-255 scale
+310 LET HU = 40 : REM Hunger: higher means hungrier
+320 LET HA = 180 : REM Happiness: higher means happier
+330 LET EN = 220 : REM Energy: higher means more energetic
+340 LET BO = 20 : REM Boredom: higher means more bored
+350 LET IR = 20 : REM Irritation: higher means more irritated
+360 LET TK = 0 : REM Simulation tick
+370 LET DC = 0 : REM Display interval counter
+380 LET EC = 0 : REM Energy interval counter
+390 LET MC = 0 : REM Message interval counter
+400 LET PS = 0 : REM Mood shown with the previous message
+410 LET LS = 0 : REM Mood used for the previous message choice
+420 LET LM = 0 : REM Previous message number
+430 LET SC = 0 : REM Spontaneous event interval counter
+440 LET LA = 0 : LET RP = 0 : LET NA = 0 : LET AD = 0
+450 LET BF = 10 + INT(RND(1) * 21) : REM Base feistiness
+460 LET PT = 2 + INT(RND(1) * 3) : REM Patience with repeats
+470 LET AP = 5 + INT(RND(1) * 16) : REM Appetite bias
+480 LET SO = INT(RND(1) * 21) : LET CI = 120 - BF
+490 LET GF = 0 : LET GC = 0 : LET DM = 0 : REM LCD animation state
+500 GOSUB 3500
+510 GOSUB 5300
+520 GOSUB 4000
+530 GOSUB 2500
+540 GOSUB 5000
+600 REM Main simulation loop
+610 GOSUB 1000
+620 LET TK = TK + 1
+630 LET SC = SC + 1
+640 IF SC < SI THEN GOTO 680
+650 LET SC = 0
+660 GOSUB 3000
+670 GOSUB 8400
+680 GOSUB 4000
+690 LET DC = DC + 1
+700 IF DC < DI THEN GOTO 750
+710 LET DC = 0
+730 GOSUB 7000
+750 LET MC = MC + 1
+760 IF MO <> PS THEN GOTO 790
+770 IF MC < MI THEN GOTO 810
+790 GOSUB 5000
+800 LET MC = 0
+810 GOSUB 6000
+820 GOTO 600
+1000 REM Update Charles's internal state for one simulation tick
+1010 LET HU = HU + 2 + INT(RND(1) * 3)
+1020 IF HU > 255 THEN LET HU = 255
+1030 LET BO = BO + 1 + INT(RND(1) * 3)
+1040 IF BO > 255 THEN LET BO = 255
+1050 LET EC = EC + 1
+1060 IF EC < 2 THEN GOTO 1100
+1070 LET EC = 0
+1080 LET EN = EN - 2 - INT(RND(1) * 3)
+1090 IF EN < 0 THEN LET EN = 0
+1100 REM Happiness tends to neutral, then unmet needs reduce it
+1110 IF HA > 128 THEN LET HA = HA - 1
+1120 IF HA < 128 AND HU < 120 AND BO < 120 THEN LET HA = HA + 1
+1130 IF HU > 140 THEN LET HA = HA - 2
+1140 IF BO > 140 THEN LET HA = HA - 1
+1150 IF HA < 0 THEN LET HA = 0
+1160 REM Irritation fades unless prolonged hunger makes it rise
+1170 IF HU <= 180 AND IR > 0 THEN LET IR = IR - 1
+1180 IF HU > 180 THEN LET IR = IR + 2
+1190 IF IR > 255 THEN LET IR = 255
+1200 LET AD = AD + 1
+1210 IF AD < 10 THEN RETURN
+1220 LET AD = 0
+1230 IF NA > 0 THEN LET NA = NA - 1
+1240 RETURN
+2000 REM Display a one-shot state, memory, and personality table
+2010 PRINT
+2020 PRINT "CHARLES STATUS:"
+2025 PRINT
+2030 PRINT "VARIABLE       VALUE"
+2040 PRINT "-------------- ----------"
+2050 PRINT "MOOD           "; SN$(MO)
+2060 PRINT "TICK          "; TK
+2070 PRINT "HUNGER        "; HU
+2080 PRINT "HAPPINESS     "; HA
+2090 PRINT "ENERGY        "; EN
+2100 PRINT "BOREDOM       "; BO
+2110 PRINT "IRRITATION    "; IR
+2120 PRINT
+2130 PRINT "MEMORY:"
+2135 PRINT "-------"
+2140 PRINT "LAST ACTION   "; LA
+2150 PRINT "REPEATS       "; RP
+2160 PRINT "RECENT ANNOY  "; NA
+2170 PRINT
+2180 PRINT "PERSONALITY:"
+2185 PRINT "------------"
+2190 PRINT "FEISTINESS    "; BF
+2200 PRINT "PATIENCE      "; PT
+2210 PRINT "APPETITE      "; AP
+2220 PRINT "SOCIABILITY   "; SO
+2230 PRINT "CROSS LEVEL   "; CI
+2235 PRINT
+2240 RETURN
+2500 REM Display Charles's mood and current glyph on LCD line one
+2510 GOSUB 5500
+2520 RETURN
+3000 REM Trigger one occasional, pseudo-random spontaneous event
+3010 LET EV = 1 + INT(RND(1) * 4)
+3030 IF EV = 1 THEN LET BO = BO - 10 : GOTO 3080
+3040 IF EV = 2 THEN LET IR = IR + 5 + INT(BF / 4) : GOTO 3100
+3050 IF EV = 3 THEN LET HU = HU - 10 : GOTO 3120
+3060 LET EN = EN + 10 : LET BO = BO - 5
+3070 LET TX$ = "I DID A FLIP" : GOSUB 5600 : RETURN
+3080 LET HA = HA + 3
+3090 LET TX$ = "HMM...INTERESTING" : GOSUB 5600 : RETURN
+3100 LET HA = HA - 2
+3110 LET TX$ = "I DISAPPROVE" : GOSUB 5600 : RETURN
+3120 LET TX$ = "A TINY CRAB!" : GOSUB 5600 : RETURN
+3500 REM Read mood names and their context-sensitive messages
+3510 FOR RS = 1 TO 6
+3520 READ SN$(RS)
+3530 FOR RM = 1 TO 3
+3540 READ ME$(RS, RM)
+3550 NEXT RM
+3560 NEXT RS
+3570 RETURN
+4000 REM Select the current behavioural state by priority
+4010 LET MO = 1 : LET CR = 0 : REM Content and not cross
+4020 IF BO >= NB THEN LET MO = 3 : REM Bored
+4030 IF HU >= NH THEN LET MO = 2 : REM Hungry
+4040 IF HU >= CH AND HA <= CM THEN LET CR = 1
+4050 IF IR >= CI THEN LET CR = 1
+4060 IF CR = 1 THEN LET MO = 5 : REM Cross
+4070 IF IR >= FI AND EN > NE THEN LET MO = 6 : REM Feisty
+4080 IF EN <= NE THEN LET MO = 4 : REM Sleepy
+4090 RETURN
+5000 REM Choose and display a non-repeating message for this state
+5010 LET RN = 1 + INT(RND(1) * 3)
+5020 IF MO <> LS THEN GOTO 5060
+5030 IF RN <> LM THEN GOTO 5060
+5040 LET RN = RN + 1
+5050 IF RN > 3 THEN LET RN = 1
+5060 LET TX$ = ME$(MO, RN) : GOSUB 5600
+5070 LET LS = MO
+5080 LET LM = RN
+5090 LET PS = MO
+5100 RETURN
+5300 REM Initialise the LCD and load three octopus glyph frames
+5310 OUT LR, 56 : GOSUB 5900 : REM 8 bit, 2 lines, 5 by 8 font
+5320 OUT LR, 12 : GOSUB 5900 : REM Display on, cursor off
+5330 OUT LR, 6 : GOSUB 5900 : REM Increment after data writes
+5340 OUT LR, 1 : GOSUB 5900 : REM Clear display
+5350 OUT LR, 64 : GOSUB 5900 : REM Select custom character RAM
+5360 FOR GL = 1 TO 24
+5370 READ BV
+5380 OUT LD, BV : GOSUB 5900
+5390 NEXT GL
+5400 OUT LR, 128 : GOSUB 5900
+5410 RETURN
+5500 REM Draw mood text and animated octopus on LCD line one
+5510 OUT LR, 128 : GOSUB 5900
+5520 FOR LC = 0 TO 15
+5530 IF LC = GP THEN OUT LD, GF : GOTO 5570
+5540 IF LC >= LEN(SN$(MO)) THEN OUT LD, 32 : GOTO 5570
+5550 LET BV = ASC(MID$(SN$(MO), LC + 1, 1))
+5560 OUT LD, BV
+5570 GOSUB 5900
+5580 NEXT LC
+5590 LET DM = MO : RETURN
+5600 REM Write TX$ as a padded 16-character comment on LCD line two
+5610 OUT LR, 192 : GOSUB 5900
+5620 FOR LC = 1 TO 16
+5630 IF LC > LEN(TX$) THEN OUT LD, 32 : GOTO 5660
+5640 LET BV = ASC(MID$(TX$, LC, 1))
+5650 OUT LD, BV
+5660 GOSUB 5900
+5670 NEXT LC
+5680 RETURN
+5900 REM Conservative delay after each LCD command or data write
+5910 FOR LQ = 1 TO 100 : NEXT LQ
+5920 RETURN
+6000 REM Animate the glyph without redrawing the complete mood line
+6010 IF MO <> DM THEN GOSUB 5500
+6020 FOR AX = 1 TO 3
+6030 LET GF = GF + 1 : IF GF > 2 THEN LET GF = 0
+6040 LET OP = GP : LET GC = GC + 1
+6050 IF GC < 3 THEN GOTO 6120
+6060 LET GC = 0 : LET GP = GP + MD
+6070 IF GP > 15 THEN LET GP = 14 : LET MD = -1
+6080 IF GP < 10 THEN LET GP = 11 : LET MD = 1
+6090 IF OP = GP THEN GOTO 6120
+6100 OUT LR, 128 + OP : GOSUB 5900
+6110 OUT LD, 32 : GOSUB 5900
+6120 OUT LR, 128 + GP : GOSUB 5900
+6130 OUT LD, GF : GOSUB 5900
+6140 FOR DE = 1 TO DL : NEXT DE
+6150 NEXT AX
+6160 RETURN
+6800 REM Remember repeated actions and recent annoyance
+6810 IF AK = LA THEN LET RP = RP + 1 : GOTO 6830
+6820 LET RP = 1
+6830 LET LA = AK
+6840 IF AK <> 4 THEN RETURN
+6850 LET NA = NA + 1 : LET AD = 0
+6860 IF NA > 9 THEN LET NA = 9
+6870 RETURN
+7000 REM Prompt for and process one user action
+7010 PRINT
+7020 PRINT "(F) FEED  (P) PLAY  (T) PET  (A) ANNOY"
+7030 PRINT "(W) WAIT  (D) DEBUG  (Q) QUIT"
+7035 PRINT
+7040 INPUT "ACTION "; AC$
+7050 LET OM = MO : REM Preserve the mood before the action
+7060 IF AC$ = "F" OR AC$ = "f" THEN LET AK = 1 : GOTO 7150
+7070 IF AC$ = "P" OR AC$ = "p" THEN LET AK = 2 : GOTO 7150
+7080 IF AC$ = "T" OR AC$ = "t" THEN LET AK = 3 : GOTO 7150
+7090 IF AC$ = "A" OR AC$ = "a" THEN LET AK = 4 : GOTO 7150
+7100 IF AC$ = "W" OR AC$ = "w" THEN GOTO 7280
+7110 IF AC$ = "D" OR AC$ = "d" THEN GOTO 7300
+7120 IF AC$ = "Q" OR AC$ = "q" THEN GOTO 7350
+7130 PRINT "ENTER F, P, T, A, W, D OR Q."
+7140 GOTO 7040
+7150 GOSUB 6800
+7160 IF AK = 1 THEN GOSUB 7400
+7170 IF AK = 2 THEN GOSUB 7600
+7180 IF AK = 3 THEN GOSUB 7800
+7190 IF AK = 4 THEN GOSUB 8200
+7200 GOSUB 8400
+7210 GOSUB 4000
+7220 LET PS = MO : LET MC = 0
+7230 GOSUB 2500
+7250 RETURN
+7280 LET LA = 0 : LET RP = 0
+7290 PRINT "TIME PASSES." : RETURN
+7300 GOSUB 2000
+7310 RETURN
+7350 LET TX$ = "I WAS NOT FINISHED" : GOSUB 5600
+7360 PRINT "GOODBYE."
+7370 END
+7400 REM Feed Charles according to appetite, hunger, and mood
+7410 LET FA = 80 - AP
+7420 IF HU < FA THEN GOTO 7480
+7430 LET HU = HU - 90 - INT(RND(1) * 21)
+7440 LET HA = HA + 15 + INT(RND(1) * 11)
+7450 LET EN = EN + 5 + INT(RND(1) * 11)
+7460 IF OM >= 5 THEN LET TX$ = "ABOUT TIME." : GOSUB 5600 : RETURN
+7470 LET TX$ = "CRAB! EXCELLENT." : GOSUB 5600 : RETURN
+7480 LET IR = IR + 10 + RP * 5 : LET HA = HA - 5
+7490 IF RP > 1 THEN LET TX$ = "STILL NOT HUNGRY" : GOSUB 5600 : RETURN
+7500 LET TX$ = "NO. I AM FULL." : GOSUB 5600
+7510 RETURN
+7600 REM Play unless Charles is hungry, tired, or out of patience
+7610 IF EN < 70 THEN LET TX$ = "TOO TIRED." : GOSUB 5600 : RETURN
+7620 IF HU >= NH THEN LET IR = IR + 5 : GOTO 7690
+7630 IF RP > PT THEN LET IR = IR + 10 : GOTO 7700
+7640 LET BO = BO - 90 - INT(RND(1) * 21)
+7650 LET HA = HA + 20 + INT(RND(1) * 11)
+7660 LET EN = EN - 25 - INT(RND(1) * 11)
+7670 IF OM >= 5 THEN LET TX$ = "FINE. ONE GAME." : GOSUB 5600 : RETURN
+7680 LET TX$ = "AGAIN!" : GOSUB 5600 : RETURN
+7690 LET TX$ = "FEED ME FIRST." : GOSUB 5600 : RETURN
+7700 LET TX$ = "I SAID ENOUGH." : GOSUB 5600
+7710 RETURN
+7800 REM Petting depends upon mood, patience, and sociability
+7810 IF OM >= 5 THEN GOTO 7880
+7820 IF RP > PT THEN GOTO 7900
+7830 IF RND(1) < BF / 500 THEN GOTO 7920
+7840 LET HA = HA + 10 + INT(SO / 4)
+7850 LET IR = IR - 15 - INT(RND(1) * 11)
+7860 IF RP > 1 THEN LET TX$ = "YES, YES." : GOSUB 5600 : RETURN
+7870 LET TX$ = "ACCEPTABLE." : GOSUB 5600 : RETURN
+7880 LET HA = HA - 5 : LET IR = IR + 10
+7890 LET TX$ = "DO NOT TOUCH ME" : GOSUB 5600 : RETURN
+7900 LET IR = IR + 10 + RP * 3
+7910 LET TX$ = "STOP THAT." : GOSUB 5600 : RETURN
+7920 LET IR = IR + 5
+7930 LET TX$ = "NOT NOW." : GOSUB 5600 : RETURN
+8200 REM Annoyance escalates with recent annoy actions and feistiness
+8210 LET IR = IR + 45 + BF + NA * 10
+8220 LET HA = HA - 20 - NA * 5
+8230 LET BO = BO - 10
+8240 IF NA >= 3 THEN LET TX$ = "YOU ARE A FISH." : GOSUB 5600 : RETURN
+8250 IF OM >= 5 THEN LET TX$ = "YOU AGAIN." : GOSUB 5600 : RETURN
+8260 LET TX$ = "THAT WAS UNWISE." : GOSUB 5600
+8270 RETURN
+8400 REM Clamp all need values to the zero-to-255 range
+8410 IF HU < 0 THEN LET HU = 0
+8420 IF HU > 255 THEN LET HU = 255
+8430 IF HA < 0 THEN LET HA = 0
+8440 IF HA > 255 THEN LET HA = 255
+8450 IF EN < 0 THEN LET EN = 0
+8460 IF EN > 255 THEN LET EN = 255
+8470 IF BO < 0 THEN LET BO = 0
+8480 IF BO > 255 THEN LET BO = 255
+8490 IF IR < 0 THEN LET IR = 0
+8500 IF IR > 255 THEN LET IR = 255
+8510 RETURN
+9000 REM OCTOPUS FRAME 1
+9010 REM .###.  #.#.#  #####  #####  .###.  #.#.#  #.#.#  .#.#.
+9020 DATA 14,21,31,31,14,21,21,10
+9030 REM OCTOPUS FRAME 2
+9040 REM .###.  #.#.#  #####  #####  .###.  #.#.#  .###.  .#.#.
+9050 DATA 14,21,31,31,14,21,14,10
+9060 REM OCTOPUS FRAME 3
+9070 REM .###.  #.#.#  #####  #####  .###.  #.#.#  #.#.#  #.#.#
+9080 DATA 14,21,31,31,14,21,21,21
