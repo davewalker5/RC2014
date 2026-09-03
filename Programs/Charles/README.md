@@ -1,7 +1,7 @@
 # Charles the Feisty Octopus
 
-Charles is a small virtual octopus for the RC2014. Phases 1 to 3 implement his
-internal needs, behavioural moods, opinions, and keyboard interaction.
+Charles is a small virtual octopus for the RC2014. Phases 1 to 4 implement his
+needs, moods, opinions, interaction, short-term memory, and feistiness.
 
 ## Hardware
 
@@ -10,7 +10,7 @@ The program requires:
 - An RC2014 Mini II running BASIC
 - A serial terminal for diagnostic output
 
-No additional hardware is required for Phases 1 to 3.
+No additional hardware is required for Phases 1 to 4.
 
 ## Program Files
 
@@ -76,6 +76,33 @@ objects. Annoying him reduces happiness and sharply increases irritation.
 Responses use Charles's mood and needs from before the action, so the same
 choice can produce a different result as his condition changes. Updated values
 and mood are displayed immediately after an action.
+
+## Memory and Personality
+
+Charles remembers the most recent action, how many times it has been repeated,
+and how many annoy actions occurred recently. Waiting or choosing a different
+action breaks a repetition chain. Recent annoyance fades gradually, rather than
+being forgotten immediately.
+
+Repeated petting eventually crosses Charles's randomly chosen patience limit
+and produces `STOP THAT`. Repeated play can also exhaust his patience. Annoying
+him repeatedly causes progressively larger happiness and irritation changes,
+with escalating responses.
+
+At startup, narrow pseudo-random ranges determine Charles's base feistiness,
+patience, appetite, and sociability. These biases affect his cross threshold,
+food acceptance, tolerance for repetition, and response to petting while
+keeping him recognisably Charles.
+
+## Spontaneous Behaviour
+
+Every 15 simulation ticks Charles experiences one pseudo-random event. He may
+notice something interesting, disapprove for no stated reason, find a tiny
+crab, or perform a somersault. Events make small changes to his needs.
+
+Small pseudo-random variations also affect metabolism and the consequences of
+accepted interactions. Need thresholds and mood priorities still dominate, so
+randomness modifies understandable behaviour rather than replacing it.
 
 ## Implementation Notes
 
