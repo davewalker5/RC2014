@@ -1,4 +1,4 @@
-10 REM Charles the Feisty Octopus - Phase 6 LCD version
+10 REM Charles the Feisty Octopus - LCD version
 20 REM LCD mood, comments, animation, and terminal interaction
 30 LET DL = 50 : REM Approximate delay between animation frames
 40 LET DI = 2 : REM Simulation ticks between action prompts
@@ -135,7 +135,7 @@
 3060 LET EN = EN + 10 : LET BO = BO - 5
 3070 LET TX$ = "I DID A FLIP" : GOSUB 5600 : RETURN
 3080 LET HA = HA + 3
-3090 LET TX$ = "HMM...INTERESTING" : GOSUB 5600 : RETURN
+3090 LET TX$ = "HM...INTERESTING" : GOSUB 5600 : RETURN
 3100 LET HA = HA - 2
 3110 LET TX$ = "I DISAPPROVE" : GOSUB 5600 : RETURN
 3120 LET TX$ = "A TINY CRAB!" : GOSUB 5600 : RETURN
@@ -257,7 +257,7 @@
 7290 PRINT "TIME PASSES." : RETURN
 7300 GOSUB 2000
 7310 RETURN
-7350 LET TX$ = "I WAS NOT FINISHED" : GOSUB 5600
+7350 LET TX$ = "I WAS NOT DONE!" : GOSUB 5600
 7360 PRINT "GOODBYE."
 7370 END
 7400 REM Feed Charles according to appetite, hunger, and mood

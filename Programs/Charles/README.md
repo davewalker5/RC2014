@@ -4,7 +4,19 @@
 
 Charles is a small virtual octopus for the RC2014 with needs, moods, opinions, interaction, memory, personality, spontaneous behaviour, and diagnostics.
 
-There is a text-only version, an LCD-based version LCD that displays habitat and animation on the LCD display, and an LCD + Digital I/O version that displays habitat anf animation on the LCD display and accepts input from the Digital I/O card.
+Three versions are provided: a text-only implementation; an LCD-based version that gives Charles an animated habitat on the LCD display; and an LCD + Digital I/O version that adds physical button controls and LED feedback.
+
+## Inspiration
+
+Charles was inspired by Peter Godfrey-Smith's *Other Minds*, and in particular its discussion of experiments investigating octopus behaviour and intelligence.
+
+The name comes from Charles, one of three octopuses used in an early learning experiment by Peter Dews. While the other octopuses learned to operate a lever for food reasonably cooperatively, Charles took a rather different approach: he applied enough force to bend and eventually break the lever, repeatedly interfered with a lamp above the tank, and had a tendency to direct jets of water out of the tank.
+
+Other anecdotes in *Other Minds* reinforce this picture of curious, individual and sometimes decidedly uncooperative animals. One captive octopus in New Zealand apparently took a dislike to a particular member of the laboratory staff and would direct around half a gallon of water at the back of her neck when she passed its tank.
+
+That combination of curiosity, individuality, unpredictability and apparent mischief provided the inspiration for this Charles.
+
+The program makes no attempt to simulate real octopus cognition or behaviour. Instead, it borrows the idea of an opinionated and somewhat unpredictable octopus as the basis for a deliberately playful RC2014 application built around state, memory, personality, spontaneous behaviour, interaction and an animated LCD character.
 
 ## Hardware
 
@@ -38,7 +50,8 @@ For the LCD version, connect the LCD Driver Module, load `charles_lcd.bas`, and 
 
 For physical controls, connect both hardware modules, load
 `charles_lcd_io.bas`, and enter `RUN`. This version runs continuously and does
-not display an action prompt. Press Ctrl-C at the terminal to stop it.
+not display an action prompt. Use the quit button for a clean exit, or press
+Ctrl-C at the terminal to interrupt it.
 
 At startup, the program displays its title,  and the available controls. At each action prompt, enter one of these letters:
 
@@ -56,12 +69,14 @@ Uppercase and lowercase letters are accepted. Invalid input displays the valid c
 
 The four lowest Digital I/O input bits are used for input via the Digital I/O card:
 
-| Input value | Action            |
-| ----------- | ----------------- |
-| 1           | Feed Charles      |
-| 2           | Play with Charles |
-| 4           | Pet Charles       |
-| 8           | Annoy Charles     |
+| Input value | Action                                |
+| ----------- | ------------------------------------- |
+| 1           | Feed Charles                          |
+| 2           | Play with Charles                     |
+| 4           | Pet Charles                           |
+| 8           | Annoy Charles                         |
+| 65          | Show a debug snapshot on the terminal |
+| 128         | Quit cleanly                          |
 
 Press only one button at a time. The program waits for release and applies a
 short debounce delay before accepting another action. A simultaneous press is
@@ -75,8 +90,9 @@ The timing is approximate because it uses processor delay loops. In the LCD vers
 
 Hunger and boredom rise over time, while energy falls at a slower interval. Happiness initially settles towards a neutral value and then falls when hunger or boredom remains high. Irritation normally fades, but prolonged hunger makes it rise.
 
-The displayed conditions use configurable thresholds near the start of the
-program. Charles becomes cross when he is both very hungry and unhappy.
+The displayed conditions use configurable thresholds near the start of the program. Charles becomes cross when he is both very hungry and unhappy.
+
+Mood is derived from these underlying needs rather than stored independently, allowing several competing conditions to exist at the same time while one dominates Charles's current behaviour.
 
 ## Behaviour and Messages
 
@@ -97,6 +113,8 @@ Charles remembers the most recent action, how many times it has been repeated, a
 Repeated petting eventually crosses Charles's randomly chosen patience limit and produces `STOP THAT`. Repeated play can also exhaust his patience. Annoying him repeatedly causes progressively larger happiness and irritation changes, with escalating responses.
 
 At startup, narrow pseudo-random ranges determine Charles's base feistiness, patience, appetite, and sociability. These biases affect his cross threshold, food acceptance, tolerance for repetition, and response to petting while keeping him recognisably Charles.
+
+The result is that separate runs produce slightly different versions of Charles without turning his behaviour into unrestricted randomness.
 
 ## Spontaneous Behaviour
 
@@ -161,4 +179,12 @@ To avoid missing a short press while BASIC is writing to the comparatively slow 
 
 The button is captured, mapped to an action, processed using the same rules as the earlier versions, and then held until release. The latch is cleared after release so a held button cannot accidentally produce a second action. Repeated-action memory is cleared after ten simulation ticks without an action. Recent annoyance still fades according to its own timer.
 
+When a valid button is accepted, the corresponding LED is illuminated using the same byte value as the input. It remains visible while Charles processes the action, then all LEDs are cleared after the button is released. A short latched press therefore still produces a visible feedback flash.
+
+Debug value 65 and quit value 128 use the same feedback mechanism. The debug button prints the one-shot state table without leaving a persistent mode. The quit button gives Charles a final LCD comment, clears every Digital I/O LED, prints `GOODBYE` on the terminal, and ends the program.
+
 Change `IP` on line 290 if the Digital I/O card uses another port. Change `DD` on line 40 if physical testing shows that the release debounce should be longer or shorter.
+
+## Inspiration and Further Reading
+
+- Peter Godfrey-Smith, *Other Minds: The Octopus, the Sea, and the Deep Origins of Consciousness* (2016).

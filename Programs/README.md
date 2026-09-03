@@ -23,6 +23,7 @@ and practical utilities.
 | Blackjack     | BASIC    | Text-only implementation of the card game for the RC2014                     |
 | BullsAndCows  | BASIC    | Implementation of the Bulls and Cows game                                    |
 | CavernStalker | BASIC    | Text-only cave hunting adventure game                                        |
+| Charles       | BASIC    | Virtual octopus with autonomous needs and evolving behaviour                 |
 | Dice          | BASIC    | Electronic coin, D6, D8 and random byte using the RC2014 Digital I/O card    |
 | Memory        | BASIC    | Memory game using the buttons and LEDs on the RC2014 Digital I/O card        |
 | Minefield     | BASIC    | An original implementation of the traditional minesweeper puzzle             |

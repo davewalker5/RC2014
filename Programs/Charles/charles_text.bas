@@ -1,4 +1,4 @@
-10 REM Charles the Feisty Octopus - Phases 1 to 5
+10 REM Charles the Feisty Octopus - Text Version
 20 REM Complete text version for RC2014 BASIC
 30 LET DL = 200 : REM Approximate delay between simulation ticks
 40 LET DI = 5 : REM Ticks between diagnostic displays
