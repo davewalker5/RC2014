@@ -15,6 +15,7 @@ The programs require:
 | File                   | Description                                                           |
 | ---------------------- | --------------------------------------------------------------------- |
 | `static_message.bas`   | Displays a fixed message across both lines                            |
+| `blinking_message.bas` | Blinks a preserved message by enabling and disabling the display      |
 | `scrolling_ticker.bas` | Scrolls a message from right to left across the first line repeatedly |
 | `hardware_ticker.bas`  | Scrolls a message using the LCD controller's hardware display shift   |
 | `custom_glyph.bas`     | Demonstrates defining and displaying a custom 5-by-8 glyph            |
@@ -28,6 +29,12 @@ Load the required program into BASIC and enter `RUN`.
 ### Static Message
 
 Run `static_message.bas`, then enter the message to display when prompted. The program writes up to two lines of text, filling the first line before continuing onto the second. Any text beyond the capacity of both lines is ignored.
+
+### Blinking Message
+
+Run `blinking_message.bas`, then enter the message to display. The program writes up to two lines using the same layout as `static_message.bas`, then repeatedly disables and restores the visible display. Command 8 blanks the LCD without erasing display memory, so the original message reappears when command 12 enables the display again.
+
+The visible and blank intervals both default to 300 loop iterations. Change `DL` on line 50 to adjust the blinking speed.
 
 ### Scrolling News Ticker
 
@@ -89,6 +96,10 @@ The LCD Driver Module uses port 218 (`0xDA`) for register commands and port 219 
 
 ## Static Message
 Character LCD controllers do not normally place the second display line immediately after the visible end of the first line in display memory. After writing `W` characters, the program sends command 192 (`0xC0`) to move the cursor to address `0x40`, the start of the second line.
+
+## Blinking Message
+
+The blinking-message program alternates display-control commands 8 (`0x08`) and 12 (`0x0C`). These commands change display visibility without modifying display data RAM, allowing the complete message to blink without being rewritten. The display is left enabled whenever the program is interrupted during its visible interval; if it is interrupted while blank, enter `OUT 218,12` at the BASIC prompt to restore it.
 
 ## Scrolling News Ticker
 
