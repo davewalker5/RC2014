@@ -1,5 +1,9 @@
 # RC2014 LCD Driver Module
 
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/LCD/animated_glyph.gif" alt="Animated Glyph" width="600">
+
+_LCD Display Driver with 2x16 digit display mounted on the RC2014 Mini II running the animated glyph program_
+
 These programs display text and custom characters on a two-line LCD connected through the RC2014 LCD Driver Module. They include fixed-message, scrolling-message, and custom-glyph demonstrations.
 
 ## Hardware
