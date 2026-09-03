@@ -1,7 +1,10 @@
 # Charles the Feisty Octopus
 
-Charles is a small virtual octopus for the RC2014. Phases 1 to 4 implement his
-needs, moods, opinions, interaction, short-term memory, and feistiness.
+![Charles Phase 5 terminal output](charles_text.png)
+
+Charles is a small virtual octopus for the RC2014. Phases 1 to 5 provide the
+complete text version, including needs, moods, opinions, keyboard interaction,
+short-term memory, personality, spontaneous behaviour, and diagnostics.
 
 ## Hardware
 
@@ -10,13 +13,14 @@ The program requires:
 - An RC2014 Mini II running BASIC
 - A serial terminal for diagnostic output
 
-No additional hardware is required for Phases 1 to 4.
+No additional hardware is required for the Phase 5 text version.
 
 ## Program Files
 
-| File               | Description                                     |
-| ------------------ | ----------------------------------------------- |
-| `charles_text.bas` | Simulates Charles's needs, moods, and interaction |
+| File               | Description                            |
+| ------------------ | -------------------------------------- |
+| `charles_text.bas` | Complete text implementation of Charles |
+| `charles_text.png` | Example Phase 5 terminal session       |
 
 ## Running the Program
 
@@ -33,14 +37,15 @@ available controls. At each action prompt, enter one of these letters:
 | T   | Pet Charles |
 | A   | Annoy Charles |
 | W   | Wait without interacting |
+| D   | Toggle the detailed debug display |
+| Q   | Quit cleanly |
 
 Uppercase and lowercase letters are accepted. Invalid input displays the valid
 choices and repeats the prompt.
 
-Every five simulation ticks, it prints Charles's hunger, happiness, energy,
-boredom, irritation, and current behavioural state. Each need value is kept in
-the range 0 to 255. The `NEEDS` line shows when the values imply that Charles
-is hungry, bored, tired, or cross.
+Charles normally displays concise mood updates, actions, and opinions. Press
+`D` to show the complete internal state after each interaction and before each
+action prompt. Each need value is kept in the range 0 to 255.
 
 The timing is approximate because it uses a processor delay loop. Change `DL`
 on line 30 to adjust the interval between simulation ticks, `DI` on line 40 to
@@ -56,10 +61,11 @@ program. Charles becomes cross when he is both very hungry and unhappy.
 
 ## Behaviour and Messages
 
-Charles selects one of five explicit moods: content, bored, hungry, cross, or
-sleepy. More urgent conditions take priority, with low energy ultimately making
-him sleepy. A state change produces an immediate message; otherwise Charles
-speaks at the configured message interval.
+Charles selects one of six explicit moods: content, bored, hungry, cross,
+feisty, or sleepy. Feisty represents high irritation while Charles still has
+enough energy to argue. Low energy ultimately makes him sleepy. A mood change
+produces an immediate message; otherwise Charles speaks at the configured
+message interval.
 
 Each state has three context-sensitive messages. A pseudo-random choice varies
 what Charles says, while the previous state and message number prevent an
@@ -103,6 +109,74 @@ crab, or perform a somersault. Events make small changes to his needs.
 Small pseudo-random variations also affect metabolism and the consequences of
 accepted interactions. Need thresholds and mood priorities still dominate, so
 randomness modifies understandable behaviour rather than replacing it.
+
+## Debug Display
+
+The optional debug panel shows:
+
+- Simulation tick and current mood
+- Active needs
+- Hunger, happiness, energy, boredom, and irritation
+- Last action number, repetition count, and recent annoyance count
+- Feistiness, patience, appetite, and sociability biases
+
+Action numbers are `1` feed, `2` play, `3` pet, and `4` annoy. Pressing `W`
+clears the repeated-action chain but does not immediately erase recent
+annoyance.
+
+## Example Interaction
+
+The exact values and some messages vary between runs, but a typical escalating
+interaction resembles:
+
+```text
+MOOD: CONTENT
+CHARLES: ACCEPTABLE.
+
+MOOD: CONTENT
+CHARLES: YES, YES.
+
+CHARLES: STOP THAT.
+MOOD: CONTENT
+
+CHARLES: THAT WAS UNWISE.
+MOOD: CROSS
+
+CHARLES: YOU AGAIN.
+MOOD: FEISTY
+
+CHARLES: YOU ARE A FISH.
+MOOD: FEISTY
+```
+
+## Configuration and Tuning
+
+Configuration values are grouped at the beginning of the program:
+
+- `DL` controls the approximate simulation delay.
+- `DI` controls the number of ticks between action prompts and debug updates.
+- `MI` controls periodic messages.
+- `SI` controls spontaneous events.
+- `NH`, `NB`, and `NE` are the hungry, bored, and low-energy thresholds.
+- `CH` and `CM` define need-driven crossness.
+- `FI` is the irritation threshold for feisty behaviour.
+
+The delay is processor-based and approximate. It may need adjustment for a
+particular RC2014 clock speed. Personality-adjusted `CI` is calculated during
+startup and should not be configured directly.
+
+## Testing with cbmbasic
+
+The text version can be tested before transfer by passing the source file to
+`cbmbasic`. Its use of `MO` for mood and standard `INPUT` avoids keywords and
+keyboard functions that differ between CBM BASIC and RC2014 Microsoft BASIC.
+
+## Hardware Guidance
+
+This version uses only a serial terminal and does not access any hardware I/O
+ports. The later LCD version will require the RC2014 LCD Driver Module on ports
+218 and 219. Digital I/O controls are deferred to the final hardware-input
+phase and are not required by `charles_text.bas`.
 
 ## Implementation Notes
 
