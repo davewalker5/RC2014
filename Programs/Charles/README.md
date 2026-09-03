@@ -2,7 +2,9 @@
 
 <img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Charles/charles.jpg" alt="Charles" width="600">
 
-Charles is a small virtual octopus for the RC2014. The Phase 5 text version provides needs, moods, opinions, interaction, memory, personality, spontaneous behaviour, and diagnostics. Phase 6 adds his LCD habitat and animation.
+Charles is a small virtual octopus for the RC2014 with needs, moods, opinions, interaction, memory, personality, spontaneous behaviour, and diagnostics.
+
+There is a text-only version, an LCD-based version LCD that displays habitat and animation on the LCD display, and an LCD + Digital I/O version that displays habitat anf animation on the LCD display and accepts input from the Digital I/O card.
 
 ## Hardware
 
@@ -16,18 +18,27 @@ The LCD version additionally requires:
 - An RC2014 LCD Driver Module
 - A compatible two-line character LCD, configured for 16 characters per line
 
+The LCD and Digital I/O version additionally requires:
+
+- An RC2014 Digital I/O card configured to use port 1
+
 ## Program Files
 
-| File               | Description                             |
-| ------------------ | --------------------------------------- |
-| `charles_text.bas` | Complete text implementation of Charles |
-| `charles_lcd.bas`  | Phase 6 LCD implementation of Charles   |
+| File                 | Description                                                                    |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `charles_text.bas`   | Complete text implementation of Charles                                        |
+| `charles_lcd.bas`    | Implementation that shows habitat and animation on the LCD display             |
+| `charles_lcd_io.bas` | Implementation that, additionally, accepts user input via the Digital I/O card |
 
 ## Running the Program
 
 Load the required program, from the table above, into BASIC and enter `RUN`.
 
 For the LCD version, connect the LCD Driver Module, load `charles_lcd.bas`, and enter `RUN`. Continue to enter actions through the serial terminal.
+
+For physical controls, connect both hardware modules, load
+`charles_lcd_io.bas`, and enter `RUN`. This version runs continuously and does
+not display an action prompt. Press Ctrl-C at the terminal to stop it.
 
 At startup, the program displays its title,  and the available controls. At each action prompt, enter one of these letters:
 
@@ -42,6 +53,19 @@ At startup, the program displays its title,  and the available controls. At each
 | Q   | Quit cleanly                                  |
 
 Uppercase and lowercase letters are accepted. Invalid input displays the valid choices and repeats the prompt.
+
+The four lowest Digital I/O input bits are used for input via the Digital I/O card:
+
+| Input value | Action            |
+| ----------- | ----------------- |
+| 1           | Feed Charles      |
+| 2           | Play with Charles |
+| 4           | Pet Charles       |
+| 8           | Annoy Charles     |
+
+Press only one button at a time. The program waits for release and applies a
+short debounce delay before accepting another action. A simultaneous press is
+ignored and reported on the serial terminal.
 
 Charles normally displays concise mood updates, actions, and opinions. Press `D` to print the complete internal state at that moment. The snapshot is shown once; subsequent output remains concise. Each need value is kept in the range 0 to 255.
 
@@ -112,7 +136,7 @@ The delay is processor-based and approximate. It may need adjustment for a parti
 
 The text version uses only a serial terminal and does not access hardware I/O ports. The LCD version uses port 218 (`0xDA`) for commands and port 219 (`0xDB`) for character data. These values are assigned to `LR` and `LD` on line 290 of `charles_lcd.bas` and can be changed for another configuration.
 
-Digital I/O controls are deferred to the final hardware-input phase. Phase 6 continues to use terminal keyboard input.
+The LCD version continues to use terminal keyboard input while the LCD + Digital I/O version reads physical buttons from port 1, assigned to `IP` on line 290 of `charles_lcd_io.bas`. The program writes zero to this port during startup so the card's LEDs remain off.
 
 ## LCD Display
 
@@ -129,6 +153,12 @@ For responsiveness, normal animation updates rewrite only the octopus cell. The 
 
 The LCD is configured for an eight-bit interface, two lines, a 5-by-8 font, incrementing writes, and no visible cursor. A conservative delay follows each command and data write.
 
-## Implementation Notes
+## Digital I/O Input
 
-The simulation clock, diagnostic display, energy update, and message timing use separate counters. The action prompt uses standard `INPUT` for compatibility with both RC2014 Microsoft BASIC and command-line BASIC interpreters. The simulation pauses while that prompt is waiting; choose `W` to let time continue.
+The LCD + Digital I/O version processes Digital I/O during every animation frame, so Charles continues to animate and his needs continue changing when the user does nothing.
+
+To avoid missing a short press while BASIC is writing to the comparatively slow LCD, the program also samples the input four times during every LCD delay. A valid value is stored in a one-byte software latch and processed at the next animation poll, even if the button has already been released.
+
+The button is captured, mapped to an action, processed using the same rules as the earlier versions, and then held until release. The latch is cleared after release so a held button cannot accidentally produce a second action. Repeated-action memory is cleared after ten simulation ticks without an action. Recent annoyance still fades according to its own timer.
+
+Change `IP` on line 290 if the Digital I/O card uses another port. Change `DD` on line 40 if physical testing shows that the release debounce should be longer or shorter.
