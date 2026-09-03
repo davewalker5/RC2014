@@ -37,15 +37,16 @@ available controls. At each action prompt, enter one of these letters:
 | T   | Pet Charles |
 | A   | Annoy Charles |
 | W   | Wait without interacting |
-| D   | Toggle the detailed debug display |
+| D   | Show a snapshot of the current internal state |
 | Q   | Quit cleanly |
 
 Uppercase and lowercase letters are accepted. Invalid input displays the valid
 choices and repeats the prompt.
 
 Charles normally displays concise mood updates, actions, and opinions. Press
-`D` to show the complete internal state after each interaction and before each
-action prompt. Each need value is kept in the range 0 to 255.
+`D` to print the complete internal state at that moment. The snapshot is shown
+once; subsequent output remains concise. Each need value is kept in the range
+0 to 255.
 
 The timing is approximate because it uses a processor delay loop. Change `DL`
 on line 30 to adjust the interval between simulation ticks, `DI` on line 40 to
@@ -110,15 +111,19 @@ Small pseudo-random variations also affect metabolism and the consequences of
 accepted interactions. Need thresholds and mood priorities still dominate, so
 randomness modifies understandable behaviour rather than replacing it.
 
-## Debug Display
+## Debug Snapshot
 
-The optional debug panel shows:
+The one-shot debug table shows:
 
 - Simulation tick and current mood
 - Active needs
 - Hunger, happiness, energy, boredom, and irritation
 - Last action number, repetition count, and recent annoyance count
 - Feistiness, patience, appetite, and sociability biases
+
+The output is divided into current state, memory, and personality sections.
+Labels use a fixed-width `VARIABLE / VALUE` layout so changing numeric widths
+do not disturb the table.
 
 Action numbers are `1` feed, `2` play, `3` pet, and `4` annoy. Pressing `W`
 clears the repeated-action chain but does not immediately erase recent
@@ -154,7 +159,7 @@ MOOD: FEISTY
 Configuration values are grouped at the beginning of the program:
 
 - `DL` controls the approximate simulation delay.
-- `DI` controls the number of ticks between action prompts and debug updates.
+- `DI` controls the number of ticks between action prompts.
 - `MI` controls periodic messages.
 - `SI` controls spontaneous events.
 - `NH`, `NB`, and `NE` are the hungry, bored, and low-energy thresholds.
