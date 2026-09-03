@@ -1,14 +1,13 @@
 # RC2014 LCD Driver Module
 
-These programs display text on a two-line LCD connected through the RC2014 LCD Driver Module. One displays a fixed message across both lines, while the other repeatedly scrolls a message across the first line.
+These programs display text and custom characters on a two-line LCD connected through the RC2014 LCD Driver Module. They include fixed-message, scrolling-message, and custom-glyph demonstrations.
 
 ## Hardware
 
 The programs require:
 
 - An RC2014 Mini II running BASIC
-- An RC2014 LCD Driver Module
-- A compatible two-line character LCD
+- An RC2014 LCD Driver Module with LCD display
 - A serial terminal for entering the message
 
 ## Program Files
@@ -17,6 +16,9 @@ The programs require:
 | ---------------------- | --------------------------------------------------------------------- |
 | `static_message.bas`   | Displays a fixed message across both lines                            |
 | `scrolling_ticker.bas` | Scrolls a message from right to left across the first line repeatedly |
+| `custom_glyph.bas`     | Demonstrates defining and displaying a custom 5-by-8 glyph            |
+| `animated_glyph.bas`   | Animates a two-frame custom glyph in a fixed display position         |
+| `moving_glyph.bas`     | Moves an animated two-frame custom glyph across the first line        |
 
 ## Running the Program
 
@@ -32,15 +34,60 @@ Run `scrolling_ticker.bas`, then enter the message to scroll when prompted. The 
 
 The delay between movements defaults to 100 loop iterations. Change `DL` on line 60 of `scrolling_ticker.bas` to adjust the speed: a larger value scrolls more slowly, while a smaller value scrolls more quickly.
 
-Both programs default to a 16-character-wide display. To use a display with a different width, change the value of `W` on line 50. For example, use `W=20` for a 20-character display.
+### Custom Glyphs
+
+Run `custom_glyph.bas` to define a glyph in custom-character slot 0 and display it after a text label. The supplied program uses an octopus pattern, but its `REM` and `DATA` statements can be replaced with any of the examples below. Change `T$` on line 180 if a different display label is wanted.
+
+Each glyph is described by eight values from top to bottom. The lowest five bits of each value control the five pixels in that row. The `REM` statement gives a compact source-code preview in which `#` is a lit pixel and `.` is an unlit pixel.
+
+```basic
+REM OCTOPUS FRAME 1
+REM .###.  #.#.#  #####  #####  .###.  #.#.#  #.#.#  .#.#.
+DATA 14,21,31,31,14,21,21,10
+
+REM OCTOPUS FRAME 2
+REM .###.  #.#.#  #####  #####  .###.  #.#.#  .###.  .#.#.
+DATA 14,21,31,31,14,21,14,10
+
+REM OCTOPUS FRAME 3
+REM .###.  #.#.#  #####  #####  .###.  #.#.#  #.#.#  #.#.#
+DATA 14,21,31,31,14,21,21,21
+
+REM SMILEY FACE
+REM .....  .#.#.  .#.#.  .....  #...#  .###.  .....  .....
+DATA 0,10,10,0,17,14,0,0
+```
+
+The glyph is stored in volatile character-generator RAM and must be defined again after the LCD loses power or is reset.
+
+The program explicitly selects incrementing address mode and uses a conservative delay after every LCD command and data write. This accommodates controllers that remain busy longer than the BASIC instruction overhead on a particular RC2014 clock configuration.
+
+### Animated Glyph
+
+Run `animated_glyph.bas` to load three octopus frames into custom-character slots 0, 1 and 2. The program displays `CUSTOM GLYPH ` followed by the glyph, then cycles the character in that position through frames 1, 2 and 3 before returning to frame 1. Change `DL` on line 40 to adjust the animation speed.
+
+### Moving Glyph
+
+Run `moving_glyph.bas` to load two octopus frames into custom-character slots 0 and 1. The program starts at the left of the first display line, erases the previous position as it moves right, and alternates between the two frames at every step. After reaching the right edge it clears the glyph and starts again.
+
+The program defaults to a 16-character-wide display. Change `W` on line 40 for a different display width. Change `DL` on line 50 to adjust the movement speed: a larger value moves more slowly, while a smaller value moves more quickly.
+
+The static-message and scrolling-ticker programs default to a 16-character-wide display. To use a display with a different width, change the value of `W` on line 50. For example, use `W=20` for a 20-character display.
 
 ## Implementation Notes
 
 The LCD Driver Module uses port 218 (`0xDA`) for register commands and port 219 (`0xDB`) for character data. The program configures the display for an eight-bit interface, two lines, and a 5-by-8 dot character font.
 
+## Static Message
 Character LCD controllers do not normally place the second display line immediately after the visible end of the first line in display memory. After writing `W` characters, the program sends command 192 (`0xC0`) to move the cursor to address `0x40`, the start of the second line.
 
+## Scrolling News Ticker
+
 The scrolling ticker sends command 128 (`0x80`) before each frame to return to the start of the first line. It writes exactly `W` characters per frame, adding spaces before and after the message so the text enters and leaves a blank display cleanly. Rewriting the visible line also avoids relying on the LCD controller's internal display-shift behaviour, which can vary with display geometry.
+
+## Custom Glyphs
+
+The LCD controller provides eight programmable 5-by-8 characters in character-generator RAM. Command 64 (`0x40`) selects the first custom-character definition, eight data writes supply its rows, and data value 0 subsequently displays it. A display-memory command such as 128 (`0x80`) must be sent after defining the character so that later data is written to the screen rather than to character-generator RAM.
 
 ## References
 
