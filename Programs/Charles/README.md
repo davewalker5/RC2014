@@ -1,6 +1,6 @@
 # Charles the Feisty Octopus
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Charles/charles.gif" alt="Charles" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/charles/Programs/Charles/charles.gif" alt="Charles" width="600">
 
 Charles is a small virtual octopus for the RC2014. The Phase 5 text version provides needs, moods, opinions, interaction, memory, personality, spontaneous behaviour, and diagnostics. Phase 6 adds his LCD habitat and animation.
 
