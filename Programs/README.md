@@ -64,4 +64,5 @@ and practical utilities.
 | AviationConverter | BASIC    | Convert common aviation distances, altitudes, speeds, and temperatures                      |
 | BaseConverter     | BASIC    | Converts byte values between binary, octal, decimal and hexadecimal                         |
 | MorseCode         | BASIC    | Morse Code translator and separate sender to send morse code to the Digital IO card         |
+| Resistor          | BASIC    | Convert between resistor values and three- to six-band colour codes                         |
 | RomanNumerals     | BASIC    | Given a Roman numeral representing a number between 1 and 3999, show the decimal equivalent |
