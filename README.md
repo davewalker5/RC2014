@@ -73,7 +73,7 @@ Programs requiring additional hardware are identified in their individual docume
 
 ## Getting Started
 
-Browse the **Program Catalogue** and choose something that looks interesting.
+Browse the **[Program Catalogue](Programs/README.md)** and choose something that looks interesting.
 
 Each program's README contains the relevant instructions for running it and, where necessary, configuring it for the hardware being used.
 
