@@ -1,0 +1,55 @@
+name: .NET tests and coverage
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.name }} tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Renumber
+            project: Renumber/Renumber.Tests/Renumber.Tests.csproj
+            results: TestResults/Renumber
+          - name: Serial Sender
+            project: SerialSender/SerialSender.Tests/SerialSender.Tests.csproj
+            results: TestResults/SerialSender
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore "${{ matrix.project }}"
+
+      - name: Run tests with coverage
+        run: >-
+          dotnet test "${{ matrix.project }}"
+          --configuration Release
+          --no-restore
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory "${{ matrix.results }}"
+          --collect "XPlat Code Coverage"
+
+      - name: Upload test results and coverage
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-test-results
+          path: ${{ matrix.results }}
+          if-no-files-found: warn
+          retention-days: 14
