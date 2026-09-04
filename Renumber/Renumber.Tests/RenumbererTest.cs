@@ -71,6 +71,23 @@ namespace Renumber.Tests
             Assert.AreEqual("X = 10 : GOSUB 200", renumbered);
         }
 
+        [TestMethod]
+        public void RenumberDoesNotReplacePartialJumpTargetTest()
+        {
+            var lines = new List<ProgramLine>
+            {
+                new ProgramLine { Number = 3, Text = "REM A low-numbered line" },
+                new ProgramLine { Number = 170, Text = "GOSUB 330" },
+                new ProgramLine { Number = 330, Text = "RETURN" }
+            };
+
+            var renumberer = CreateRenumberer(lines);
+            renumberer.Renumber();
+
+            var jumpLine = renumberer.Lines.Single(line => line.Number == 170);
+            Assert.AreEqual("GOSUB 30", jumpLine.Text);
+        }
+
         private IRenumberer<ProgramLine> CreateRenumberer(IEnumerable<ProgramLine> lines)
         {
             var settings = new RenumberAppSettings

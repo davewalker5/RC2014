@@ -42,80 +42,73 @@ namespace SerialSender.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(TooFewValuesException))]
         public void TooFewArgumentsFailsTest()
         {
             string[] args = ["-s"];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<TooFewValuesException>(() => _parser.Parse(args));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(TooManyValuesException))]
         public void TooManyArgumentsFailsTest()
         {
             string[] args = ["-s", "myprogram.bas", "extra argument"];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<TooManyValuesException>(() => _parser.Parse(args));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(TooManyValuesException))]
         public void MultipleInstancesAppendValues()
         {
             string[] args = ["-s", "myprogram.bas", "-s", "myotherprogram.bas"];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<TooManyValuesException>(() => _parser.Parse(args));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnrecognisedCommandLineOptionException))]
         public void UnrecognisedOptionNameFailsTest()
         {
             string[] args = ["--oops", "myprogram.bas"];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<UnrecognisedCommandLineOptionException>(() => _parser.Parse(args));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnrecognisedCommandLineOptionException))]
         public void UnrecognisedOptionShortNameFailsTest()
         {
             string[] args = ["-o", "myprogram.bas"];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<UnrecognisedCommandLineOptionException>(() => _parser.Parse(args));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(MalformedCommandLineException))]
         public void MalformedCommandLineFailsTest()
         {
             string[] args = ["myprogram.bas", "--send", "myotherprogram.bas"];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<MalformedCommandLineException>(() => _parser.Parse(args));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(DuplicateOptionException))]
         public void DuplicateOptionTypeFailsTest()
         {
-            _parser.Add(CommandLineOptionType.Send, true, "--other-lookup", "-ol", "Duplicate option type", 2, 2);
+            Assert.ThrowsExactly<DuplicateOptionException>(() =>
+                _parser.Add(CommandLineOptionType.Send, true, "--other-lookup", "-ol", "Duplicate option type", 2, 2));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(DuplicateOptionException))]
         public void DuplicateOptionNameFailsTest()
         {
-            _parser.Add(CommandLineOptionType.Unknown, true, "--send", "-unk", "Duplicate option name", 2, 2);
+            Assert.ThrowsExactly<DuplicateOptionException>(() =>
+                _parser.Add(CommandLineOptionType.Unknown, true, "--send", "-unk", "Duplicate option name", 2, 2));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(DuplicateOptionException))]
         public void DuplicateOptionShortNameFailsTest()
         {
-            _parser.Add(CommandLineOptionType.Unknown, true, "--unknown", "-s", "Duplicate option shortname", 2, 2);
+            Assert.ThrowsExactly<DuplicateOptionException>(() =>
+                _parser.Add(CommandLineOptionType.Unknown, true, "--unknown", "-s", "Duplicate option shortname", 2, 2));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(MultipleOperationsException))]
         public void MultipleOperationsFailsTest()
         {
             string[] args = ["--send", "myprogram.bas", "--port", "COM3" ];
-            _parser.Parse(args);
+            Assert.ThrowsExactly<MultipleOperationsException>(() => _parser.Parse(args));
         }
     }
 }

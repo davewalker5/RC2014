@@ -60,52 +60,45 @@ namespace Renumber.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MissingFileRaisesExceptionTest()
         {
-            _reader.ReadLines("missing.bas");
+            Assert.ThrowsExactly<FileNotFoundException>(() => _reader.ReadLines("missing.bas"));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidLineFormatException))]
         public void LineWithNoSpacesRaisesExceptionTest()
         {
-            _reader.ParseLine("10GOTO100", 1);
+            Assert.ThrowsExactly<InvalidLineFormatException>(() => _reader.ParseLine("10GOTO100", 1));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidLineFormatException))]
         public void LineWithLeadingSpacesAndNoNumberRaisesExceptionTest()
         {
-            _reader.ParseLine("   GOTO 100", 1);
+            Assert.ThrowsExactly<InvalidLineFormatException>(() => _reader.ParseLine("   GOTO 100", 1));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidLineFormatException))]
         public void LineWithNoNumberRaisesExceptionTest()
         {
-            _reader.ParseLine("GOTO 100", 1);
+            Assert.ThrowsExactly<InvalidLineFormatException>(() => _reader.ParseLine("GOTO 100", 1));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidLineNumberException))]
         public void LineWithZeroNumberRaisesExceptionTest()
         {
-            _reader.ParseLine("0 GOTO 100", 1);
+            Assert.ThrowsExactly<InvalidLineNumberException>(() => _reader.ParseLine("0 GOTO 100", 1));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidLineNumberException))]
         public void LineWithNegativeNumberRaisesExceptionTest()
         {
-            _reader.ParseLine("-1 GOTO 100", 1);
+            Assert.ThrowsExactly<InvalidLineNumberException>(() => _reader.ParseLine("-1 GOTO 100", 1));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidLineFormatException))]
         public void LineWithFloatingPointNumberRaisesExceptionTest()
         {
-            _reader.ParseLine("10.1 GOTO 100", 1);
+            Assert.ThrowsExactly<InvalidLineFormatException>(() => _reader.ParseLine("10.1 GOTO 100", 1));
         }
 
         private SortedDictionary<int, string> ReadTestFile()
