@@ -1,5 +1,6 @@
 ﻿using Renumber.Entities.Events;
 using Renumber.Entities.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace Renumber.Logic.Renumberer
 {
@@ -83,9 +84,9 @@ namespace Renumber.Logic.Renumberer
         {
             foreach (var command in _jumpCommands)
             {
-                var pattern = $"{command} {oldNumber}";
+                var pattern = $"{Regex.Escape(command)} {oldNumber}(?![0-9])";
                 var replacement = $"{command} {newNumber}";
-                line = line.Replace(pattern, replacement);
+                line = Regex.Replace(line, pattern, replacement);
             }
 
             return line;

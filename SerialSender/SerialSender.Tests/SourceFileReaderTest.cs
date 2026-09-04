@@ -56,11 +56,10 @@ namespace SerialSender.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MissingFileThrowsExceptionTest()
         {
             var reader = new SourceFileReader(new FileWrapper());
-            reader.Read("NotThere.bas");
+            Assert.ThrowsExactly<FileNotFoundException>(() => reader.Read("NotThere.bas"));
         }
 
         [TestMethod]
