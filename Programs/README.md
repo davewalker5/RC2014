@@ -29,6 +29,7 @@ and practical utilities.
 | Minefield     | BASIC    | An original implementation of the traditional minesweeper puzzle             |
 | MoonDescent   | BASIC    | Turn-based lunar descent simulation with limited fuel                        |
 | Reflex        | BASIC    | Reaction timer and multi-round reflex game using the RC2014 Digital I/O card |
+| SlotMachine   | BASIC    | Animated three-reel LCD slot machine with custom symbols and play credits    |
 
 ## Mathematics & Science
 
