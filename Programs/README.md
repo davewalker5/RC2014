@@ -44,10 +44,11 @@ and practical utilities.
 
 ## Computing & Algorithms
 
-| Folder        | Language | Description                                                      |
-| ------------- | -------- | ---------------------------------------------------------------- |
-| Logic         | BASIC    | Truth-table and Digital I/O demonstrations of common logic gates |
-| StackAndQueue | BASIC    | Demonstration implementations of a stack and a FIFO queue        |
+| Folder        | Language     | Description                                                                             |
+| ------------- | ------------ | --------------------------------------------------------------------------------------- |
+| Assembly      | Z80 Assembly | Small Z80 assembly programs for the RC2014 Mini II running Small Computer Monitor (SCM) |
+| Logic         | BASIC        | Truth-table and Digital I/O demonstrations of common logic gates                        |
+| StackAndQueue | BASIC        | Demonstration implementations of a stack and a FIFO queue                               |
 
 ## Hardware & Digital I/O
 

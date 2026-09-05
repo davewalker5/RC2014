@@ -71,6 +71,17 @@ dotnet publish SerialSender\SerialSender.csproj -c Release -r rid --self-contain
 
 ### Small Computer Monitor Files
 
+For `.asm` files (case-insensitive), lines whose first non-whitespace character is `;` are skipped completely, including their line endings. This allows instructions and notes at the top of a saved file:
+
+```asm
+; Prints Hello, Z80!
+; Run with G 8000 after loading.
+A 8000
+LD DE,$8100
+```
+
+For `.asm` files, empty lines and lines containing only whitespace (including spaces and tabs) are also skipped completely, so they cannot advance SCM's assembler past an instruction. Inline comments such as `LD C,6 ; print string` are not removed and should not be used when sending to SCM. Semicolons within message text are preserved. Other file types retain their existing behaviour, including blank lines.
+
 - The following is an example SCM file that sends the "hello world" program and associated data, given as an example in the SCM tutorial (see references, below):
 
 ```
