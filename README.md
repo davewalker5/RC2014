@@ -10,9 +10,9 @@
 
 A collection of programs, experiments and utilities written for the **RC2014 Mini II**, a Zilog Z80-based 8-bit computer.
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii.jpg" alt="RC2014 Mini II" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-with-expansion-cards.jpg" alt="RC2014 Mini II" width="600">
 
-*Assembled RC2014 Mini II*
+*Assembled RC2014 Mini II with backplane and expansion modules*
 
 ## About
 
