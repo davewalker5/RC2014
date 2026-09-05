@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>MIDIConverter.Logic</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ProductVersion>1.0.0</ProductVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) 2026 Dave Walker</Copyright>
+    <Owners>Dave Walker</Owners>
+    <Title>MIDI Converter Business Logic</Title>
+    <Summary>MIDI Converter Business Logic</Summary>
+    <PackageTags>MIDI Converter Logic</PackageTags>
+    <Description>MIDI Converter Business Logic</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageProjectUrl>https://github.com/davewalker5/RC2014</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MIDIConverter.Entities\MIDIConverter.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Templates\SIDPlayer.bas.template">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <TargetPath>Templates\SIDPlayer.bas.template</TargetPath>
+    </Content>
+  </ItemGroup>
+
+</Project>

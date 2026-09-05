@@ -31,6 +31,12 @@ and practical utilities.
 | Reflex        | BASIC    | Reaction timer and multi-round reflex game using the RC2014 Digital I/O card |
 | SlotMachine   | BASIC    | Animated three-reel LCD slot machine with custom symbols and play credits    |
 
+## Music
+
+| Folder       | Language | Description                                                                          |
+| ------------ | -------- | ------------------------------------------------------------------------------------ |
+| PineappleRag | BASIC    | SID-Ulator arrangement of Scott Joplin's *Pineapple Rag*, generated from a MIDI file |
+
 ## Mathematics & Science
 
 | Folder      | Language | Description                                                                       |
@@ -41,7 +47,7 @@ and practical utilities.
 | Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                         |
 | GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports |
 | Life        | BASIC    | Conway's Game of Life on a configurable grid                                      |
-| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading  |
+| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading   |
 | MoonPhase   | BASIC    | Calculate the phase of the moon on a specified date                               |
 
 ## Computing & Algorithms
@@ -54,10 +60,10 @@ and practical utilities.
 
 ## Hardware & Digital I/O
 
-| Folder    | Language | Description                                                         |
-| --------- | -------- | ------------------------------------------------------------------- |
-| DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card              |
-| LCD       | BASIC    | A set of programs that use the RC2014 LCD Driver Module             |
+| Folder    | Language | Description                                                                                           |
+| --------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card                                                |
+| LCD       | BASIC    | A set of programs that use the RC2014 LCD Driver Module                                               |
 | Sound     | BASIC    | Scale, lasers, siren, gunshots, explosions, engine sounds and bubbles using the SID-Ulator sound card |
 
 ## Utilities & Converters
