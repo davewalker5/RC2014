@@ -106,7 +106,4 @@ To inspect a loaded program, enter `D 8000` at the SCM prompt and press Escape w
 ## References
 
 - [Zilog Z80 CPU User Manual (PDF)](https://www.zilog.com/docs/z80/um0080.pdf) — Official reference for the Z80 instruction set, registers, addressing modes, flags, and instruction timings.
-- [Serial Sender application](../../SerialSender/README.md)
 - [Small Computer Monitor documentation](https://rc2014.co.uk/troubleshooting/small-computer-monitor/)
-- [Digital I/O examples](../DigitalIO/README.md)
-- [LCD examples](../LCD/README.md)
