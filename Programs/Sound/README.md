@@ -2,7 +2,7 @@
 
 A collection of BASIC programs demonstrating musical notes and sound effects
 on the RC2014 SID-Ulator sound module, including lasers, sirens, gunshots,
-explosions, an engine and bubbles.
+explosions and an engine.
 
 ## Hardware
 
