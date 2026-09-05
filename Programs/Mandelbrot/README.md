@@ -1,4 +1,6 @@
-# Text Mandelbrot Set
+# Mandelbrot Set
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Mandelbrot/mandelbrot.png" alt="The Mandelbrot Set" width="600">
 
 A BASIC program that draws the Mandelbrot set in a serial terminal using character shading. The default view is 64 characters wide and 24 rows high, with up to 32 iterations per point. Each character appears as it is calculated.
 
