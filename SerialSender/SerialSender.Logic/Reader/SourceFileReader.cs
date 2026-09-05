@@ -24,8 +24,15 @@ namespace SerialSender.Logic.Reader
             // Read the file content then iterate through them and replace the ESCAPE
             // placeholder with an escape character to build the final collection
             var rawLines = _fileWrapper.ReadAllLines(path);
+            var isAssembly = string.Equals(Path.GetExtension(path), ".asm", StringComparison.OrdinalIgnoreCase);
             foreach (var line in rawLines)
             {
+                // Skip blank and comment lines entirely so no line ending is sent to SCM.
+                if (isAssembly && (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith(";")))
+                {
+                    continue;
+                }
+
                 Lines.Add(line.Replace("<ESC>", "\x1B"));
             }
 

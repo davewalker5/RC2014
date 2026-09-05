@@ -4,10 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>SerialSender.Logic</PackageId>
-    <PackageVersion>1.5.0.0</PackageVersion>
-    <ReleaseVersion>1.5.0.0</ReleaseVersion>
-    <FileVersion>1.5.0.0</FileVersion>
-    <ProductVersion>1.5.0</ProductVersion>
+    <PackageVersion>1.6.0.0</PackageVersion>
+    <ReleaseVersion>1.6.0.0</ReleaseVersion>
+    <FileVersion>1.6.0.0</FileVersion>
+    <ProductVersion>1.6.0</ProductVersion>
     <Authors>Dave Walker</Authors>
     <Copyright>Copyright (c) 2024 - 2026 Dave Walker</Copyright>
     <Owners>Dave Walker</Owners>

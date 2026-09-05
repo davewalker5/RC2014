@@ -63,6 +63,43 @@ namespace SerialSender.Tests
         }
 
         [TestMethod]
+        [DataRow("program.asm")]
+        [DataRow("program.ASM")]
+        public void AssemblyCommentAndBlankLinesAreOmittedTest(string path)
+        {
+            var mockFileWrapper = new Mock<IFileWrapper>();
+            mockFileWrapper.Setup(f => f.ReadAllLines(path)).Returns(new[]
+            {
+                "; Instructions", " \t; Indented comment", ";", "A 8000",
+                "LD C,6", "", "  ", "\t", " \t ", "\"Hello; Z80!", "RET ; inline", "<ESC>"
+            });
+            var reader = new SourceFileReader(mockFileWrapper.Object);
+
+            reader.Read(path);
+
+            CollectionAssert.AreEqual(new[]
+            {
+                "A 8000", "LD C,6", "\"Hello; Z80!", "RET ; inline", "\x1B"
+            }, reader.Lines.ToArray());
+        }
+
+        [TestMethod]
+        [DataRow("program.bas")]
+        [DataRow("program.scm")]
+        [DataRow("program.txt")]
+        public void OtherFileTypesRetainCommentAndBlankLinesTest(string path)
+        {
+            var lines = new[] { "; Keep this", " \t; Keep this too", "", "  ", "\t", " \t " };
+            var mockFileWrapper = new Mock<IFileWrapper>();
+            mockFileWrapper.Setup(f => f.ReadAllLines(path)).Returns(lines);
+            var reader = new SourceFileReader(mockFileWrapper.Object);
+
+            reader.Read(path);
+
+            CollectionAssert.AreEqual(lines, reader.Lines.ToArray());
+        }
+
+        [TestMethod]
         public void EscapePlaceHolderIsReplacedTest()
         {
             var mockFileWrapper = new Mock<IFileWrapper>();
