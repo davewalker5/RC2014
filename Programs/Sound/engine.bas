@@ -1,0 +1,54 @@
+10 REM SID-Ulator engine idle and revs - ports D4/D5
+20 RP = 212 : DP = 213 : DL = 20 : NC = 3
+30 FL = 800 : FH = 4800 : FS = 100 : VL = 10
+40 REM Clear all writable SID registers
+50 FOR R = 0 TO 24
+60 OUT RP, R : OUT DP, 0
+70 NEXT R
+80 REM Voice 1: pulse wave with 25 percent duty cycle
+90 OUT RP, 2 : OUT DP, 0
+100 OUT RP, 3 : OUT DP, 4
+110 OUT RP, 5 : OUT DP, 0
+120 OUT RP, 6 : OUT DP, 242
+130 REM Voice 2: quieter noise for exhaust texture
+140 OUT RP, 12 : OUT DP, 0
+150 OUT RP, 13 : OUT DP, 66
+160 F = FL : GOSUB 500
+170 OUT RP, 24 : OUT DP, VL
+180 OUT RP, 4 : OUT DP, 65
+190 OUT RP, 11 : OUT DP, 129
+200 PRINT "ENGINE IDLING"
+210 FOR T = 1 TO 1500 : NEXT T
+220 FOR N = 1 TO NC
+230 PRINT "REVVING UP"
+240 FOR F = FL TO FH STEP FS
+250 GOSUB 500
+260 FOR T = 1 TO DL : NEXT T
+270 NEXT F
+280 FOR T = 1 TO 500 : NEXT T
+290 PRINT "SLOWING DOWN"
+300 FOR F = FH - FS TO FL STEP -FS
+310 GOSUB 500
+320 FOR T = 1 TO DL : NEXT T
+330 NEXT F
+340 PRINT "IDLING"
+350 FOR T = 1 TO 1500 : NEXT T
+360 NEXT N
+370 REM Release both voices and allow the short tails
+380 OUT RP, 4 : OUT DP, 64
+390 OUT RP, 11 : OUT DP, 128
+400 FOR T = 1 TO 500 : NEXT T
+410 OUT RP, 4 : OUT DP, 0
+420 OUT RP, 11 : OUT DP, 0
+430 OUT RP, 24 : OUT DP, 0
+440 PRINT "ENGINE STOPPED"
+450 END
+500 REM Engine pulse frequency
+510 H = INT(F / 256) : L = F - 256 * H
+520 OUT RP, 0 : OUT DP, L
+530 OUT RP, 1 : OUT DP, H
+540 REM Exhaust noise gets brighter as the engine revs
+550 G = F * 3 : H = INT(G / 256) : L = G - 256 * H
+560 OUT RP, 7 : OUT DP, L
+570 OUT RP, 8 : OUT DP, H
+580 RETURN

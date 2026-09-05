@@ -53,10 +53,11 @@ and practical utilities.
 
 ## Hardware & Digital I/O
 
-| Folder    | Language | Description                                             |
-| --------- | -------- | ------------------------------------------------------- |
-| DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card  |
-| LCD       | BASIC    | A set of programs that use the RC2014 LCD Driver Module |
+| Folder    | Language | Description                                                         |
+| --------- | -------- | ------------------------------------------------------------------- |
+| DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card              |
+| LCD       | BASIC    | A set of programs that use the RC2014 LCD Driver Module             |
+| Sound     | BASIC    | Scale, lasers, siren, gunshots, explosions, engine sounds and bubbles using the SID-Ulator sound card |
 
 ## Utilities & Converters
 
