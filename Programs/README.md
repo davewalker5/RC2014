@@ -41,6 +41,7 @@ and practical utilities.
 | Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                         |
 | GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports |
 | Life        | BASIC    | Conway's Game of Life on a configurable grid                                      |
+| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading  |
 | MoonPhase   | BASIC    | Calculate the phase of the moon on a specified date                               |
 
 ## Computing & Algorithms
