@@ -17,19 +17,19 @@ The current converter supports:
 - Configurable SID clock, master volume, pulse width and BASIC timing
 - Safe output replacement and a conversion summary
 
-Format 2 MIDI files are not supported. They may contain independent sequences or patterns that aren’t necessarily intended to play together while the reader currently combines every track’s notes and tempo changes, so doing that to a format 2 MIDI file could overlay unrelated patterns.
+Format 2 MIDI files are not supported. They contain independent sequences or patterns that aren’t necessarily intended to play together. The reader currently combines every track’s notes and tempo changes, so applying this approach to a format 2 file could overlay unrelated patterns and mix their tempo maps.
 
-The current implementation supports _pulses per quarter note_ (PPQN) timing. For example, at 480 PPQN, 480 ticks represent one quarter note, whose real duration depends on the tempo, the latter translating ticks into elapsed time.
+The current implementation supports _pulses per quarter note_ (PPQN) timing. For example, at 480 PPQN, 480 ticks represent one quarter note, whose duration in milliseconds depends on the tempo. The tempo therefore determines how ticks translate into elapsed time.
 
 In contrast, SMPTE timing defines ticks using frames per second and ticks per frame, measuring elapsed time directly. To support it, the converter would require a separate tick-to-time calculation, correct handling of frame-rate encodings and a design decision about quantisation:
 
-- Preserve the original timing or;
-- Use a millisecond grid or;
+- Preserve the original timing
+- Use a millisecond grid
 - Derive a musical grid
 
 This is outside the scope of the current implementation.
 
-Percussion, program changes, pitch bend, sustain, expression and other controllers are not synthesised., though percussion and controller events are counted in the conversion summary.
+Percussion, program changes, pitch bend, sustain, expression and other controllers are not synthesised, though percussion and controller events are counted in the conversion summary.
 
 When more than three pitched notes overlap, the converter retains stable assigned voices and favours melody, bass and the strongest inner note for available voices.
 
@@ -55,13 +55,13 @@ The reader produces notes and timing information, the arranger reduces those not
 
 A Standard MIDI File stores timed musical instructions rather than recorded audio:
 
-- A note-on event starts a numbered pitch on a channel, with a velocity describing the strength of the attack, roughly how hard a note is struck
+- A note-on event starts a numbered pitch on a channel, with a velocity indicating how hard the note was played
 - A later note-off event ends the note
 - Tracks hold event sequences
 - Channels identify parts within those sequences
 - A track can contain more than one channel, so tracks do not correspond directly to SID voices
 
-`MIDIFileReader.ReadAsync` loads the file into memory asynchronously, then parses its binary _chunks_. A _chunk_ is a labelled block of bytes within the file, each chunk having three parts:
+`MIDIFileReader.ReadAsync` loads the file into memory asynchronously, then parses its binary _chunks_. A _chunk_ is a labelled block of bytes within the file. Each chunk has three parts:
 
 | Part     | Length         | Comments                      |
 | -------- | -------------- | ----------------------------- |
@@ -76,7 +76,7 @@ MIDI files use two main chunk types:
 | `MThd` | Declares the format, track count and timing resolution                                                              |
 | `MTrk` | Contains events preceded by variable-length delta times, the number of ticks since the previous event in that track |
 
-Format 0 has one track while format 1 has multiple tracks sharing a timeline. 
+Format 0 has one track, while format 1 supports multiple tracks sharing a timeline.
 
 A two-track file therefore looks like:
 
@@ -86,13 +86,13 @@ A two-track file therefore looks like:
 [MTrk | length | events for track 2]
 ```
 
-The reader accumulates the delta-times into absolute tick positions, counted from the start of the track.
+The reader accumulates the delta times into absolute tick positions, counted from the start of the track.
 
 The MIDI file structure allows the reader to check the boundaries of each chunk and its payload and reject files with truncated data or missing declared tracks. It also allows chunks with unrecognised identifiers to be skipped.
 
 ### Running Status
 
-Running status lets consecutive channel events omit a repeated status byte: A channel event normally starts with a **status byte**, which identifies the event type and channel. For example, `90` means “note-on, channel 1”. Two data bytes then supply the note number and velocity.
+Running status lets consecutive channel events omit a repeated status byte. A channel event normally starts with a **status byte**, which identifies the event type and channel. For example, `90` means “note-on, channel 1”. Two data bytes then supply the note number and velocity.
 
 For example, three note-on events could be stored as:
 
@@ -110,15 +110,17 @@ With **running status**, the repeated `90` bytes can be omitted:
    43 64    Reuse them again
 ```
 
+The byte values above are hexadecimal; the note numbers and velocities in the descriptions are decimal. Each event’s delta time has been omitted for clarity.
+
 The reader remembers the most recent channel status. A new channel status replaces it. A meta or system event clears that remembered value, so the next channel event must explicitly include its status byte again.
 
 ### Event Content Handling
 
-The converter applies the event content handling rules outlined below, resulting in an in-memory `MIDIFileData` object containing the _combined_ time-ordered notes, tempo map and other meta-data about the source MIDI file and the conversion process.
+The converter applies the event content handling rules outlined below, resulting in an in-memory `MIDIFileData` object containing the _combined_ time-ordered notes, tempo map and other metadata about the source MIDI file and the conversion process.
 
 _Combined_ in this context means the notes from all tracks gathered into one list sorted by start time.
 
-The tempo map has the following conceptual structure:
+For example, a tempo map could describe these effective tempo ranges:
 
 | Tick range |   Tempo |
 | ---------- | ------: |
@@ -129,11 +131,11 @@ Note times are still musical ticks at this stage.
 
 #### Pitched Notes
 
-Note-on and note-off events are paired within each track by channel and pitch and a note-on with velocity zero is also a note-off.
+Note-on and note-off events are paired within each track by channel and pitch. A note-on with velocity zero is also treated as a note-off.
 
-The reader maintains a separate queue for each channel and pitch within each track and every pitched note-on with non-zero velocity is added to the appropriate queue.
+The reader maintains a separate queue for each channel and pitch within each track. Every pitched note-on with non-zero velocity is added to the appropriate queue.
 
-Usually, a queue contains just one note waiting for its note-off but the queue matters when the same pitch starts again before its earlier occurrence ends:
+Usually, a queue contains just one note waiting for its note-off, but the queue matters when the same pitch starts again before its earlier occurrence ends:
 
 ```text
 Tick 0:   Note-on C4   → queue: [first C4]
@@ -154,7 +156,7 @@ Each resulting note retains its identity, track, channel, pitch, starting veloci
 
 - An unmatched note-off produces a warning
 - A note still open at the end of a track is closed there with a warning
-- Notes are given at least one tick of duration including same-tick note-on/off pairs
+- Notes are given at least one tick of duration, including same-tick note-on/off pairs
 
 #### Tempo
 
@@ -185,9 +187,9 @@ The track and source-order rules give the converter a consistent way to resolve 
 
 #### Performance and Instrument Controls
 
-- Control changes, polyphonic pressure, channel pressure and pitch bend are ignored
+- Control changes, polyphonic pressure, channel pressure and pitch bend are counted but have no audible effect
 - This includes sustain, expression and channel-volume controls
-- Program changes are consumed without selecting an instrument
+- Program changes are consumed without selecting an instrument and are not included in the ignored-controller count
 
 #### System Messages
 
@@ -211,7 +213,7 @@ Tick:  0       120       240       360       480
 
 With 480 PPQN, those grid points are 120 ticks apart, as shown. More steps create a finer grid that preserves more timing detail while fewer steps produce coarser timing. When PPQN is not evenly divisible by the step count, grid positions are rounded to whole ticks.
 
-For example, if PPQN were 100 and the number of steps were 3: 
+For example, if PPQN were 100 and the number of steps were 3:
 
 ```text
 Ideal: 0       33⅓       66⅔       100
@@ -226,7 +228,7 @@ If a note's rounded end is no later than its rounded start, the end advances to 
 
 ### Determining Interval Boundaries
 
-The arranger sorts the quantised note start and end times, together with tick zero, to arrive at a set of _interval boundaries_ Suppose two notes have these quantised times:
+The arranger gathers the quantised note start and end times, adds tick zero, removes duplicates and sorts the result to produce the _interval boundaries_. Suppose two notes have these quantised times:
 
 ```text
 Note A: starts at 0,   ends at 240
@@ -241,7 +243,7 @@ The boundaries are **0, 120, 240, 360**, giving these intervals:
 | 120–240  | A and B      |
 | 240–360  | B            |
 
-Within each interval, no note starts or ends, so the set of active notes stays unchanged. At a boundary, notes starting there become active and notes ending there become inactive so these are _note boundaries_, rather than every point on the musical grid and grid points where nothing starts or ends don’t create an interval boundary.
+Within each interval, no note starts or ends, so the set of active notes stays unchanged. At a boundary, notes starting there become active and notes ending there become inactive. These are _note boundaries_; grid points where nothing starts or ends don’t create an interval boundary.
 
 Each interval therefore has a fixed set of active notes.
 
@@ -253,7 +255,7 @@ MIDI note 69 is used as the reference point for converting note numbers into fre
 
 MIDI note numbers advance by one for each _semitone_ — one adjacent piano key, counting both white and black keys. An octave contains 12 semitones, and moving up an octave doubles the frequency.
 
-So, if `n` is the MIDI note number then its frequency in Hz, `f` is given by:
+If `n` is the MIDI note number, its frequency `f` in hertz is given by:
 
 $$
 f = 440 \cdot 2^{\frac{n-69}{12}}
@@ -270,7 +272,7 @@ The expression `(n - 69)` counts semitones above or below A4 and dividing by 12 
 So, for example, for note 70, just one semitone above A4, the frequency is:
 
 $$
-f = (440 \cdot 2^{1/12} \approx 466.16 Hz
+f = 440 \cdot 2^{1/12} \approx 466.16\,\mathrm{Hz}
 $$
 
 This is **equal temperament**: each semitone multiplies frequency by the same ratio rather than adding a fixed number of hertz.
@@ -281,26 +283,26 @@ $$
 f = \frac{W \cdot f_{\mathrm{clk}}}{2^{24}}
 $$
 
-So the converter needs the SID clock frequency to calculate the word `W` that will produce the intended note. The `--sidclock` setting specifies the clock used by the hardware uses. If that setting is wrong, playback will be sharp or flat.
+So the converter needs the SID clock frequency to calculate the word `W` that will produce the intended note. Here, `W` is the SID frequency word and `f_clk` is the SID clock frequency in hertz. The `--sidclock` setting specifies the clock frequency used by the hardware. If that setting is wrong, playback will be sharp or flat.
 
 The resulting frequency is converted to the SID frequency word as follows:
 
 $$
-W = round\left(\frac{f \cdot 2^{24}}{f_{\mathrm{clk}}}\right)
+W = \operatorname{round}\left(\frac{f \cdot 2^{24}}{f_{\mathrm{clk}}}\right)
 $$
 
-That's then constrained as follows:
+The result is rounded to the nearest integer, with halfway values rounded away from zero, then clamped to the range:
 
 $$
-1 \leq W \leq 65535\
+1 \leq W \leq 65535
 $$
 
 ### Calculating Duration
 
-The interval boundaries are converted from ticks to elapsed milliseconds using the tempo map and interval durations are calculated as the difference between the two boundary times, rounded to the nearest millisecond and constrained as follows:
+The interval boundaries are converted from ticks to elapsed milliseconds using the tempo map. Each interval’s duration is the difference between its two boundary times, rounded to the nearest millisecond with halfway values rounded away from zero. The minimum duration is one millisecond:
 
 $$
-1 \leq duration
+D \geq 1\,\mathrm{ms}
 $$
 
 The calculation adds the elapsed time in each tempo segment, including changes inside an interval where the notes remain unchanged.
@@ -339,17 +341,17 @@ At each interval boundary, ended notes release their SID voices and continuing n
 - Notes starting at the boundary
 - Notes that started earlier but haven’t received a voice because all three were occupied
 
-Any free voices are filled from the remaining active notes using the pitch and velocity priorities:
+If no more than three notes are active, all are selected. When more than three overlap, continuing assigned notes are retained and any free voices are filled from the remaining active notes using these priorities:
 
 1. The highest pitch, as a simple melody preference
 2. The lowest pitch, as a bass preference
 3. The note with the highest velocity, to retain a strong inner part
-4. A newly arriving high or low note will not interrupt three continuing assigned notes
-5. Ties use source timing, channel, pitch or note identity in fixed order so repeated conversions produce the same arrangement
+
+A newly arriving high or low note will not interrupt three continuing assigned notes. Ties use source timing, channel, pitch or note identity in a fixed order so repeated conversions produce the same arrangement.
 
 So a previously omitted note can be selected and begin sounding partway through its duration when a voice becomes available before that note ends.
 
-Note that these are pitch and velocity heuristics, not an analysis of musical parts, and it should be noted that velocity affects this selection process only - it does not become per-note SID volume.
+These are pitch and velocity heuristics, not an analysis of musical parts. Velocity affects selection only; it does not become per-note SID volume.
 
 After selection using these rules, a note is assigned to the first free voice. Voice 1 is therefore not permanently the melody, nor is any voice tied to a MIDI track or channel. Distinct notes of the same pitch can occupy separate voices.
 
@@ -367,7 +369,111 @@ Adjacent steps with identical frequencies and active masks are merged by adding 
 
 ## Generating the BASIC Program
 
-_To be completed_
+### Waveform Shapes
+
+The following are the alternative shapes for the repeating waveform each SID voice produces:
+
+| Waveform     | Shape during each cycle              | Typical sound                             |
+| ------------ | ------------------------------------ | ----------------------------------------- |
+| **Triangle** | Rises steadily, then falls steadily  | Soft, mellow                              |
+| **Sawtooth** | Rises steadily, then jumps back down | Bright, buzzy                             |
+| **Pulse**    | Switches between high and low        | Hollow or nasal, depending on pulse width |
+
+All three can repeat at the same frequency, producing the same note, but they sound different because their shapes contain different mixtures of harmonics.
+
+When the _Pulse_ waveform is selected, the _pulse width_ controls the proportion of each pulse-wave cycle spent high versus low, which affects the tone:
+
+- 50%: equal time high and low—a square wave, with a character often described as hollow or woody
+- 25%: high for a quarter of the cycle—a more nasal or buzzy sound
+- Very narrow pulses: typically sound thinner and sharper, and can become quieter near the extremes
+
+The pitch stays the same because the whole cycle still repeats at the same rate. What changes is the mix of harmonics — the higher-frequency components that give a sound its character.
+
+Changing pulse width continuously while a note sounds is called _pulse-width modulation (PWM)_. It produces a moving, shimmering tone. The converter currently sets a fixed pulse width for all three voices, so it doesn’t create that movement.
+
+Triangle and sawtooth don’t have a high/low pulse whose width can be adjusted.
+
+In the converter, `--waveform` chooses which shape all three SID voices use. The notes determine how fast that shape repeats, and the gates and envelopes determine when each voice sounds.
+
+### Applying Conversion Settings
+
+`BasicProgramGenerator.Generate` loads the unnumbered `SIDPlayer.bas.template` and substitutes the conversion settings.
+
+Each voice has seven registers controlling its sound:
+
+| Registers per voice      | Purpose                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| Frequency low and high   | Set pitch                                                                            |
+| Pulse width low and high | Set pulse width                                                                      |
+| Control                  | Select waveform and control gate, sync and ring modulation; also includes a test bit |
+| Attack/decay             | Set envelope attack and decay                                                        |
+| Sustain/release          | Set envelope sustain and release                                                     |
+
+The individual bits of the _Control_ register act as switches for waveform selection, the gate and other features:
+
+| Setting  | Binary value | Decimal value |
+| -------- | ------------ | ------------: |
+| Triangle | `00010000`   |            16 |
+| Sawtooth | `00100000`   |            32 |
+| Pulse    | `01000000`   |            64 |
+| Gate     | `00000001`   |             1 |
+
+Selecting triangle means setting the bit worth 16. To also turn the gate on, the player adds 1:
+
+```text
+16 = triangle, gate off
+17 = triangle, gate on
+```
+
+Likewise, sawtooth uses 32/33 and pulse uses 64/65.
+
+The _gate_ controls the note’s envelope: setting it starts the attack, and clearing it starts the release. This lets the player start and release notes while keeping the same waveform selected. To retrigger a note, it clears the gate and then sets it again.
+
+The _pulse width_ setting is 12 bits wide, with values from 0 to 4095, but each SID register holds only 8 bits.
+
+The generator splits the value into two bytes for the player to write to the SID:
+
+$$
+\text{low byte} = \text{pulse width} \bmod 256
+$$
+
+$$
+\text{high byte} = \left\lfloor \frac{\text{pulse width}}{256} \right\rfloor
+$$
+
+For the default width of **2048**, it writes **0** to the low register and **8** to the high register. Together they represent:
+
+$$
+8 \times 256 + 0 = 2048
+$$
+
+This gives a 50% duty cycle—a square wave.
+
+Note that pulse width affects the pulse waveform but it doesn’t change triangle or sawtooth.
+
+The generator appends one six-value `DATA` statement per compressed playback step, followed by `DATA 0,0,0,0,0,0` to mark the end.
+
+Durations remain in milliseconds and delay calibration is applied by the player.
+
+Template labels such as `[[LOOP]]` are mapped to the selected BASIC line numbers, and references such as `@LOOP@` are replaced with those numbers.
+
+Numbering uses `--startline` and `--lineincrement`.
+
+Generation fails if a line number exceeds 65529 or a complete numbered line exceeds the 120-character compatibility limit.
+
+### Running the Generated Player
+
+When the generated program runs, it:
+
+1. Clears SID registers 0–24 through ports 212 and 213, sets the same fixed envelope and pulse width on all three voices, and sets master volume. The envelope uses zero attack, decay and release settings with maximum sustain; MIDI instruments and velocities do not alter it.
+2. Reads the next duration, frequency words, active mask and retrigger mask.
+3. Updates each voice: clears the gate for a note that ended or needs retriggering, writes the active voice's low/high frequency bytes, and sets the gate for a new or retriggered note. Continuing notes keep their gate set.
+4. Holds the state with `FOR T=1 TO D*DF:NEXT T`, where `D` is duration and `DF` is the delay factor, then reads the next record.
+5. On the zero-duration sentinel, releases all three gates, mutes master volume and prints `PLAYBACK COMPLETE`.
+
+Register writes and BASIC interpretation add overhead, so timing needs the adjustment described in [Timing Calibration](#timing-calibration).
+
+Finally, the service writes the generated text to a temporary file in the output directory and moves it into place, honouring the overwrite setting. It returns a conversion summary with note and step counts, ignored and discarded events, warnings, and duration calculated from the playback steps.
 
 ---
 
@@ -464,8 +570,10 @@ Template values use double-braced tokens such as `{{MASTER_VOLUME}}`. Branch and
 - `1`: command-line, configuration, input, conversion or output failure
 - `2`: conversion was cancelled with Ctrl+C
 
-Expected errors are printed without a stack trace
+Expected errors are printed without a stack trace.
 
 ## References
 
-_To be completed_
+- [Standard MIDI Files Specification (RP-001, version 1.0)](https://midi.org/standard-midi-files-specification) — the MIDI Association's official specification for the file format used by this converter.
+- [RC2014 SID-Ulator Sound Module](https://rc2014.co.uk/modules/sid-ulator-sound-module/)
+- [MOS 6581 SID datasheet](https://www.cpcwiki.eu/imgs/9/9d/Mos_6581_sid.pdf)
