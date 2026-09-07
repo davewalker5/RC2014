@@ -1,0 +1,74 @@
+10 REM Rodeo Rumble - four synchronised 2x2 bulls
+20 R=218:D=219:REM LCD command and data ports
+30 DL=100:FD=150:REM LCD write delay and frame hold unit
+40 X0=1:SP=4:REM Left column and spacing: two blank cells
+50 NS=16:REM Repeating pose sequence; fixed positions
+60 DIM G(3,31),P(NS-1),H(NS-1),BF(1)
+70 RESTORE
+80 FOR F=0 TO 3:FOR I=0 TO 31
+90 READ G(F,I)
+100 NEXT I:NEXT F
+110 FOR S=0 TO NS-1
+120 READ P(S),H(S)
+130 NEXT S
+140 BF(0)=-1:BF(1)=-1:AB=1
+150 GOSUB 900
+160 C=56:GOSUB 1000:REM 8 bit, two lines, 5x8 font
+170 C=12:GOSUB 1000:REM Display on, cursor and blink off
+180 C=6:GOSUB 1000:REM Increment address, no shift
+190 C=1:GOSUB 1000:REM Clear only at startup
+200 PRINT "RODEO RUMBLE - FOUR BULLS"
+210 PRINT "CTRL-C TO STOP; RUN TO RESTART"
+220 FOR S=0 TO NS-1
+230 F=P(S):NB=1-AB:BS=4*NB
+240 IF BF(NB)=F THEN 330
+280 C=64+8*BS:GOSUB 1000:REM Prepare hidden four-slot bank
+290 FOR I=0 TO 31
+300 B=G(F,I):GOSUB 1100
+310 NEXT I
+320 BF(NB)=F
+330 REM All bulls share the prepared pose, columns 1,5,9,13
+340 FOR U=0 TO 3
+350 X=X0+U*SP
+360 C=128+X:GOSUB 1000
+370 B=BS:GOSUB 1100
+380 B=BS+1:GOSUB 1100
+390 C=192+X:GOSUB 1000
+400 B=BS+2:GOSUB 1100
+410 B=BS+3:GOSUB 1100
+420 NEXT U
+430 AB=NB:REM Old bank is now hidden for every bull
+500 FOR T=1 TO FD*H(S):NEXT T
+510 NEXT S
+520 GOTO 220
+900 REM Conservative LCD settling and write delay
+910 FOR Z=1 TO DL:NEXT Z
+920 RETURN
+1000 OUT R,C:GOSUB 900:RETURN
+1100 OUT D,B:GOSUB 900:RETURN
+2000 REM Pose 0 - straight, TL TR BL BR tiles
+2010 DATA 16,16,24,12,7,3,15,31
+2020 DATA 1,1,3,6,28,24,30,31
+2030 DATA 5,7,7,3,7,5,7,3
+2040 DATA 20,28,28,24,28,20,28,24
+2200 REM Pose 1 - left, TL TR BL BR tiles
+2210 DATA 16,16,24,12,7,7,31,31
+2220 DATA 1,1,3,6,28,16,28,28
+2230 DATA 11,15,15,15,31,22,31,15
+2240 DATA 8,24,24,0,16,16,16,0
+2400 REM Pose 2 - right, TL TR BL BR tiles
+2410 DATA 16,16,24,12,7,1,7,7
+2420 DATA 1,1,3,6,28,28,31,31
+2430 DATA 2,3,3,0,1,1,1,0
+2440 DATA 26,30,30,30,31,13,31,30
+2600 REM Pose 3 - down, TL TR BL BR tiles
+2610 DATA 0,0,16,16,24,12,7,31
+2620 DATA 0,0,1,1,3,6,28,31
+2630 DATA 5,7,7,3,7,5,7,3
+2640 DATA 20,28,28,24,28,20,28,24
+3000 REM Sequence pairs: pose, positive hold units
+3010 REM Pose 0 straight, 1 left, 2 right, 3 down
+3020 DATA 0,3,1,2,0,1,2,2
+3030 DATA 0,2,3,1,0,2,3,1
+3040 DATA 0,2,1,1,1,2,0,1
+3050 DATA 2,1,2,2,3,1,0,3
