@@ -16,6 +16,7 @@ The programs require:
 | `message_lcd.asm` | Yes    | No          | Yes        | No                    |
 | `led.asm`         | Yes    | Yes         | No         | No                    |
 | `buttons.asm`     | Yes    | Yes         | No         | No                    |
+| `scale.asm`       | Yes    | No          | No         | Yes                   |
 
 ## Program Files
 
@@ -25,6 +26,7 @@ The programs require:
 | `message_lcd.asm` | Initialises and clears the LCD, then prints up to 16 characters on the first line |
 | `led.asm`         | Displays an alternating LED pattern on the Digital I/O card                       |
 | `buttons.asm`     | Reads the Digital I/O buttons once and displays their state on the LEDs           |
+| `scale.asm`       | Plays the C-major scale from C4 to C5 once on SID-Ulator voice 1                  |
 
 ## Running the Programs
 
@@ -78,6 +80,16 @@ The program returns to SCM when finished. Enter `G 8000` again to repeat it, or 
 
 For `buttons.asm`, hold the desired buttons while entering `G 8000`. The program samples them once, rather than continuously monitoring them. The resulting LED pattern remains visible after it returns.
 
+### Playing the C-Major Scale
+
+Load `scale.asm` using the sequence above: **`A 8000` → send file → Escape → `G 8000`**. No message or note data needs to be entered beforehand. Connect audio output to the SID-Ulator and configure the module for register port **D4** and data port **D5**. For a module configured for A4/A5, replace every D4/D5 port operand accordingly.
+
+The program plays **C4, D4, E4, F4, G4, A4, B4, C5** using a triangle waveform at volume 10, then mutes the card and returns to SCM. It clears SID registers 0–24 at startup, replacing any previous sound settings. Run `G 8000` again to repeat the scale.
+
+Pitches use the same frequency words as [the BASIC scale example](../Sound/scale.bas), assuming a nominal 1 MHz SID clock. At a 7.3728 MHz Z80 clock, each note lasts about 0.46 seconds, followed by a 0.058-second release gap. CPU speed affects duration, while the effective SID clock affects pitch. Adjust the two `LD DE,$FFFF` values in the play routine to change note duration and `LD DE,$4000` to change the gap; use nonzero values.
+
+The program occupies `8000`–`809B`, including its routines and note constants. It uses the existing SCM stack. Its fixed targets are `8002` (register-clear loop), `8065` (play note), and `8095` (delay). Keep instruction lengths unchanged when editing values, or recalculate the targets. The first instruction at `8000` should be `LD B,$19`.
+
 ### Comments and Blank Lines
 
 The text transmitted to SCM's assembler must not contain `;` comments or blank lines. SCM does not accept assembly comments, and a blank line advances past the instruction currently in memory. This can shift the loaded program and invalidate its call and jump addresses.
@@ -95,7 +107,7 @@ If sending with another tool, remove comments and blank lines from the transmitt
 
 ## Implementation Notes
 
-SCM assembles each instruction directly into RAM. The LCD example uses fixed numeric call and jump addresses, so it must be assembled at `8000`. Adding instructions or changing their lengths requires recalculating those addresses.
+SCM assembles each instruction directly into RAM. The LCD and scale examples use fixed numeric call and jump addresses, so it must be assembled at `8000`. Adding instructions or changing their lengths requires recalculating those addresses.
 
 Both message programs read a zero-terminated string at `8100`. The console example uses SCM's string-output and new-line functions. The LCD example initialises the controller, checks its busy flag before subsequent writes, and limits output to the first display line.
 
@@ -106,4 +118,5 @@ To inspect a loaded program, enter `D 8000` at the SCM prompt and press Escape w
 ## References
 
 - [Zilog Z80 CPU User Manual (PDF)](https://www.zilog.com/docs/z80/um0080.pdf) — Official reference for the Z80 instruction set, registers, addressing modes, flags, and instruction timings.
+- [SID-Ulator Sound Module](https://rc2014.co.uk/modules/sid-ulator-sound-module/) — Hardware, port selection, and register-write interface.
 - [Small Computer Monitor documentation](https://rc2014.co.uk/troubleshooting/small-computer-monitor/)
