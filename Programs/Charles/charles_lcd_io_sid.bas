@@ -1,4 +1,4 @@
-10 REM Charles the Feisty Octopus - LCD and Digital IO Version with SID chirps
+10 REM Charles the Feisty Octopus - LCD and Digital IO Version with SID
 20 REM LCD output, physical buttons, animation, and simulation
 30 LET DL = 50 : REM Approximate delay between animation frames
 40 LET DD = 30 : REM Button release debounce delay
@@ -17,7 +17,7 @@
 185 PRINT
 190 PRINT "CHARLES LIVES ON THE LCD."
 200 PRINT
-210 DIM SN$(6), ME$(6, 3), SX(4), SY(4)
+210 DIM SN$(6), ME$(6, 3), SX(19), SY(19)
 220 REM Each mood record contains its name followed by three messages
 230 DATA "CONTENT","THIS IS NICE","CHARLES HAPPY","ALL IS WELL"
 240 DATA "HUNGRY","NEED CRAB","FEED ME","WHERE IS CRAB?"
@@ -351,7 +351,9 @@
 9200 REM Initialise SID-Ulator voice 1 on D4/D5
 9210 LET SR = 212 : LET SD = 213 : LET SV = 8
 9220 LET SP = 24 : REM Happy animation frames between chirps
+9225 LET SG = 48 : REM Cross or feisty frames between grumbles
 9230 LET SA = 0 : LET SM = 0 : LET SQ = 0
+9235 LET ST = 16 : LET SU = 0 : LET SE = 4
 9240 FOR SZ = 0 TO 24
 9250 OUT SR, SZ : OUT SD, 0
 9260 NEXT SZ
@@ -361,37 +363,61 @@
 9264 LET SY(SZ) = INT(SF / 256)
 9265 LET SX(SZ) = SF - 256 * SY(SZ)
 9266 NEXT SZ
-9270 OUT SR, 5 : OUT SD, 0
+9267 FOR SZ = 5 TO 19
+9268 LET SF = 2400 - (SZ - 5) * 100
+9269 LET SY(SZ) = INT(SF / 256) : LET SX(SZ) = SF - 256 * SY(SZ)
+9270 NEXT SZ
+9271 OUT SR, 2 : OUT SD, 0
+9272 OUT SR, 3 : OUT SD, 4
+9273 OUT SR, 5 : OUT SD, 0
 9280 OUT SR, 6 : OUT SD, 245
 9290 OUT SR, 24 : OUT SD, SV
 9300 RETURN
-9320 REM Track mood separately from display and message state
-9330 IF MO <> 1 THEN GOSUB 9700 : LET SQ = 0 : GOTO 9360
-9340 IF SM > 1 THEN GOSUB 9500
+9320 REM React once to each mood change, independently of display state
+9330 IF MO = SM THEN RETURN
+9335 GOSUB 9700 : LET SQ = 0
+9340 IF MO = 1 AND SM > 1 THEN GOSUB 9500
+9350 IF MO >= 5 THEN GOSUB 9800
 9360 LET SM = MO : RETURN
-9400 REM Called once per animation frame; only content Charles chirps
-9410 IF MO <> 1 THEN RETURN
+9400 REM Occasional mood sounds counted in animation frames
+9410 IF MO <> 1 AND MO < 5 THEN RETURN
 9420 LET SQ = SQ + 1
-9430 IF SQ < SP THEN RETURN
-9440 IF SA = 0 THEN GOSUB 9500
+9430 IF SA <> 0 THEN RETURN
+9440 IF MO = 1 AND SQ >= SP THEN GOSUB 9500
+9445 IF MO >= 5 AND SQ >= SG THEN GOSUB 9800
 9450 RETURN
 9500 REM Start a rising triangle chirp and return immediately
 9510 GOSUB 9700
-9520 LET SQ = 0
+9520 LET SQ = 0 : LET ST = 16 : LET SE = 4
+9522 OUT SR, 5 : OUT SD, 0
+9524 OUT SR, 6 : OUT SD, 245
 9530 OUT SR, 0 : OUT SD, SX(0)
 9535 OUT SR, 1 : OUT SD, SY(0)
 9540 OUT SR, 4 : OUT SD, 17
 9550 LET SA = 1 : RETURN
 9600 REM Write the next prepared pitch and return immediately
 9610 IF SA = 0 THEN RETURN
-9620 IF SA > 4 THEN OUT SR, 4 : OUT SD, 16 : LET SA = 0 : RETURN
+9612 IF ST = 16 THEN GOTO 9620
+9614 LET SU = SU + 1
+9616 IF SU < 2 THEN RETURN
+9618 LET SU = 0
+9620 IF SA > SE THEN OUT SR, 4 : OUT SD, ST : LET SA = 0 : RETURN
 9630 OUT SR, 0 : OUT SD, SX(SA)
 9640 OUT SR, 1 : OUT SD, SY(SA)
 9650 LET SA = SA + 1 : RETURN
 9700 REM Release voice 1; SID handles the short fade independently
-9710 OUT SR, 4 : OUT SD, 16
+9710 OUT SR, 4 : OUT SD, ST
 9720 LET SA = 0 : RETURN
 9750 REM Silence SID on a clean exit
 9760 GOSUB 9700
 9770 OUT SR, 24 : OUT SD, 0
 9780 RETURN
+9800 REM Start the low falling pulse grumble from Sound/grumble.bas
+9810 GOSUB 9700
+9820 LET SQ = 0 : LET SU = 0 : LET ST = 64 : LET SE = 19
+9830 OUT SR, 5 : OUT SD, 16
+9840 OUT SR, 6 : OUT SD, 247
+9850 OUT SR, 0 : OUT SD, SX(5)
+9860 OUT SR, 1 : OUT SD, SY(5)
+9870 OUT SR, 4 : OUT SD, 65
+9880 LET SA = 6 : RETURN

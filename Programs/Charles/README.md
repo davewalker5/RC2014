@@ -188,11 +188,12 @@ Change `IP` on line 290 if the Digital I/O card uses another port. Change `DD` o
 
 - Peter Godfrey-Smith, *Other Minds: The Octopus, the Sea, and the Deep Origins of Consciousness* (2016).
 
-## SID-Ulator chirp versions
+## SID-Ulator sound versions
 
 `charles_lcd_sid.bas` copies the LCD/terminal version, and
 `charles_lcd_io_sid.bas` copies the LCD/Digital I/O version, adding the
-rising triangle chirp from `Programs/Sound/chirp.bas`. The original versions
+rising triangle chirp from `Programs/Sound/chirp.bas` and the falling pulse
+grumble from `Programs/Sound/grumble.bas`. The original versions
 remain available. Load the chosen SID version and enter `RUN` as usual.
 These versions additionally require the SID-Ulator configured for D4/D5
 (decimal 212/213).
@@ -200,13 +201,17 @@ These versions additionally require the SID-Ulator configured for D4/D5
 Charles chirps every 24 animation frames while his mood is `CONTENT`
 (the program's happy state), and immediately when another mood changes back
 to `CONTENT`. A startup chirp also plays as the first LCD comment is written. Each
-chirp resets the periodic counter; leaving content releases an active chirp
-and resets that counter.
+sound resets the periodic counter. Charles grumbles when he enters `CROSS`
+or `FEISTY` (including transitions between those two moods), and every 48
+animation frames while he remains in either mood. Actions such as annoyance
+can trigger a grumble by causing those mood changes. Hungry, bored and sleepy
+moods are quiet. Any mood change releases the previous sound before starting
+the new one, if applicable.
 
 Small routines at lines 9200 onwards initialise, start, advance and release
 voice 1. Pitch advances within short slices of existing LCD delays and during
 frame delays, rather than waiting for a complete LCD write or animation frame.
-This keeps the rising notes close together. The sweep uses 2000-unit steps,
+This keeps the rising notes close together. The chirp sweep uses 2000-unit steps,
 ending at 16000, to make it faster than the original integration. Pitch
 register values are prepared once at startup; playback writes the stored bytes
 directly, avoiding frequency arithmetic and nested subroutine calls between notes. The total LCD delay-loop iteration
@@ -216,6 +221,12 @@ while waiting for button release. Timing depends on CPU speed and the work
 being done, so the integrated chirp may differ in duration from the standalone
 example. No interrupt handler is required.
 
+The grumble uses the prototype's 25 percent pulse width, attack and release,
+and 2400-to-1000 frequency sweep in steps of 100. It advances every second
+sound-service call for a slower growl. Line 9616 controls this spacing.
+Both effects share voice 1, with the waveform and envelope restored each time
+an effect starts. A new mood sound replaces the previous effect.
+
 The terminal version releases sound before `INPUT`, allowing its fade to
 finish while waiting for an answer; an unfinished chirp can therefore be
 shortened by a prompt. Periodic chirps count animation frames, not time spent
@@ -223,5 +234,6 @@ waiting for terminal input. Both versions mute the SID on a clean quit.
 Ctrl-C bypasses that cleanup; use `OUT 212,24 : OUT 213,0` to mute manually.
 
 Set `SV` on line 9210 for volume (0-15), and `SP` on line 9220 for the number
-of happy animation frames between chirps (a positive whole number). Startup
-clears the SID registers, and these versions use voice 1 for the chirp.
+of happy animation frames between chirps. `SG` on line 9225 sets cross/feisty
+frames between grumbles. Both intervals must be positive whole numbers.
+Startup clears the SID registers, and these versions use voice 1 for sound.
