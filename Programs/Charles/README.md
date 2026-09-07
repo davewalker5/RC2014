@@ -193,7 +193,8 @@ Change `IP` on line 290 if the Digital I/O card uses another port. Change `DD` o
 `charles_lcd_sid.bas` copies the LCD/terminal version, and
 `charles_lcd_io_sid.bas` copies the LCD/Digital I/O version, adding the
 rising triangle chirp from `Programs/Sound/chirp.bas` and the falling pulse
-grumble from `Programs/Sound/grumble.bas`. The original versions
+grumble from `Programs/Sound/grumble.bas`, plus the exasperated noise sigh
+from `Programs/Sound/sigh.bas`. The original versions
 remain available. Load the chosen SID version and enter `RUN` as usual.
 These versions additionally require the SID-Ulator configured for D4/D5
 (decimal 212/213).
@@ -205,7 +206,7 @@ sound resets the periodic counter. Charles grumbles when he enters `CROSS`
 or `FEISTY` (including transitions between those two moods), and every 48
 animation frames while he remains in either mood. Actions such as annoyance
 can trigger a grumble by causing those mood changes. Hungry, bored and sleepy
-moods are quiet. Any mood change releases the previous sound before starting
+moods have no periodic sound. Any mood change releases the previous sound before starting
 the new one, if applicable.
 
 Small routines at lines 9200 onwards initialise, start, advance and release
@@ -237,3 +238,23 @@ Set `SV` on line 9210 for volume (0-15), and `SP` on line 9220 for the number
 of happy animation frames between chirps. `SG` on line 9225 sets cross/feisty
 frames between grumbles. Both intervals must be positive whole numbers.
 Startup clears the SID registers, and these versions use voice 1 for sound.
+
+### Exasperated refusals
+
+Charles sighs when refusing food (full or still not hungry), refusing play
+(too tired, feed me first, or enough), or declining petting (stop that or not
+now). The refusal queues a sigh, started as its LCD comment is written.
+It plays regardless of mood; a cross or feisty mood can also produce its
+normal grumble on voice 1. Successful actions and ordinary mood
+messages do not trigger sighs.
+
+The small routine at 9900 uses voice 2 with the standalone sigh's frequency
+12000, attack 10, decay 9, zero sustain and release 9. The SID swells and
+fades it to silence autonomously, even while BASIC waits for terminal input
+or button release. There is no software hold or pitch-update loop for the
+sigh; its gate remains set after the silent decay until another sigh or clean
+quit releases it. Repeated refusals retrigger this voice instead of layering
+more sighs. The existing chirp and grumble share voice 1 and keep their
+settings and timing; a later mood sound can overlap a sigh's fading tail.
+A sigh resets the periodic sound counter. Clean quit releases both voices
+and mutes the card. The master volume setting applies to all effects.

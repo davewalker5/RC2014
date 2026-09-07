@@ -25,7 +25,8 @@
 260 DATA "SLEEPY","CHARLES SLEEPY","ZZZ...","NAP REQUIRED"
 270 DATA "CROSS","NO.","GO AWAY","CHARLES CROSS"
 280 DATA "FEISTY","YOU ARE A FISH","OCTOPUS WINS","ABSOLUTELY NOT"
-290 LET LR = 218 : LET LD = 219 : LET IP = 1 : LET GP = 15 : LET MD = -1
+290 LET LR = 218 : LET LD = 219 : LET IP = 1
+295 LET GP = 15 : LET MD = -1
 300 REM Initialise Charles's needs on a zero-to-255 scale
 310 LET HU = 40 : REM Hunger: higher means hungrier
 320 LET HA = 180 : REM Happiness: higher means happier

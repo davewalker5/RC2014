@@ -194,6 +194,7 @@
 5580 NEXT LC
 5590 LET DM = MO : RETURN
 5600 REM Write TX$ as a padded 16-character comment on LCD line two
+5605 IF SJ <> 0 THEN GOSUB 9900 : REM Sound with the refusal
 5610 OUT LR, 192 : GOSUB 5900
 5620 FOR LC = 1 TO 16
 5630 IF LC > LEN(TX$) THEN OUT LD, 32 : GOTO 5660
@@ -278,11 +279,15 @@
 7460 IF OM >= 5 THEN LET TX$ = "ABOUT TIME." : GOSUB 5600 : RETURN
 7470 LET TX$ = "CRAB! EXCELLENT." : GOSUB 5600 : RETURN
 7480 LET IR = IR + 10 + RP * 5 : LET HA = HA - 5
-7490 IF RP > 1 THEN LET TX$ = "STILL NOT HUNGRY" : GOSUB 5600 : RETURN
-7500 LET TX$ = "NO. I AM FULL." : GOSUB 5600
+7490 IF RP <= 1 THEN GOTO 7500
+7492 LET TX$ = "STILL NOT HUNGRY" : LET SJ = 1
+7494 GOSUB 5600 : RETURN
+7500 LET TX$ = "NO. I AM FULL." : LET SJ = 1 : GOSUB 5600
 7510 RETURN
 7600 REM Play unless Charles is hungry, tired, or out of patience
-7610 IF EN < 70 THEN LET TX$ = "TOO TIRED." : GOSUB 5600 : RETURN
+7610 IF EN >= 70 THEN GOTO 7620
+7612 LET TX$ = "TOO TIRED." : LET SJ = 1
+7614 GOSUB 5600 : RETURN
 7620 IF HU >= NH THEN LET IR = IR + 5 : GOTO 7690
 7630 IF RP > PT THEN LET IR = IR + 10 : GOTO 7700
 7640 LET BO = BO - 90 - INT(RND(1) * 21)
@@ -290,8 +295,8 @@
 7660 LET EN = EN - 25 - INT(RND(1) * 11)
 7670 IF OM >= 5 THEN LET TX$ = "FINE. ONE GAME." : GOSUB 5600 : RETURN
 7680 LET TX$ = "AGAIN!" : GOSUB 5600 : RETURN
-7690 LET TX$ = "FEED ME FIRST." : GOSUB 5600 : RETURN
-7700 LET TX$ = "I SAID ENOUGH." : GOSUB 5600
+7690 LET TX$ = "FEED ME FIRST." : LET SJ = 1 : GOSUB 5600 : RETURN
+7700 LET TX$ = "I SAID ENOUGH." : LET SJ = 1 : GOSUB 5600
 7710 RETURN
 7800 REM Petting depends upon mood, patience, and sociability
 7810 IF OM >= 5 THEN GOTO 7880
@@ -304,9 +309,9 @@
 7880 LET HA = HA - 5 : LET IR = IR + 10
 7890 LET TX$ = "DO NOT TOUCH ME" : GOSUB 5600 : RETURN
 7900 LET IR = IR + 10 + RP * 3
-7910 LET TX$ = "STOP THAT." : GOSUB 5600 : RETURN
+7910 LET TX$ = "STOP THAT." : LET SJ = 1 : GOSUB 5600 : RETURN
 7920 LET IR = IR + 5
-7930 LET TX$ = "NOT NOW." : GOSUB 5600 : RETURN
+7930 LET TX$ = "NOT NOW." : LET SJ = 1 : GOSUB 5600 : RETURN
 8200 REM Annoyance escalates with recent annoy actions and feistiness
 8210 LET IR = IR + 45 + BF + NA * 10
 8220 LET HA = HA - 20 - NA * 5
@@ -342,6 +347,7 @@
 9225 LET SG = 48 : REM Cross or feisty frames between grumbles
 9230 LET SA = 0 : LET SM = 0 : LET SQ = 0
 9235 LET ST = 16 : LET SU = 0 : LET SE = 4
+9236 LET SJ = 0 : REM Pending refusal sigh
 9240 FOR SZ = 0 TO 24
 9250 OUT SR, SZ : OUT SD, 0
 9260 NEXT SZ
@@ -361,7 +367,7 @@
 9280 OUT SR, 6 : OUT SD, 245
 9290 OUT SR, 24 : OUT SD, SV
 9300 RETURN
-9320 REM React once to each mood change, independently of display state
+9320 REM React once per mood change, separate from display state
 9330 IF MO = SM THEN RETURN
 9335 GOSUB 9700 : LET SQ = 0
 9340 IF MO = 1 AND SM > 1 THEN GOSUB 9500
@@ -398,6 +404,7 @@
 9720 LET SA = 0 : RETURN
 9750 REM Silence SID on a clean exit
 9760 GOSUB 9700
+9765 OUT SR, 11 : OUT SD, 128 : REM Release the sigh voice too
 9770 OUT SR, 24 : OUT SD, 0
 9780 RETURN
 9800 REM Start the low falling pulse grumble from Sound/grumble.bas
@@ -409,3 +416,14 @@
 9860 OUT SR, 1 : OUT SD, SY(5)
 9870 OUT SR, 4 : OUT SD, 65
 9880 LET SA = 6 : RETURN
+9900 REM Play a queued refusal sigh as its LCD comment begins
+9910 IF SJ = 0 THEN RETURN
+9920 LET SJ = 0
+9940 REM Voice 2: Sound/sigh.bas noise and self-decaying envelope
+9950 OUT SR, 11 : OUT SD, 128 : REM Gate off before retriggering
+9960 OUT SR, 7 : OUT SD, 224 : REM Frequency 12000 low byte
+9970 OUT SR, 8 : OUT SD, 46 : REM Frequency 12000 high byte
+9980 OUT SR, 12 : OUT SD, 169 : REM Attack 10, decay 9
+9990 OUT SR, 13 : OUT SD, 9 : REM Zero sustain, release 9
+10000 OUT SR, 11 : OUT SD, 129 : REM Swell and decay autonomously
+10010 LET SQ = 0 : RETURN
