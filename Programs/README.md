@@ -33,9 +33,11 @@ and practical utilities.
 
 ## Music
 
-| Folder       | Language | Description                                                                          |
-| ------------ | -------- | ------------------------------------------------------------------------------------ |
-| PineappleRag | BASIC    | SID-Ulator arrangement of Scott Joplin's *Pineapple Rag*, generated from a MIDI file |
+| Folder          | Language | Description                                                                                                                                             |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| MapleLeafRag    | BASIC    | SID-Ulator arrangement of Scott Joplin's *Maple Leaf Rag*, generated from a MIDI file                                                                   |
+| MoonlightSonata | BASIC    | SID-Ulator arrangement of the first movement of Ludwig van Beethoven's *Piano Sonata No. 14 in C-sharp minor, Op. 27 No. 2*, generated from a MIDI file |
+| PineappleRag    | BASIC    | SID-Ulator arrangement of Scott Joplin's *Pineapple Rag*, generated from a MIDI file                                                                    |
 
 ## Mathematics & Science
 
