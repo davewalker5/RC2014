@@ -1,4 +1,4 @@
-10 REM Charles the Feisty Octopus - LCD and Digital IO Version
+10 REM Charles - LCD, Digital IO and SID version
 20 REM LCD output, physical buttons, animation, and simulation
 30 LET DL = 50 : REM Approximate delay between animation frames
 40 LET DD = 30 : REM Button release debounce delay
@@ -17,7 +17,7 @@
 185 PRINT
 190 PRINT "CHARLES LIVES ON THE LCD."
 200 PRINT
-210 DIM SN$(6), ME$(6, 3)
+210 DIM SN$(6), ME$(6, 3), SX(19), SY(19)
 220 REM Each mood record contains its name followed by three messages
 230 DATA "CONTENT","THIS IS NICE","CHARLES HAPPY","ALL IS WELL"
 240 DATA "HUNGRY","NEED CRAB","FEED ME","WHERE IS CRAB?"
@@ -47,6 +47,7 @@
 470 LET AP = 5 + INT(RND(1) * 16) : REM Appetite bias
 480 LET SO = INT(RND(1) * 21) : LET CI = 120 - BF
 490 LET GF = 0 : LET GC = 0 : LET DM = 0 : LET PB = 0 : REM LCD state
+495 GOSUB 9200
 500 GOSUB 3500
 510 OUT IP, 0 : REM Ensure the Digital IO LEDs are off
 520 GOSUB 5300
@@ -158,8 +159,10 @@
 4060 IF CR = 1 THEN LET MO = 5 : REM Cross
 4070 IF IR >= FI AND EN > NE THEN LET MO = 6 : REM Feisty
 4080 IF EN <= NE THEN LET MO = 4 : REM Sleepy
+4085 GOSUB 9320
 4090 RETURN
 5000 REM Choose and display a non-repeating message for this state
+5005 IF LS = 0 THEN GOSUB 9500 : REM Chirp with the first LCD message
 5010 LET RN = 1 + INT(RND(1) * 3)
 5020 IF MO <> LS THEN GOTO 5060
 5030 IF RN <> LM THEN GOTO 5060
@@ -193,6 +196,7 @@
 5580 NEXT LC
 5590 LET DM = MO : RETURN
 5600 REM Write TX$ as a padded 16-character comment on LCD line two
+5605 IF SJ <> 0 THEN GOSUB 9900 : REM Sound with the refusal
 5610 OUT LR, 192 : GOSUB 5900
 5620 FOR LC = 1 TO 16
 5630 IF LC > LEN(TX$) THEN OUT LD, 32 : GOTO 5660
@@ -206,12 +210,16 @@
 5920 LET PK = INP(IP)
 5930 IF PK = 1 OR PK = 2 OR PK = 4 OR PK = 8 THEN LET PB = PK
 5940 IF PK = 65 OR PK = 128 THEN LET PB = PK
-5950 FOR LW = 1 TO 25 : NEXT LW
+5950 FOR LW = 1 TO 5
+5952 FOR SW = 1 TO 5 : NEXT SW
+5954 IF SA <> 0 THEN GOSUB 9600
+5956 NEXT LW
 5960 NEXT LQ
 5970 RETURN
 6000 REM Animate the glyph without redrawing the complete mood line
 6010 IF MO <> DM THEN GOSUB 5500
 6020 FOR AX = 1 TO 3
+6025 GOSUB 9400
 6030 LET GF = GF + 1 : IF GF > 2 THEN LET GF = 0
 6040 LET OP = GP : LET GC = GC + 1
 6050 IF GC < 3 THEN GOTO 6120
@@ -223,7 +231,9 @@
 6110 OUT LD, 32 : GOSUB 5900
 6120 OUT LR, 128 + GP : GOSUB 5900
 6130 OUT LD, GF : GOSUB 5900
-6140 FOR DE = 1 TO DL : NEXT DE
+6140 FOR DE = 1 TO DL
+6142 IF SA <> 0 THEN GOSUB 9600
+6144 NEXT DE
 6150 GOSUB 7000
 6160 NEXT AX
 6170 RETURN
@@ -265,9 +275,9 @@
 7260 GOSUB 7300 : RETURN
 7270 LET TX$ = "I WAS NOT DONE!" : GOSUB 5600
 7280 PRINT "GOODBYE."
-7290 OUT IP, 0 : LET PB = 0 : END
+7290 GOSUB 9750 : OUT IP, 0 : LET PB = 0 : END
 7300 REM Wait for button release and apply a short debounce delay
-7310 LET BK = INP(IP)
+7310 GOSUB 9600 : LET BK = INP(IP)
 7320 IF BK <> 0 THEN GOTO 7310
 7330 OUT IP, 0 : REM Clear all feedback LEDs
 7340 LET PB = 0
@@ -282,11 +292,15 @@
 7460 IF OM >= 5 THEN LET TX$ = "ABOUT TIME." : GOSUB 5600 : RETURN
 7470 LET TX$ = "CRAB! EXCELLENT." : GOSUB 5600 : RETURN
 7480 LET IR = IR + 10 + RP * 5 : LET HA = HA - 5
-7490 IF RP > 1 THEN LET TX$ = "STILL NOT HUNGRY" : GOSUB 5600 : RETURN
-7500 LET TX$ = "NO. I AM FULL." : GOSUB 5600
+7490 IF RP <= 1 THEN GOTO 7500
+7492 LET TX$ = "STILL NOT HUNGRY" : LET SJ = 1
+7494 GOSUB 5600 : RETURN
+7500 LET TX$ = "NO. I AM FULL." : LET SJ = 1 : GOSUB 5600
 7510 RETURN
 7600 REM Play unless Charles is hungry, tired, or out of patience
-7610 IF EN < 70 THEN LET TX$ = "TOO TIRED." : GOSUB 5600 : RETURN
+7610 IF EN >= 70 THEN GOTO 7620
+7612 LET TX$ = "TOO TIRED." : LET SJ = 1
+7614 GOSUB 5600 : RETURN
 7620 IF HU >= NH THEN LET IR = IR + 5 : GOTO 7690
 7630 IF RP > PT THEN LET IR = IR + 10 : GOTO 7700
 7640 LET BO = BO - 90 - INT(RND(1) * 21)
@@ -294,8 +308,8 @@
 7660 LET EN = EN - 25 - INT(RND(1) * 11)
 7670 IF OM >= 5 THEN LET TX$ = "FINE. ONE GAME." : GOSUB 5600 : RETURN
 7680 LET TX$ = "AGAIN!" : GOSUB 5600 : RETURN
-7690 LET TX$ = "FEED ME FIRST." : GOSUB 5600 : RETURN
-7700 LET TX$ = "I SAID ENOUGH." : GOSUB 5600
+7690 LET TX$ = "FEED ME FIRST." : LET SJ = 1 : GOSUB 5600 : RETURN
+7700 LET TX$ = "I SAID ENOUGH." : LET SJ = 1 : GOSUB 5600
 7710 RETURN
 7800 REM Petting depends upon mood, patience, and sociability
 7810 IF OM >= 5 THEN GOTO 7880
@@ -308,9 +322,9 @@
 7880 LET HA = HA - 5 : LET IR = IR + 10
 7890 LET TX$ = "DO NOT TOUCH ME" : GOSUB 5600 : RETURN
 7900 LET IR = IR + 10 + RP * 3
-7910 LET TX$ = "STOP THAT." : GOSUB 5600 : RETURN
+7910 LET TX$ = "STOP THAT." : LET SJ = 1 : GOSUB 5600 : RETURN
 7920 LET IR = IR + 5
-7930 LET TX$ = "NOT NOW." : GOSUB 5600 : RETURN
+7930 LET TX$ = "NOT NOW." : LET SJ = 1 : GOSUB 5600 : RETURN
 8200 REM Annoyance escalates with recent annoy actions and feistiness
 8210 LET IR = IR + 45 + BF + NA * 10
 8220 LET HA = HA - 20 - NA * 5
@@ -340,3 +354,89 @@
 9060 REM OCTOPUS FRAME 3
 9070 REM .###.  #.#.#  #####  #####  .###.  #.#.#  #.#.#  #.#.#
 9080 DATA 14,21,31,31,14,21,21,21
+9200 REM Initialise SID-Ulator voice 1 on D4/D5
+9210 LET SR = 212 : LET SD = 213 : LET SV = 8
+9220 LET SP = 24 : REM Happy animation frames between chirps
+9225 LET SG = 48 : REM Cross or feisty frames between grumbles
+9230 LET SA = 0 : LET SM = 0 : LET SQ = 0
+9235 LET ST = 16 : LET SU = 0 : LET SE = 4
+9236 LET SJ = 0 : REM Pending refusal sigh
+9240 FOR SZ = 0 TO 24
+9250 OUT SR, SZ : OUT SD, 0
+9260 NEXT SZ
+9261 REM Prepare pitch bytes once instead of calculating during sound
+9262 FOR SZ = 0 TO 4
+9263 LET SF = 8000 + SZ * 2000
+9264 LET SY(SZ) = INT(SF / 256)
+9265 LET SX(SZ) = SF - 256 * SY(SZ)
+9266 NEXT SZ
+9267 FOR SZ = 5 TO 19
+9268 LET SF = 2400 - (SZ - 5) * 100
+9269 LET SY(SZ) = INT(SF / 256) : LET SX(SZ) = SF - 256 * SY(SZ)
+9270 NEXT SZ
+9271 OUT SR, 2 : OUT SD, 0
+9272 OUT SR, 3 : OUT SD, 4
+9273 OUT SR, 5 : OUT SD, 0
+9280 OUT SR, 6 : OUT SD, 245
+9290 OUT SR, 24 : OUT SD, SV
+9300 RETURN
+9320 REM React once per mood change, separate from display state
+9330 IF MO = SM THEN RETURN
+9335 GOSUB 9700 : LET SQ = 0
+9340 IF MO = 1 AND SM > 1 THEN GOSUB 9500
+9350 IF MO >= 5 THEN GOSUB 9800
+9360 LET SM = MO : RETURN
+9400 REM Occasional mood sounds counted in animation frames
+9410 IF MO <> 1 AND MO < 5 THEN RETURN
+9420 LET SQ = SQ + 1
+9430 IF SA <> 0 THEN RETURN
+9440 IF MO = 1 AND SQ >= SP THEN GOSUB 9500
+9445 IF MO >= 5 AND SQ >= SG THEN GOSUB 9800
+9450 RETURN
+9500 REM Start a rising triangle chirp and return immediately
+9510 GOSUB 9700
+9520 LET SQ = 0 : LET ST = 16 : LET SE = 4
+9522 OUT SR, 5 : OUT SD, 0
+9524 OUT SR, 6 : OUT SD, 245
+9530 OUT SR, 0 : OUT SD, SX(0)
+9535 OUT SR, 1 : OUT SD, SY(0)
+9540 OUT SR, 4 : OUT SD, 17
+9550 LET SA = 1 : RETURN
+9600 REM Write the next prepared pitch and return immediately
+9610 IF SA = 0 THEN RETURN
+9612 IF ST = 16 THEN GOTO 9620
+9614 LET SU = SU + 1
+9616 IF SU < 2 THEN RETURN
+9618 LET SU = 0
+9620 IF SA > SE THEN OUT SR, 4 : OUT SD, ST : LET SA = 0 : RETURN
+9630 OUT SR, 0 : OUT SD, SX(SA)
+9640 OUT SR, 1 : OUT SD, SY(SA)
+9650 LET SA = SA + 1 : RETURN
+9700 REM Release voice 1; SID handles the short fade independently
+9710 OUT SR, 4 : OUT SD, ST
+9720 LET SA = 0 : RETURN
+9750 REM Silence SID on a clean exit
+9760 GOSUB 9700
+9765 OUT SR, 11 : OUT SD, 128 : REM Release the sigh voice too
+9770 OUT SR, 24 : OUT SD, 0
+9780 RETURN
+9800 REM Start the low falling pulse grumble from Sound/grumble.bas
+9810 GOSUB 9700
+9820 LET SQ = 0 : LET SU = 0 : LET ST = 64 : LET SE = 19
+9830 OUT SR, 5 : OUT SD, 16
+9840 OUT SR, 6 : OUT SD, 247
+9850 OUT SR, 0 : OUT SD, SX(5)
+9860 OUT SR, 1 : OUT SD, SY(5)
+9870 OUT SR, 4 : OUT SD, 65
+9880 LET SA = 6 : RETURN
+9900 REM Play a queued refusal sigh as its LCD comment begins
+9910 IF SJ = 0 THEN RETURN
+9920 LET SJ = 0
+9940 REM Voice 2: Sound/sigh.bas noise and self-decaying envelope
+9950 OUT SR, 11 : OUT SD, 128 : REM Gate off before retriggering
+9960 OUT SR, 7 : OUT SD, 224 : REM Frequency 12000 low byte
+9970 OUT SR, 8 : OUT SD, 46 : REM Frequency 12000 high byte
+9980 OUT SR, 12 : OUT SD, 169 : REM Attack 10, decay 9
+9990 OUT SR, 13 : OUT SD, 9 : REM Zero sustain, release 9
+10000 OUT SR, 11 : OUT SD, 129 : REM Swell and decay autonomously
+10010 LET SQ = 0 : RETURN

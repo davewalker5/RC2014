@@ -1,9 +1,10 @@
 ; SCALE.ASM - Play C major, C4 to C5, once on SID-Ulator voice 1.
-; SCM: A 8000, send this file with Serial Sender, Escape, G 8000.
-; No pre-entered data needed. Load at 8000; numeric targets are fixed.
+;
 ; Register port D4, data port D5. Nominal SID clock: 1 MHz.
-; Triangle wave, volume 10. Clears registers 0-24 and mutes on completion.
+; Triangle wave, volume 10
+; Clears registers 0-24 and mutes on completion
 ; At 7.3728 MHz: about 0.46 seconds per note and 0.058 seconds per gap.
+;
 ; Uses AF, B, DE and HL; returns to SCM with its existing stack.
 LD B,$19
 ; CLEAR at 8002
