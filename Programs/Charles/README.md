@@ -20,27 +20,26 @@ The program makes no attempt to simulate real octopus cognition or behaviour. In
 
 ## Hardware
 
-The text version requires:
+| File                     | RC2014 (*) | Digital I/O | LCD Driver | SID-Ulator Sound Card |
+| ------------------------ | ---------- | ----------- | ---------- | --------------------- |
+| `charles_text.bas`       | Yes        | No          | No         | No                    |
+| `charles_lcd.bas`        | Yes        | No          | Yes        | No                    |
+| `charles_lcd_io.bas`     | Yes        | Yes         | Yes        | No                    |
+| `charles_lcd_sid.bas`    | Yes        | No          | Yes        | Yes                   |
+| `charles_lcd_io_sid.bas` | Yes        | Yes         | Yes        | Yes                   |
 
-- An RC2014 Mini II running BASIC
-- A serial terminal for diagnostic output
-
-The LCD version additionally requires:
-
-- An RC2014 LCD Driver Module
-- A compatible two-line character LCD, configured for 16 characters per line
-
-The LCD and Digital I/O version additionally requires:
-
-- An RC2014 Digital I/O card configured to use port 1
+(*) The RC2014 should be running BASIC
 
 ## Program Files
 
-| File                 | Description                                                                    |
-| -------------------- | ------------------------------------------------------------------------------ |
-| `charles_text.bas`   | Complete text implementation of Charles                                        |
-| `charles_lcd.bas`    | Implementation that shows habitat and animation on the LCD display             |
-| `charles_lcd_io.bas` | Implementation that, additionally, accepts user input via the Digital I/O card |
+| File                     | Description                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `charles_text.bas`       | Complete text implementation of Charles                                           |
+| `charles_lcd.bas`        | Implementation that shows habitat and animation on the LCD display                |
+| `charles_lcd_io.bas`     | Implementation that, additionally, accepts user input via the Digital I/O card    |
+| `charles_lcd_sid.bas`    | Implementation of `charles_lcd.bas` with sound support via the SID-Ulator card    |
+| `charles_lcd_io.bas`     | Implementation that, additionally, accepts user input via the Digital I/O card    |
+| `charles_lcd_io_sid.bas` | Implementation of `charles_lcd_io.bas` with sound support via the SID-Ulator card |
 
 ## Running the Program
 
@@ -188,3 +187,41 @@ Change `IP` on line 290 if the Digital I/O card uses another port. Change `DD` o
 ## Inspiration and Further Reading
 
 - Peter Godfrey-Smith, *Other Minds: The Octopus, the Sea, and the Deep Origins of Consciousness* (2016).
+
+## SID-Ulator chirp versions
+
+`charles_lcd_sid.bas` copies the LCD/terminal version, and
+`charles_lcd_io_sid.bas` copies the LCD/Digital I/O version, adding the
+rising triangle chirp from `Programs/Sound/chirp.bas`. The original versions
+remain available. Load the chosen SID version and enter `RUN` as usual.
+These versions additionally require the SID-Ulator configured for D4/D5
+(decimal 212/213).
+
+Charles chirps every 24 animation frames while his mood is `CONTENT`
+(the program's happy state), and immediately when another mood changes back
+to `CONTENT`. A startup chirp also plays as the first LCD comment is written. Each
+chirp resets the periodic counter; leaving content releases an active chirp
+and resets that counter.
+
+Small routines at lines 9200 onwards initialise, start, advance and release
+voice 1. Pitch advances within short slices of existing LCD delays and during
+frame delays, rather than waiting for a complete LCD write or animation frame.
+This keeps the rising notes close together. The sweep uses 2000-unit steps,
+ending at 16000, to make it faster than the original integration. Pitch
+register values are prepared once at startup; playback writes the stored bytes
+directly, avoiding frequency arithmetic and nested subroutine calls between notes. The total LCD delay-loop iteration
+count is preserved, although the additional BASIC checks add some overhead.
+There are no separate waits for sound playback. The Digital I/O version also advances sound
+while waiting for button release. Timing depends on CPU speed and the work
+being done, so the integrated chirp may differ in duration from the standalone
+example. No interrupt handler is required.
+
+The terminal version releases sound before `INPUT`, allowing its fade to
+finish while waiting for an answer; an unfinished chirp can therefore be
+shortened by a prompt. Periodic chirps count animation frames, not time spent
+waiting for terminal input. Both versions mute the SID on a clean quit.
+Ctrl-C bypasses that cleanup; use `OUT 212,24 : OUT 213,0` to mute manually.
+
+Set `SV` on line 9210 for volume (0-15), and `SP` on line 9220 for the number
+of happy animation frames between chirps (a positive whole number). Startup
+clears the SID registers, and these versions use voice 1 for the chirp.
