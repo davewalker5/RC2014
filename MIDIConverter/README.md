@@ -4,6 +4,8 @@ MIDI Converter turns a Standard MIDI File into a self-contained Microsoft BASIC 
 
 The converter targets .NET 10 and runs on Windows, macOS and Linux.
 
+The SID-Ulator uses SwinSID firmware to emulate a SID. References to the SID below describe that register interface; `--sidclock` specifies the effective SID clock used for pitch calculations, not the module’s microcontroller crystal frequency. See the [module documentation](https://rc2014.co.uk/modules/sid-ulator-sound-module/).
+
 ## Capabilities and Limitations
 
 The current converter supports:
@@ -56,7 +58,7 @@ The reader produces notes and timing information, the arranger reduces those not
 A Standard MIDI File stores timed musical instructions rather than recorded audio:
 
 - A note-on event starts a numbered pitch on a channel, with a velocity indicating how hard the note was played
-- A later note-off event ends the note
+- A later note-off event requests the note’s release; an instrument’s envelope or sustain controller can affect when it becomes silent
 - Tracks hold event sequences
 - Channels identify parts within those sequences
 - A track can contain more than one channel, so tracks do not correspond directly to SID voices
@@ -148,7 +150,7 @@ This produces two overlapping notes: one spanning ticks **0–200**, the other *
 
 A note-off identifies the channel and pitch, but doesn’t say *which occurrence* it ends. The converter resolves that ambiguity by closing the **oldest matching note first**. Notes on different pitches, channels or tracks are paired independently.
 
-Percussion notes on MIDI channel 10 are excluded. Note-off velocity is not used.
+The converter treats all notes on MIDI channel 10 as percussion and excludes them, following the General MIDI convention. This also excludes pitched parts if a non-General-MIDI file uses that channel for them. Positive-velocity note-ons on channel 10 are counted in the summary. Note-off velocity is not used.
 
 Each resulting note retains its identity, track, channel, pitch, starting velocity and start/end ticks.
 
@@ -177,13 +179,15 @@ For example:
 
 At tick 480, the converter processes all three tempo changes in that order. **The last one wins**, so 90 BPM applies from tick 480 onward.
 
-The track and source-order rules give the converter a consistent way to resolve tempo changes at exactly the same time.
+The track and source-order rules give the converter a consistent way to resolve tempo changes at exactly the same time. This is the converter’s conflict-resolution policy, rather than a MIDI rule giving later tracks priority. Standard format 1 files place the tempo map in the first track; the reader also accepts tempo events from other tracks.
 
 #### Metadata
 
 - Track-name information is collected but does not choose voices or instruments
 - End-of-track stops parsing that track
-- Other meta events, such as time signatures, key signatures and lyrics, are skipped
+- Time signatures, key signatures, lyrics and other unused meta-event payloads are skipped; their delta times still advance the timeline
+
+The current reader also decodes sequence-number events (`0x00`) as text into its names list. The MIDI standard defines these as numeric identifiers, not names. This metadata-handling limitation does not affect generated playback.
 
 #### Performance and Instrument Controls
 
@@ -193,13 +197,13 @@ The track and source-order rules give the converter a consistent way to resolve 
 
 #### System Messages
 
-Length-prefixed system-exclusive payloads are skipped; other system status messages are rejected.
+Length-prefixed `F0` system-exclusive and `F7` continuation/escape payloads are skipped. Other system status bytes encountered directly as track events are rejected.
 
 ---
 
 ## Arranging for Three SID Voices
 
-`MIDIArranger.Arrange` quantises the timeline and uses heuristics to allocate notes to the three available SID voices, turning the combined notes into a sequence of `PlaybackStep` objects.
+`MIDIArranger.Arrange` quantises the timeline and uses heuristics to allocate notes to the three available SID voices, turning the combined notes into a sequence of `PlaybackStep` objects. Files with no pitched notes remaining after percussion is excluded are rejected.
 
 ### Musical Grid
 
@@ -224,7 +228,7 @@ Tick:  0       33        67        100
 
 Each note's start and end are rounded independently to the nearest configured musical grid position with halfway values rounding away from zero. For example, with the first musical grid shown above, a note starting at tick 130 will move to 120 and a note ending at 350 will move to 360.
 
-If a note's rounded end is no later than its rounded start, the end advances to the next grid position.
+If a note's rounded end is no later than its rounded start, the arranger attempts to extend it to the next grid position. There is a current edge case when grid positions require rounding to whole ticks: this extension can return the same tick and the note is then omitted. For example, at 100 PPQN with `--steps 3`, a note from tick 33 to 34 rounds to tick 33 at both ends and is lost. Choosing a step count that divides PPQN evenly avoids this particular issue.
 
 ### Determining Interval Boundaries
 
@@ -245,7 +249,7 @@ The boundaries are **0, 120, 240, 360**, giving these intervals:
 
 Within each interval, no note starts or ends, so the set of active notes stays unchanged. At a boundary, notes starting there become active and notes ending there become inactive. These are _note boundaries_; grid points where nothing starts or ends don’t create an interval boundary.
 
-Each interval therefore has a fixed set of active notes.
+Each interval therefore has a fixed set of active notes. Tick zero preserves leading silence, and gaps between notes are retained. Playback ends at the last quantised note end; trailing empty time up to an end-of-track event is not retained.
 
 ### Calculating Pitch
 
@@ -320,7 +324,7 @@ For example, with 480 ticks per quarter note at 120 BPM, one tick represents app
 | 0–240            | A            |   250 ms |
 | 240–480          | A and B      |   250 ms |
 
-The player starts A and waits for the first interval. It then starts B while leaving A sounding, and waits for the second interval. At the end of the music, both voices are released. A therefore sounds across both intervals for a nominal total of 500 ms, while B sounds for 250 ms. An interval with no active notes similarly holds silence for its calculated duration.
+The player starts A and waits for the first interval. It then starts B while leaving A sounding, and waits for the second interval. At the end of the music, both voices are released. A therefore sounds across both intervals for a nominal total of 500 ms, while B sounds for 250 ms. An interval with no active notes schedules a rest for its calculated duration; a preceding note can have a brief release tail.
 
 The generator stores the duration as the first value in each playback `DATA` record. Adjacent intervals with identical voice states can be combined by adding their durations, provided no new note attack needs to be preserved. The BASIC player reads each record into `D,F1,F2,F3,A,G`, updates the three voices, then executes:
 
@@ -349,11 +353,11 @@ If no more than three notes are active, all are selected. When more than three o
 
 A newly arriving high or low note will not interrupt three continuing assigned notes. Ties use source timing, channel, pitch or note identity in a fixed order so repeated conversions produce the same arrangement.
 
-So a previously omitted note can be selected and begin sounding partway through its duration when a voice becomes available before that note ends.
+So a previously omitted note can be selected and begin sounding partway through its duration when a voice becomes available before that note ends. The discarded-note count includes each source note omitted in any interval, counted once even if it is later selected.
 
 These are pitch and velocity heuristics, not an analysis of musical parts. Velocity affects selection only; it does not become per-note SID volume.
 
-After selection using these rules, a note is assigned to the first free voice. Voice 1 is therefore not permanently the melody, nor is any voice tied to a MIDI track or channel. Distinct notes of the same pitch can occupy separate voices.
+Newly selected notes are ordered by original start tick, channel, pitch and identity, then each is assigned to the first free voice. Voice 1 is therefore not permanently the melody, nor is any voice tied to a MIDI track or channel. Distinct notes of the same pitch can occupy separate voices.
 
 ### Encoding Playback States
 
@@ -429,7 +433,7 @@ Likewise, sawtooth uses 32/33 and pulse uses 64/65.
 
 The _gate_ controls the note’s envelope: setting it starts the attack, and clearing it starts the release. This lets the player start and release notes while keeping the same waveform selected. To retrigger a note, it clears the gate and then sets it again.
 
-The _pulse width_ setting is 12 bits wide, with values from 0 to 4095, but each SID register holds only 8 bits.
+The _pulse width_ setting is 12 bits wide, with values from 0 to 4095, but each SID register holds only 8 bits. The low register holds eight bits and only the bottom four bits of the high register are used.
 
 The generator splits the value into two bytes for the player to write to the SID:
 
@@ -459,13 +463,13 @@ Template labels such as `[[LOOP]]` are mapped to the selected BASIC line numbers
 
 Numbering uses `--startline` and `--lineincrement`.
 
-Generation fails if a line number exceeds 65529 or a complete numbered line exceeds the 120-character compatibility limit.
+Generation fails if a line number exceeds 65529 or a complete numbered line exceeds the converter’s 120-character compatibility limit. These checks do not guarantee that the program fits in the RC2014’s available BASIC memory.
 
 ### Running the Generated Player
 
 When the generated program runs, it:
 
-1. Clears SID registers 0–24 through ports 212 and 213, sets the same fixed envelope and pulse width on all three voices, and sets master volume. The envelope uses zero attack, decay and release settings with maximum sustain; MIDI instruments and velocities do not alter it.
+1. Clears SID registers 0–24 through ports 212 and 213, sets the same fixed envelope and pulse width on all three voices, and sets master volume. The envelope uses rate codes of 0 for attack, decay and release, with maximum sustain. These are the fastest rates, not zero-duration stages: the original SID specifies nominal attack and decay/release times of 2 ms and 6 ms at a 1 MHz clock. MIDI instruments and velocities do not alter these settings.
 2. Reads the next duration, frequency words, active mask and retrigger mask.
 3. Updates each voice: clears the gate for a note that ended or needs retriggering, writes the active voice's low/high frequency bytes, and sets the gate for a new or retriggered note. Continuing notes keep their gate set.
 4. Holds the state with `FOR T=1 TO D*DF:NEXT T`, where `D` is duration and `DF` is the delay factor, then reads the next record.
@@ -513,7 +517,9 @@ An existing output file is protected by default. Replace it explicitly with:
 | First BASIC line number     | `--startline`     | `-sl`        |                      10 |
 | BASIC line increment        | `--lineincrement` | `-li`        |                      10 |
 | Replace existing output     | `--overwrite`     | `-f`         |                   false |
-| Detailed output             | `--verbose`       | `-d`         |                   false |
+| Verbose flag (currently unused) | `--verbose`       | `-d`         |                   false |
+
+`--verbose` is parsed and stored but currently does not change the output; the summary and warnings are always printed.
 
 Long and short option names and waveform values are case-insensitive. Boolean options require an explicit `true` or `false` value.
 
@@ -529,14 +535,14 @@ Start with `DelayLoopIterationsPerMillisecond` set to 1. Convert a short file wh
 new delay factor = current delay factor * expected duration / measured duration
 ```
 
-Round to a positive whole number and convert the file again. BASIC loop overhead means this remains an approximation, especially for music with many short notes. A machine-code or interrupt-driven player would be required for precise timing.
+Round to a positive whole number and convert the file again. The minimum delay factor is 1: if playback is already too slow at that value, this setting cannot shorten the delay further. BASIC loop overhead means the calculation remains an approximation, especially for music with many short notes. More precise timing would require a player that schedules updates against a clock or timer and accounts for processing time.
 
 ## Loading and Playing
 
 The generated program expects:
 
 - An RC2014 Mini II running Microsoft BASIC with the `OUT` statement.
-- A SID-Ulator configured for register port D4 and data port D5.
+- A SID-Ulator configured for register port `0xD4` (212) and data port `0xD5` (213).
 - Powered speakers or headphones connected to the module.
 
 Transfer the generated `.bas` file with the repository's SerialSender or a serial terminal, then enter `RUN` in BASIC.
