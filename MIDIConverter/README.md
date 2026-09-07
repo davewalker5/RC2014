@@ -288,7 +288,7 @@ So the converter needs the SID clock frequency to calculate the word `W` that wi
 The resulting frequency is converted to the SID frequency word as follows:
 
 $$
-W = \operatorname{round}\left(\frac{f \cdot 2^{24}}{f_{\mathrm{clk}}}\right)
+W = round\left(\frac{f \cdot 2^{24}}{f_{\mathrm{clk}}}\right)
 $$
 
 The result is rounded to the nearest integer, with halfway values rounded away from zero, then clamped to the range:
