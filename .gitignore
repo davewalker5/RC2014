@@ -95,6 +95,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+Published/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -408,3 +409,8 @@ data/
 bin
 obj
 .DS_Store
+
+published/
+Published/
+.~lock.*
+*.bin
