@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>MachineCodeConverter.Entities</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ProductVersion>1.0.0</ProductVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) 2024 - 2026 Dave Walker</Copyright>
+    <Owners>Dave Walker</Owners>
+    <Title>Machine Code Converter Domain Models</Title>
+    <Summary>Machine Code Converter Domain Models</Summary>
+    <PackageTags>Machine Code DATA Entities</PackageTags>
+    <Description>Machine Code Converter Domain Models/Entities</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageProjectUrl>https://github.com/davewalker5/RC2014</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+</Project>
