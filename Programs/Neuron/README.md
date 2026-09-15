@@ -2,7 +2,7 @@
 
 ## Overview
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Neuron/neuron.gif" alt="Single One-Input Neuron" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Neuron/neuron.png" alt="Single One-Input Neuron" width="600">
 
 This implements the smallest useful artificial neuron: one numeric input, one weight, one bias and one activation function.
 
