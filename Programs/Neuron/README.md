@@ -32,22 +32,23 @@ The program requires:
 
 The terminal-only version needs no additional hardware. `neuron_io.bas` also requires an RC2014 Digital I/O card configured for port 1.
 
+`neuron_io_lcd.bas` requires both the Digital I/O card and an RC2014 LCD Driver Module with a 16-character, two-line display. The LCD uses command port 218 and data port 219.
+
 ## Program Files
 
-| Filename        | Content                                                |
-| --------------- | ------------------------------------------------------ |
-| `neuron.bas`    | Terminal-only single-input neuron                      |
-| `neuron_io.bas` | Same neuron with binary output on the Digital I/O LEDs |
+| Filename            | Content                                                 |
+| ------------------- | ------------------------------------------------------- |
+| `neuron.bas`        | Terminal-only single-input neuron                       |
+| `neuron_io.bas`     | Same neuron with binary output on the Digital I/O LEDs  |
+| `neuron_io_lcd.bas` | User inputs only, with Digital I/O LEDs and LCD results |
 
 ## Running the Program
 
-Load `neuron.bas` or `neuron_io.bas` into BASIC and enter `RUN`.
+Load your chosen `.bas` file into BASIC and enter `RUN`.
 
-The program first runs the demonstration inputs: `2`, `3` and `4`. For each input it prints the input, weighted input, bias, sum and
-final output.
+The `neuron.bas` and `neuron_io.bas` programs first run the demonstration inputs: `2`, `3` and `4`. For each input it prints the input, weighted input, bias, sum and final output.
 
-Afterwards, enter `Y` to try another numeric input or `N` to
-finish.
+Afterwards, enter `Y` to try another numeric input or `N` to finish.
 
 ### Digital I/O Output
 
@@ -58,14 +59,22 @@ finish.
 | 0      | `00000000`           | All off                |
 | 1      | `00000001`           | LED 0 on; LEDs 1–7 off |
 
-The demonstration pauses after each example; press RETURN to continue.
-Inputs still come from the serial terminal. During interactive use, the LEDs
-hold the latest result while you enter another input. Answering `N` clears
-all LEDs before the program finishes. The LEDs are also cleared at startup.
+The demonstration pauses after each example; press RETURN to continue. Inputs still come from the serial terminal. During interactive use, the LEDs hold the latest result while you enter another input. Answering `N` clears all LEDs before the program finishes. The LEDs are also cleared at startup.
 
-To use another port, change `IP` on line 40. The display subroutine writes
-`Y` with `OUT IP, Y` on line 2005. If you interrupt the program manually,
-you can clear the card by entering `OUT 1, 0` (substitute your configured port).
+To use another port, change `IP` on line 40. The display subroutine writes `Y` with `OUT IP, Y` on line 2005. If you interrupt the program manually, you can clear the card by entering `OUT 1, 0` (substitute your configured port).
+
+### LCD and Digital I/O Version
+
+`neuron_io_lcd.bas` goes straight to the numeric input prompt, with no predefined examples. Enter an input on the serial terminal; the program prints the calculation stages there and shows the output on both the LEDs and LCD. For an input of `4`, the LCD shows:
+
+```text
+NEURON OUTPUT: 1
+BINARY: 00000001
+```
+
+For inputs at or below `3`, both displayed outputs are zero. The result stays visible while you answer `Y` to enter another input. Answer `N` to finish and clear both the LEDs and LCD. Lowercase answers also work.
+
+The LCD initially displays `SINGLE NEURON` and `ENTER X ON PC`. Change `IP` on line 40 for a different Digital I/O port, or `LR` and `LD` on line 60 for different LCD ports. Each LCD row is padded to 16 characters so old text is erased. A short delay follows every LCD write, following the other LCD examples in this repository.
 
 ## Parts of the Neuron
 
@@ -199,7 +208,7 @@ The weight and bias are not adjusted during this process. A forward pass only ev
 
 ## BASIC Implementation
 
-The implementations are in [`neuron.bas`](neuron.bas) and [`neuron_io.bas`](neuron_io.bas). Both use the same calculation subroutine.
+The implementations are in [`neuron.bas`](neuron.bas) and [`neuron_io.bas`](neuron_io.bas). The LCD variant is in [`neuron_io_lcd.bas`](neuron_io_lcd.bas). All three use the same calculation subroutine.
 
 ### Setting the Weight and Bias
 
@@ -235,7 +244,7 @@ The demonstration reads its three inputs from the `DATA` statement at line 3000.
 
 ### Trying a Different Activation
 
-Use the terminal-only `neuron.bas` for this experiment: the Digital I/O version expects a binary output of `0` or `1`.
+Use the terminal-only `neuron.bas` for this experiment: both Digital I/O versions expect a binary output of `0` or `1`.
 
 To try an identity activation, which returns _z_ unchanged, replace line 1030 with:
 
@@ -268,3 +277,9 @@ Start each experiment from the original program. Edit the weight on line 20 or t
 - This neuron has only one input and fixed parameters
 - It does not calculate a loss, derive gradients or update itself from examples
 - The step activation is helpful for demonstrating a threshold, but its lack of a useful derivative makes it unsuitable for gradient-based training
+
+## References
+
+- [Michael Nielsen — Neural Networks and Deep Learning, Chapter 1](https://neuralnetworksanddeeplearning.com/chap1): An approachable introduction to perceptrons, weights, bias and thresholds. Its step activation uses the same convention as this program: output 1 when the weighted input plus bias is strictly greater than zero, and 0 otherwise.
+- [Dive into Deep Learning — Linear Regression](https://classic.d2l.ai/chapter_linear-networks/linear-regression.html): Explains weighted sums and bias, including the distinction between a linear transformation and an affine transformation with an added bias.
+- [Dive into Deep Learning — Multilayer Perceptrons](https://en.d2l.ai/chapter_multilayer-perceptrons/mlp.html): Further reading on activation functions and how individual neurons are combined into multilayer networks.
