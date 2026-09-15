@@ -30,23 +30,42 @@ The program requires:
 - An RC2014 computer running Microsoft BASIC
 - A serial terminal
 
-No additional hardware is required.
+The terminal-only version needs no additional hardware. `neuron_io.bas` also requires an RC2014 Digital I/O card configured for port 1.
 
 ## Program Files
 
-| Filename      | Content                                     |
-| ------------- | ------------------------------------------- |
-| neuron.bas | Implementation of the single-input neuron |
+| Filename        | Content                                                |
+| --------------- | ------------------------------------------------------ |
+| `neuron.bas`    | Terminal-only single-input neuron                      |
+| `neuron_io.bas` | Same neuron with binary output on the Digital I/O LEDs |
 
 ## Running the Program
 
-Load `neuron.bas` into BASIC and enter `RUN`.
+Load `neuron.bas` or `neuron_io.bas` into BASIC and enter `RUN`.
 
-The program first runs the demonstration inputs: `0`, `2`, `3`, `4` and `6`. For each input it prints the input, weighted input, bias, sum and
+The program first runs the demonstration inputs: `2`, `3` and `4`. For each input it prints the input, weighted input, bias, sum and
 final output.
 
 Afterwards, enter `Y` to try another numeric input or `N` to
 finish.
+
+### Digital I/O Output
+
+`neuron_io.bas` writes the output to the card after every calculation:
+
+| Output | Binary (bits 7 to 0) | LEDs                   |
+| ------ | -------------------- | ---------------------- |
+| 0      | `00000000`           | All off                |
+| 1      | `00000001`           | LED 0 on; LEDs 1–7 off |
+
+The demonstration pauses after each example; press RETURN to continue.
+Inputs still come from the serial terminal. During interactive use, the LEDs
+hold the latest result while you enter another input. Answering `N` clears
+all LEDs before the program finishes. The LEDs are also cleared at startup.
+
+To use another port, change `IP` on line 40. The display subroutine writes
+`Y` with `OUT IP, Y` on line 2005. If you interrupt the program manually,
+you can clear the card by entering `OUT 1, 0` (substitute your configured port).
 
 ## Parts of the Neuron
 
@@ -180,7 +199,7 @@ The weight and bias are not adjusted during this process. A forward pass only ev
 
 ## BASIC Implementation
 
-The implementation is in [`neuron.bas`](neuron.bas).
+The implementations are in [`neuron.bas`](neuron.bas) and [`neuron_io.bas`](neuron_io.bas). Both use the same calculation subroutine.
 
 ### Setting the Weight and Bias
 
@@ -212,9 +231,11 @@ It takes the input `X`, weight `W` and bias `B`, then produces the weighted inpu
 
 The display subroutine at line 2000 prints `X`, `V`, `B`, `Z` and `Y`. For input `4` with the default parameters, these values are `4`, `8`, `-6`, `2` and `1` respectively.
 
-The demonstration reads its five inputs from the `DATA` statement at line 3000. The interactive section then accepts further inputs and uses the same calculation and display subroutines.
+The demonstration reads its three inputs from the `DATA` statement at line 3000. The interactive section then accepts further inputs and uses the same calculation and display subroutines.
 
 ### Trying a Different Activation
+
+Use the terminal-only `neuron.bas` for this experiment: the Digital I/O version expects a binary output of `0` or `1`.
 
 To try an identity activation, which returns _z_ unchanged, replace line 1030 with:
 
@@ -228,7 +249,7 @@ With the default weight and bias, input `4` then produces output `2`. This expos
 
 ## Checking the Results
 
-With the original step activation and default parameters, compare the initial five results with the worked-example table above. Then try `2.9`, `3` and `3.1`: the outputs should be `0`, `0` and `1` respectively.
+With the original step activation and default parameters, compare the initial three results with the worked-example table above. Then try `2.9`, `3` and `3.1`: the outputs should be `0`, `0` and `1` respectively.
 
 Numeric input is handled by BASIC's `INPUT` statement. The program does not add the Python version's explicit checks for non-finite values. Very large values may cause BASIC overflow errors, and floating-point rounding can affect inputs extremely close to the switching point.
 
