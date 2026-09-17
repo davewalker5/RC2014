@@ -61,6 +61,7 @@ and practical utilities.
 | MachineCode   | BASIC / Z80 Assembly | Classic `DATA`/`POKE` example for loading and executing Z80 machine code from BASIC     |
 | Neuron        | BASIC                | Fixed single-input artificial neuron with an inspectable forward pass                   |
 | StackAndQueue | BASIC                | Demonstration implementations of a stack and a FIFO queue                               |
+| TrainableNeuron | BASIC              | Single-input sigmoid neuron that learns from examples, with terminal, LED and LCD output |
 
 ## Hardware & Digital I/O
 
