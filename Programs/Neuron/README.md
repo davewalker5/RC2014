@@ -202,7 +202,7 @@ Since 2 is greater than zero, the step activation returns 1.
 
 A forward pass moves information in one direction, from input to output:
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Neuron/single-neuron-forward.png" width="100%">
+<img src="https://github.com/davewalker5/RC2014/blob/main/diagrams/single-neuron-forward.png" width="100%">
 
 The weight and bias are not adjusted during this process. A forward pass only evaluates the neuron using its fixed parameters.
 
