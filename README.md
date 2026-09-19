@@ -81,6 +81,12 @@ For more information about RC2014 computers, kits and expansion modules, see:
 
 https://rc2014.co.uk
 
+## Licences
+
+Unless otherwise noted, this repository is licensed under the [MIT licence](LICENSE). Individual file and third-party notices take precedence.
+
+[EmulatorSupport](EmulatorSupport/README.md) contains components under separate GPL and BSD licences, alongside MIT-licensed support files. See its [licence map](EmulatorSupport/LICENSE.md) for the exceptions and included licence texts. The repository's MIT licence does not relicense these components or downloaded firmware.
+
 ## Authors
 
 * **Dave Walker** — initial work and ongoing development

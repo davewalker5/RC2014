@@ -1,0 +1,241 @@
+diff --git a/Makefile b/Makefile
+index b33dc00..8d1ac15 100644
+--- a/Makefile
++++ b/Makefile
+@@ -372,3 +372,22 @@ libz280/libz80.o: libz280/z80.c libz280/z80.h
+ cpu.c: lib65816/config.h
+ 
+ include $(wildcard $(DEPFILES))
++
++# Local SID-Ulator extension; keep the original terminal-only target available.
++SDL_CONFIG ?= sdl2-config
++SID_PREFIX ?= ../sid-prefix
++SID_OBJECTS = event_noui.o 16x50.o acia.o z80sio.o ttycon.o vtcon_noui.o amd9511.o ef9345.o ef9345_norender.o gdb-backend-z80.o gdb-server.o ide.o ncr5380.o ppide.o ps2.o ps2event_noui.o rtc_bitbang.o sasi.o sdcard.o sn76489_noui.o tft_dumb.o tft_dumb_norender.o tms9918a.o tms9918a_norender.o w5100.o z80dma.o z180copro.o zxkey_none.o z180_io.o z80dis.o libz80/libz80.o libz180/libz180.o lib765/lib/lib765.a am9511/libam9511.a
++rc2014_sid.o: rc2014.c ../local/sidulator.h ../local/lcd.h ../local/digitalio.h
++	$(CC) $(CFLAGS) -DRC2014_SID_SUPPORT -c rc2014.c -o $@
++sidulator.o: ../local/sidulator.cpp ../local/sidulator.h
++	$(CXX) -std=c++17 -O2 -Wall -I$(SID_PREFIX)/include `$(SDL_CONFIG) --cflags` -c ../local/sidulator.cpp -o $@
++rc2014-sid: rc2014_sid.o sidulator.o lcd.o lcd_model.o digitalio.o $(SID_OBJECTS) $(SID_PREFIX)/lib/libresidfp.a
++	$(CXX) rc2014_sid.o sidulator.o lcd.o lcd_model.o digitalio.o $(SID_OBJECTS) $(SID_PREFIX)/lib/libresidfp.a `$(SDL_CONFIG) --libs` -lm -o $@
++
++lcd.o: ../local/digitalio.h ../local/lcd.cpp ../local/lcd.h ../local/lcd_model.h ../local/lcd_font.h
++	$(CXX) -std=c++17 -O2 -Wall `$(SDL_CONFIG) --cflags` -c ../local/lcd.cpp -o $@
++lcd_model.o: ../local/lcd_model.cpp ../local/lcd_model.h
++	$(CXX) -std=c++17 -O2 -Wall -c ../local/lcd_model.cpp -o $@
++
++digitalio.o: ../local/digitalio.cpp ../local/digitalio.h ../local/lcd_font.h
++	$(CXX) -std=c++17 -O2 -Wall `$(SDL_CONFIG) --cflags` -c ../local/digitalio.cpp -o $@
+diff --git a/acia.c b/acia.c
+index 3260601..9f1e30b 100644
+--- a/acia.c
++++ b/acia.c
+@@ -65,7 +65,10 @@ static void acia_transmit(struct acia *acia)
+ void acia_timer(struct acia *acia)
+ {
+ 	int s = acia->dev->ready(acia->dev);
+-	if (s & 1)
++	/* Honour RTS: BASIC raises it when its software receive buffer is full.
++	 * Also keep host input queued while the receive register is occupied. */
++	if ((s & 1) && !(acia->status & 1) &&
++	    (acia->config & 0x60) != 0x40)
+ 		acia_receive(acia);
+ 	if (s & 2)
+ 		acia_transmit(acia);
+diff --git a/ps2event_noui.c b/ps2event_noui.c
+index a0a4cb2..7e58034 100644
+--- a/ps2event_noui.c
++++ b/ps2event_noui.c
+@@ -5,7 +5,6 @@
+ #include <stdio.h>
+ #include <stdint.h>
+ #include <stdbool.h>
+-#include <SDL2/SDL.h>
+ #include "ps2.h"
+ 
+ void ps2_add_events(struct ps2 *ps2, uint32_t window)
+diff --git a/rc2014.c b/rc2014.c
+index 0bbceb4..5cdb5d0 100644
+--- a/rc2014.c
++++ b/rc2014.c
+@@ -68,6 +68,15 @@
+ #include "sasi.h"
+ #include "ncr5380.h"
+ #include "sn76489.h"
++#ifdef RC2014_SID_SUPPORT
++#include "../local/sidulator.h"
++#include "../local/digitalio.h"
++static int dio_enabled;
++#include "../local/lcd.h"
++static int lcd_enabled;
++static unsigned sid_chunk_cycles;
++static int sid_enabled;
++#endif
+ 
+ static uint8_t ramrom[2048 * 1024];	/* Covers the banked card and ZRC */
+ 
+@@ -2622,6 +2631,14 @@ static void io_write_ez512(uint16_t addr, uint8_t val)
+ 
+ void io_write(int unused, uint16_t addr, uint8_t val)
+ {
++#ifdef RC2014_SID_SUPPORT
++	if (sid_enabled || lcd_enabled || dio_enabled) {
++		lcd_advance(cpu_z80.tstates - sid_chunk_cycles);
++		sidulator_advance(cpu_z80.tstates - sid_chunk_cycles);
++		sid_chunk_cycles = cpu_z80.tstates;
++		if (digitalio_write(addr, val) || lcd_write(addr, val) || sidulator_write(addr, val)) return;
++	}
++#endif
+ 	switch (cpuboard) {
+ 	case CPUBOARD_Z80:
+ 		if (extreme)
+@@ -2680,6 +2697,15 @@ void io_write(int unused, uint16_t addr, uint8_t val)
+ 
+ uint8_t io_read(int unused, uint16_t addr)
+ {
++#ifdef RC2014_SID_SUPPORT
++	if (lcd_enabled || dio_enabled) {
++		uint8_t value;
++		lcd_advance(cpu_z80.tstates - sid_chunk_cycles);
++		sidulator_advance(cpu_z80.tstates - sid_chunk_cycles);
++		sid_chunk_cycles = cpu_z80.tstates;
++		if (digitalio_read(addr, &value) || lcd_read(addr, &value)) return value;
++	}
++#endif
+ 	switch (cpuboard) {
+ 	case CPUBOARD_Z80:
+ 	case CPUBOARD_SC108:
+@@ -3451,6 +3477,19 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
++#ifdef RC2014_SID_SUPPORT
++	/* SID clock conversion is validated for this default 7.3728 MHz board. */
++	if ((strcmp(getenv("RC2014_SID") ? getenv("RC2014_SID") : "off", "off") ||
++	     strcmp(getenv("RC2014_LCD") ? getenv("RC2014_LCD") : "off", "off") ||
++	     strcmp(getenv("RC2014_DIO") ? getenv("RC2014_DIO") : "off", "off")) &&
++	    (cpuboard != CPUBOARD_Z80 || fast || gdb_bind)) {
++		fprintf(stderr, "SID/LCD/Digital I/O require default Z80 board, normal speed and no GDB.\n");
++		exit(1);
++	}
++	sid_enabled = sidulator_init();
++	lcd_enabled = lcd_init();
++	dio_enabled = digitalio_init();
++#endif
+ 	/* 2.5ms - it's a balance between nice behaviour and simulation
+ 	   smoothness */
+ 	tc.tv_sec = 0;
+@@ -3500,6 +3539,9 @@ int main(int argc, char *argv[])
+ 			int j;
+ 			for (j = 0; j < 100; j++) {
+ 				unsigned int tstates = (tstate_steps + 5) / 10;
++#ifdef RC2014_SID_SUPPORT
++				sid_chunk_cycles = 0;
++#endif
+ 				if (gdb) {
+ 					cpu_z80.tstates = 0;
+ 					while (cpu_z80.tstates < tstates) {
+@@ -3509,6 +3551,12 @@ int main(int argc, char *argv[])
+ 				} else {
+ 					Z80ExecuteTStates(&cpu_z80, tstates);
+ 				}
++#ifdef RC2014_SID_SUPPORT
++				if (sid_enabled || lcd_enabled || dio_enabled) {
++					sidulator_advance(cpu_z80.tstates - sid_chunk_cycles);
++					lcd_advance(cpu_z80.tstates - sid_chunk_cycles);
++				}
++#endif
+ 				if (ef9345)
+ 					ef9345_cycles(ef9345, 200);
+ 				if (copro)
+@@ -3576,9 +3624,15 @@ int main(int argc, char *argv[])
+ 		}
+ 		if (have_wiznet)
+ 			w5100_process(wiz);
++#ifdef RC2014_SID_SUPPORT
++		if (lcd_enabled || dio_enabled) peripheral_events();
++#endif
+ 		/* Do 20ms of I/O and delays */
+-		if (!fast)
+-			nanosleep(&tc, NULL);
++		if (!fast
++#ifdef RC2014_SID_SUPPORT
++		    && !sidulator_pace()
++#endif
++		   ) nanosleep(&tc, NULL);
+ 		/* Non IM2 devices just hold interrupt */
+ 		/* If there is no pending Z80 vector IRQ but we think
+ 		   there now might be one we use the same logic as for
+diff --git a/ttycon.c b/ttycon.c
+index 8d7dbc4..5bbf91c 100644
+--- a/ttycon.c
++++ b/ttycon.c
+@@ -3,6 +3,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include <string.h>
+ #include <sys/select.h>
+ #include "serialdevice.h"
+ #include "ttycon.h"
+@@ -10,6 +11,11 @@
+ /*
+  *	This replaces the old hard coded serial to tty link
+  */
++/* Drain terminal pastes even while the guest has asserted flow control. */
++static uint8_t *input_queue;
++static size_t input_start, input_end, input_capacity;
++static int input_eof;
++
+ static unsigned con_ready(struct serial_device *dev)
+ {
+ 	fd_set i, o;
+@@ -17,7 +23,8 @@ static unsigned con_ready(struct serial_device *dev)
+ 	unsigned int r = 0;
+ 
+ 	FD_ZERO(&i);
+-	FD_SET(0, &i);
++	if (!input_eof)
++		FD_SET(0, &i);
+ 	FD_ZERO(&o);
+ 	FD_SET(1, &o);
+ 	tv.tv_sec = 0;
+@@ -29,7 +36,26 @@ static unsigned con_ready(struct serial_device *dev)
+ 		perror("select");
+ 		exit(1);
+ 	}
+-	if (FD_ISSET(0, &i))
++	if (FD_ISSET(0, &i)) {
++		if (input_capacity - input_end < 4096) {
++			if (input_start < input_end)
++				memmove(input_queue, input_queue + input_start, input_end - input_start);
++			input_end -= input_start;
++			input_start = 0;
++			if (input_capacity - input_end < 4096) {
++				size_t capacity = input_capacity ? input_capacity * 2 : 65536;
++				uint8_t *queue = realloc(input_queue, capacity);
++				if (!queue) { perror("console input queue"); exit(1); }
++				input_queue = queue;
++				input_capacity = capacity;
++			}
++		}
++		ssize_t count = read(0, input_queue + input_end, 4096);
++		if (count > 0) input_end += count;
++		else if (count == 0) input_eof = 1;
++		else if (errno != EINTR && errno != EAGAIN) { perror("console read"); exit(1); }
++	}
++	if (input_start < input_end)
+ 		r |= 1;
+ 	if (FD_ISSET(1, &o))
+ 		r |= 2;
+@@ -48,9 +74,8 @@ static unsigned con_noready(struct serial_device *dev)
+ 
+ static uint8_t con_get(struct serial_device *dev)
+ {
+-	static uint8_t c;
+-	if (read(0, (char *) &c, 1) != 1)
+-		return c;
++	uint8_t c = input_queue[input_start++];
++	if (input_start == input_end) input_start = input_end = 0;
+ 	if (c == 0x0A)
+ 		c = '\r';
+ 	return c;
