@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>SpeechConverter.Logic</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ProductVersion>1.0.0</ProductVersion>
+    <Authors>Dave Walker</Authors>
+    <Copyright>Copyright (c) 2026 Dave Walker</Copyright>
+    <Owners>Dave Walker</Owners>
+    <Title>Speech Converter Business Logic</Title>
+    <Summary>Speech Converter Business Logic</Summary>
+    <PackageTags>Speech Converter Logic</PackageTags>
+    <Description>Speech Converter Business Logic</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageProjectUrl>https://github.com/davewalker5/RC2014</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../SpeechConverter.Entities/SpeechConverter.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="pronunciation.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="pronunciation.json" Pack="true" PackagePath="contentFiles/any/any/" PackageCopyToOutput="true" PackageFlatten="true" />
+  </ItemGroup>
+</Project>
