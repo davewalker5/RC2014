@@ -2,7 +2,7 @@ diff --git a/Makefile b/Makefile
 index b33dc00..8d1ac15 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -372,3 +372,22 @@ libz280/libz80.o: libz280/z80.c libz280/z80.h
+@@ -372,3 +372,24 @@ libz280/libz80.o: libz280/z80.c libz280/z80.h
  cpu.c: lib65816/config.h
  
  include $(wildcard $(DEPFILES))
@@ -11,12 +11,14 @@ index b33dc00..8d1ac15 100644
 +SDL_CONFIG ?= sdl2-config
 +SID_PREFIX ?= ../sid-prefix
 +SID_OBJECTS = event_noui.o 16x50.o acia.o z80sio.o ttycon.o vtcon_noui.o amd9511.o ef9345.o ef9345_norender.o gdb-backend-z80.o gdb-server.o ide.o ncr5380.o ppide.o ps2.o ps2event_noui.o rtc_bitbang.o sasi.o sdcard.o sn76489_noui.o tft_dumb.o tft_dumb_norender.o tms9918a.o tms9918a_norender.o w5100.o z80dma.o z180copro.o zxkey_none.o z180_io.o z80dis.o libz80/libz80.o libz180/libz180.o lib765/lib/lib765.a am9511/libam9511.a
-+rc2014_sid.o: rc2014.c ../local/sidulator.h ../local/lcd.h ../local/digitalio.h
++rc2014_sid.o: rc2014.c ../local/sidulator.h ../local/lcd.h ../local/digitalio.h ../local/speech.h
 +	$(CC) $(CFLAGS) -DRC2014_SID_SUPPORT -c rc2014.c -o $@
 +sidulator.o: ../local/sidulator.cpp ../local/sidulator.h
 +	$(CXX) -std=c++17 -O2 -Wall -I$(SID_PREFIX)/include `$(SDL_CONFIG) --cflags` -c ../local/sidulator.cpp -o $@
-+rc2014-sid: rc2014_sid.o sidulator.o lcd.o lcd_model.o digitalio.o $(SID_OBJECTS) $(SID_PREFIX)/lib/libresidfp.a
-+	$(CXX) rc2014_sid.o sidulator.o lcd.o lcd_model.o digitalio.o $(SID_OBJECTS) $(SID_PREFIX)/lib/libresidfp.a `$(SDL_CONFIG) --libs` -lm -o $@
++speech.o: ../local/speech.cpp ../local/speech.h
++	$(CXX) -std=c++17 -O2 -Wall `$(SDL_CONFIG) --cflags` -c ../local/speech.cpp -o $@
++rc2014-sid: rc2014_sid.o sidulator.o lcd.o lcd_model.o digitalio.o speech.o $(SID_OBJECTS) $(SID_PREFIX)/lib/libresidfp.a
++	$(CXX) rc2014_sid.o sidulator.o lcd.o lcd_model.o digitalio.o speech.o $(SID_OBJECTS) $(SID_PREFIX)/lib/libresidfp.a `$(SDL_CONFIG) --libs` -lm -o $@
 +
 +lcd.o: ../local/digitalio.h ../local/lcd.cpp ../local/lcd.h ../local/lcd_model.h ../local/lcd_font.h
 +	$(CXX) -std=c++17 -O2 -Wall `$(SDL_CONFIG) --cflags` -c ../local/lcd.cpp -o $@
@@ -57,12 +59,14 @@ diff --git a/rc2014.c b/rc2014.c
 index 0bbceb4..5cdb5d0 100644
 --- a/rc2014.c
 +++ b/rc2014.c
-@@ -68,6 +68,15 @@
+@@ -68,6 +68,17 @@
  #include "sasi.h"
  #include "ncr5380.h"
  #include "sn76489.h"
 +#ifdef RC2014_SID_SUPPORT
 +#include "../local/sidulator.h"
++#include "../local/speech.h"
++static int speech_enabled;
 +#include "../local/digitalio.h"
 +static int dio_enabled;
 +#include "../local/lcd.h"
@@ -73,38 +77,40 @@ index 0bbceb4..5cdb5d0 100644
  
  static uint8_t ramrom[2048 * 1024];	/* Covers the banked card and ZRC */
  
-@@ -2622,6 +2631,14 @@ static void io_write_ez512(uint16_t addr, uint8_t val)
+@@ -2622,6 +2633,15 @@ static void io_write_ez512(uint16_t addr, uint8_t val)
  
  void io_write(int unused, uint16_t addr, uint8_t val)
  {
 +#ifdef RC2014_SID_SUPPORT
-+	if (sid_enabled || lcd_enabled || dio_enabled) {
++	if (sid_enabled || lcd_enabled || dio_enabled || speech_enabled) {
++		speech_advance(cpu_z80.tstates - sid_chunk_cycles);
 +		lcd_advance(cpu_z80.tstates - sid_chunk_cycles);
 +		sidulator_advance(cpu_z80.tstates - sid_chunk_cycles);
 +		sid_chunk_cycles = cpu_z80.tstates;
-+		if (digitalio_write(addr, val) || lcd_write(addr, val) || sidulator_write(addr, val)) return;
++		if (digitalio_write(addr, val) || lcd_write(addr, val) || speech_write(addr, val) || sidulator_write(addr, val)) return;
 +	}
 +#endif
  	switch (cpuboard) {
  	case CPUBOARD_Z80:
  		if (extreme)
-@@ -2680,6 +2697,15 @@ void io_write(int unused, uint16_t addr, uint8_t val)
+@@ -2680,6 +2699,16 @@ void io_write(int unused, uint16_t addr, uint8_t val)
  
  uint8_t io_read(int unused, uint16_t addr)
  {
 +#ifdef RC2014_SID_SUPPORT
-+	if (lcd_enabled || dio_enabled) {
++	if (lcd_enabled || dio_enabled || speech_enabled) {
 +		uint8_t value;
++		speech_advance(cpu_z80.tstates - sid_chunk_cycles);
 +		lcd_advance(cpu_z80.tstates - sid_chunk_cycles);
 +		sidulator_advance(cpu_z80.tstates - sid_chunk_cycles);
 +		sid_chunk_cycles = cpu_z80.tstates;
-+		if (digitalio_read(addr, &value) || lcd_read(addr, &value)) return value;
++		if (digitalio_read(addr, &value) || lcd_read(addr, &value) || speech_read(addr, &value)) return value;
 +	}
 +#endif
  	switch (cpuboard) {
  	case CPUBOARD_Z80:
  	case CPUBOARD_SC108:
-@@ -3451,6 +3477,19 @@ int main(int argc, char *argv[])
+@@ -3451,6 +3479,21 @@ int main(int argc, char *argv[])
  		}
  	}
  
@@ -112,19 +118,21 @@ index 0bbceb4..5cdb5d0 100644
 +	/* SID clock conversion is validated for this default 7.3728 MHz board. */
 +	if ((strcmp(getenv("RC2014_SID") ? getenv("RC2014_SID") : "off", "off") ||
 +	     strcmp(getenv("RC2014_LCD") ? getenv("RC2014_LCD") : "off", "off") ||
-+	     strcmp(getenv("RC2014_DIO") ? getenv("RC2014_DIO") : "off", "off")) &&
++	     strcmp(getenv("RC2014_DIO") ? getenv("RC2014_DIO") : "off", "off") ||
++	     strcmp(getenv("RC2014_SPEECH") ? getenv("RC2014_SPEECH") : "on", "off")) &&
 +	    (cpuboard != CPUBOARD_Z80 || fast || gdb_bind)) {
-+		fprintf(stderr, "SID/LCD/Digital I/O require default Z80 board, normal speed and no GDB.\n");
++		fprintf(stderr, "SID/LCD/Digital I/O/MG005 require default Z80 board, normal speed and no GDB.\n");
 +		exit(1);
 +	}
 +	sid_enabled = sidulator_init();
 +	lcd_enabled = lcd_init();
 +	dio_enabled = digitalio_init();
++	speech_enabled = speech_init();
 +#endif
  	/* 2.5ms - it's a balance between nice behaviour and simulation
  	   smoothness */
  	tc.tv_sec = 0;
-@@ -3500,6 +3539,9 @@ int main(int argc, char *argv[])
+@@ -3500,6 +3541,9 @@ int main(int argc, char *argv[])
  			int j;
  			for (j = 0; j < 100; j++) {
  				unsigned int tstates = (tstate_steps + 5) / 10;
@@ -134,12 +142,13 @@ index 0bbceb4..5cdb5d0 100644
  				if (gdb) {
  					cpu_z80.tstates = 0;
  					while (cpu_z80.tstates < tstates) {
-@@ -3509,6 +3551,12 @@ int main(int argc, char *argv[])
+@@ -3509,6 +3553,13 @@ int main(int argc, char *argv[])
  				} else {
  					Z80ExecuteTStates(&cpu_z80, tstates);
  				}
 +#ifdef RC2014_SID_SUPPORT
-+				if (sid_enabled || lcd_enabled || dio_enabled) {
++				if (sid_enabled || lcd_enabled || dio_enabled || speech_enabled) {
++					speech_advance(cpu_z80.tstates - sid_chunk_cycles);
 +					sidulator_advance(cpu_z80.tstates - sid_chunk_cycles);
 +					lcd_advance(cpu_z80.tstates - sid_chunk_cycles);
 +				}
@@ -147,7 +156,7 @@ index 0bbceb4..5cdb5d0 100644
  				if (ef9345)
  					ef9345_cycles(ef9345, 200);
  				if (copro)
-@@ -3576,9 +3624,15 @@ int main(int argc, char *argv[])
+@@ -3576,9 +3629,15 @@ int main(int argc, char *argv[])
  		}
  		if (have_wiznet)
  			w5100_process(wiz);

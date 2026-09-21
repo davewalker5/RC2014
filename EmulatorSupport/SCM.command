@@ -8,6 +8,7 @@ stty -onlcr
 . ./sound.conf
 . ./display.conf
 . ./digitalio.conf
+. ./speech.conf
 emulator=./bin/rc2014-sid
-if [ "$RC2014_SID" = off ] && [ "$RC2014_LCD" = off ] && [ "$RC2014_DIO" = off ]; then emulator=./bin/rc2014; fi
+if [ "$RC2014_SID" = off ] && [ "$RC2014_LCD" = off ] && [ "$RC2014_DIO" = off ] && [ "$RC2014_SPEECH" = off ]; then emulator=./bin/rc2014; fi
 "$emulator" -a -r roms/mini-ii-v1.2.bin -e 14
