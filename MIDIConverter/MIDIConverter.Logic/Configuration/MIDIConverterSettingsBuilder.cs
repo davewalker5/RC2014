@@ -41,6 +41,7 @@ namespace MIDIConverter.Logic.Configuration
                 x => Settings.BasicLineNumberIncrement = x);
             ApplyBoolean(parser, CommandLineOptionType.OverwriteOutputFile, x => Settings.OverwriteOutputFile = x);
             ApplyBoolean(parser, CommandLineOptionType.Verbose, x => Settings.Verbose = x);
+            ApplyBoolean(parser, CommandLineOptionType.VuMeter, x => Settings.VuMeter = x);
 
             var waveform = Value(parser, CommandLineOptionType.Waveform);
             if (waveform is not null)
@@ -73,6 +74,7 @@ namespace MIDIConverter.Logic.Configuration
             parser.Add(CommandLineOptionType.BasicLineNumberIncrement, false, "--lineincrement", "-li", "BASIC line increment", 1, 1);
             parser.Add(CommandLineOptionType.OverwriteOutputFile, false, "--overwrite", "-f", "Overwrite output", 1, 1);
             parser.Add(CommandLineOptionType.Verbose, false, "--verbose", "-d", "Verbose diagnostics", 1, 1);
+            parser.Add(CommandLineOptionType.VuMeter, false, "--vumeter", "-vm", "Digital I/O activity meter", 1, 1);
             return parser;
         }
 

@@ -4,10 +4,11 @@ An RC2014 SID-Ulator arrangement of Scott Joplin's *Pineapple Rag* (1908).
 
 ## Files
 
-| Filename           | Description                                                                                                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `PineappleRag.mid` | Original MIDI source downloaded from the [Mutopia Project](https://www.mutopiaproject.org/)                                           |
-| `PineappleRag.bas` | RC2014 BASIC arrangement generated from the MIDI file using this repository's [MIDI Converter](../../MIDIConverter/README.md) |
+| Filename              | Description                                                                                                                   |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `PineappleRag.mid`    | Original MIDI source downloaded from the [Mutopia Project](https://www.mutopiaproject.org/)                                   |
+| `PineappleRag.bas`    | RC2014 BASIC arrangement generated from the MIDI file using this repository's [MIDI Converter](../../MIDIConverter/README.md) |
+| `PineappleRag_io.bas` | As `PineappleRag.bas` but with support for an activity meter using the Digital I/O card                                       |
 
 The converter reads the MIDI notes and timing, quantises the music, reduces its polyphony to the SID's three voices, converts each selected pitch into a SID frequency word, and writes a self-contained Microsoft BASIC player followed by the music as `DATA` statements.
 

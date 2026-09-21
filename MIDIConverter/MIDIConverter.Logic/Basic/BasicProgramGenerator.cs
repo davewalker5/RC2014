@@ -61,10 +61,11 @@ namespace MIDIConverter.Logic.Basic
             {
                 statements.Add(new(null,
                     $"DATA {step.DurationMilliseconds},{step.Frequency1},{step.Frequency2}," +
-                    $"{step.Frequency3},{step.ActiveMask},{step.RetriggerMask}"));
+                    $"{step.Frequency3},{step.ActiveMask},{step.RetriggerMask}" +
+                    (settings.VuMeter ? $",{(1 << step.MeterLevel) - 1}" : "")));
             }
 
-            statements.Add(new(null, "DATA 0,0,0,0,0,0"));
+            statements.Add(new(null, settings.VuMeter ? "DATA 0,0,0,0,0,0,0" : "DATA 0,0,0,0,0,0"));
 
             // Resolve symbolic targets only after the complete statement list is
             // known, allowing custom start lines and increments to work safely.
@@ -131,6 +132,7 @@ namespace MIDIConverter.Logic.Basic
             var replacements = new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["{{SOURCE_NAME}}"] = safeName,
+                ["{{DATA_VERSION}}"] = settings.VuMeter ? "2" : "1",
                 ["{{SID_CLOCK_HERTZ}}"] = settings.SIDClockHertz.ToString(CultureInfo.InvariantCulture),
                 ["{{WAVEFORM_NAME}}"] = settings.Waveform.ToString(),
                 ["{{WAVEFORM_VALUE}}"] = waveform.ToString(CultureInfo.InvariantCulture),
@@ -138,12 +140,19 @@ namespace MIDIConverter.Logic.Basic
                 ["{{MASTER_VOLUME}}"] = settings.MasterVolume.ToString(CultureInfo.InvariantCulture),
                 ["{{DELAY_FACTOR}}"] = settings.DelayLoopIterationsPerMillisecond.ToString(CultureInfo.InvariantCulture),
                 ["{{PULSE_LOW}}"] = pulseLow.ToString(CultureInfo.InvariantCulture),
-                ["{{PULSE_HIGH}}"] = pulseHigh.ToString(CultureInfo.InvariantCulture)
+                ["{{PULSE_HIGH}}"] = pulseHigh.ToString(CultureInfo.InvariantCulture),
+                ["{{METER_READ}}"] = settings.VuMeter ? ",M" : "",
+                ["{{METER_HEADER}}"] = settings.VuMeter ? ",LED MASK" : ""
             };
             var statements = new List<Statement>();
             foreach (var templateLine in File.ReadAllLines(_templatePath))
             {
                 var text = templateLine.Trim();
+                if (text.StartsWith("VU:", StringComparison.Ordinal))
+                {
+                    if (!settings.VuMeter) continue;
+                    text = text[3..];
+                }
                 if (string.IsNullOrWhiteSpace(text))
                 {
                     continue;
