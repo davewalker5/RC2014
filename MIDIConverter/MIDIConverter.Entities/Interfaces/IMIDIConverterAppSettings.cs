@@ -15,5 +15,6 @@ namespace MIDIConverter.Entities.Interfaces
         int BasicLineNumberIncrement { get; set; }
         bool OverwriteOutputFile { get; set; }
         bool Verbose { get; set; }
+        bool VuMeter { get; set; }
     }
 }

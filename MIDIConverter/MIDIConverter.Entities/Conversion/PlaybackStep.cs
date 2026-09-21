@@ -11,6 +11,7 @@ namespace MIDIConverter.Entities.Conversion
         public int Frequency3 { get; init; }
         public int ActiveMask { get; init; }
         public int RetriggerMask { get; init; }
+        public int MeterLevel { get; init; }
 
         public IReadOnlyList<int> Frequencies
             => [Frequency1, Frequency2, Frequency3];

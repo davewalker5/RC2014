@@ -60,5 +60,6 @@ namespace MIDIConverter.Entities.Configuration
         /// Gets or sets whether detailed conversion diagnostics are displayed.
         /// </summary>
         public bool Verbose { get; set; }
+        public bool VuMeter { get; set; }
     }
 }

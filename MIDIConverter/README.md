@@ -503,25 +503,28 @@ An existing output file is protected by default. Replace it explicitly with:
 
 ## Options
 
-| Setting                     | Long option       | Short option |                 Default |
-| --------------------------- | ----------------- | ------------ | ----------------------: |
-| Input MIDI file             | `--convert`       | `-c`         |                Required |
-| Output BASIC file           | `--output`        | `-o`         | Source name with `.bas` |
-| Steps per quarter note      | `--steps`         | `-q`         |                       4 |
-| Tempo override in BPM       | `--tempo`         | `-t`         |          MIDI tempo map |
-| SID clock in hertz          | `--sidclock`      | `-sc`        |                 1000000 |
-| Master volume               | `--volume`        | `-v`         |                      10 |
-| Waveform                    | `--waveform`      | `-w`         |                Triangle |
-| Pulse width                 | `--pulsewidth`    | `-pw`        |                    2048 |
-| Delay loops per millisecond | `--delayfactor`   | `-df`        |                       1 |
-| First BASIC line number     | `--startline`     | `-sl`        |                      10 |
-| BASIC line increment        | `--lineincrement` | `-li`        |                      10 |
-| Replace existing output     | `--overwrite`     | `-f`         |                   false |
+| Setting                         | Long option       | Short option |                 Default |
+| ------------------------------- | ----------------- | ------------ | ----------------------: |
+| Input MIDI file                 | `--convert`       | `-c`         |                Required |
+| Output BASIC file               | `--output`        | `-o`         | Source name with `.bas` |
+| Steps per quarter note          | `--steps`         | `-q`         |                       4 |
+| Tempo override in BPM           | `--tempo`         | `-t`         |          MIDI tempo map |
+| SID clock in hertz              | `--sidclock`      | `-sc`        |                 1000000 |
+| Master volume                   | `--volume`        | `-v`         |                      10 |
+| Waveform                        | `--waveform`      | `-w`         |                Triangle |
+| Pulse width                     | `--pulsewidth`    | `-pw`        |                    2048 |
+| Delay loops per millisecond     | `--delayfactor`   | `-df`        |                       1 |
+| First BASIC line number         | `--startline`     | `-sl`        |                      10 |
+| BASIC line increment            | `--lineincrement` | `-li`        |                      10 |
+| Replace existing output         | `--overwrite`     | `-f`         |                   false |
+| Digital I/O activity meter      | `--vumeter`       | `-vm`        |                   false |
 | Verbose flag (currently unused) | `--verbose`       | `-d`         |                   false |
 
 `--verbose` is parsed and stored but currently does not change the output; the summary and warnings are always printed.
 
 Long and short option names and waveform values are case-insensitive. Boolean options require an explicit `true` or `false` value.
+
+Set `--vumeter true` to show a simulated activity level on the eight LEDs of a Digital I/O card. The level is calculated from the velocities of notes assigned to the three SID voices; it is not an audio measurement. The player updates the LEDs at each playback step and clears them when playback finishes. Meter output adds BASIC processing overhead, so playback timing may need recalibration.
 
 Defaults are stored under `ApplicationSettings` in `appsettings.json`. Command-line values override those defaults for one run.
 
@@ -562,7 +565,7 @@ REM DURATION,FREQUENCY1,FREQUENCY2,FREQUENCY3,ACTIVE MASK,RETRIGGER MASK
 DATA 500,4389,5530,6577,7,7
 ```
 
-Duration is in milliseconds before BASIC delay calibration. Frequencies are precalculated SID words. The active mask selects voices and the retrigger mask distinguishes a repeated note from a continued one. A zero-duration record ends the music.
+Duration is in milliseconds before BASIC delay calibration. Frequencies are precalculated SID words. The active mask selects voices and the retrigger mask distinguishes a repeated note from a continued one. A zero-duration record ends the music. Meter-enabled output uses data-format version 2 and appends a seventh value containing the LED mask; version 1 remains the default.
 
 ## BASIC Player Template
 

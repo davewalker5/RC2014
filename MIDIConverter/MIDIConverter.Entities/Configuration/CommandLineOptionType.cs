@@ -15,6 +15,7 @@
         BasicStartLineNumber,
         BasicLineNumberIncrement,
         OverwriteOutputFile,
-        Verbose
+        Verbose,
+        VuMeter
     }
 }

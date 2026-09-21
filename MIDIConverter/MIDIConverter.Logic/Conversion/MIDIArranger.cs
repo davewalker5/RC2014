@@ -142,8 +142,9 @@ namespace MIDIConverter.Logic.Conversion
                     Frequency2 = frequencies[1],
                     Frequency3 = frequencies[2],
                     ActiveMask = activeMask,
-                    RetriggerMask = retriggerMask
-                });
+                    RetriggerMask = retriggerMask,
+                    MeterLevel = Math.Min(8, (int)Math.Ceiling(selected.Sum(x => x.Source.Velocity) * 8d / (3 * 127)))
+                }, settings.VuMeter);
             }
 
             // Collate parser warnings with one warning for each distinct pitch that
@@ -281,7 +282,7 @@ namespace MIDIConverter.Logic.Conversion
             return elapsedMicroseconds / 1000d;
         }
 
-        private static void AddOrMerge(ICollection<PlaybackStep> steps, PlaybackStep step)
+        private static void AddOrMerge(ICollection<PlaybackStep> steps, PlaybackStep step, bool vuMeter)
         {
             // Run-length encode unchanged states. A retrigger must remain a separate
             // row because it represents an audible new attack at the same pitch.
@@ -291,7 +292,8 @@ namespace MIDIConverter.Logic.Conversion
                 previous.Frequency1 == step.Frequency1 &&
                 previous.Frequency2 == step.Frequency2 &&
                 previous.Frequency3 == step.Frequency3 &&
-                previous.ActiveMask == step.ActiveMask)
+                previous.ActiveMask == step.ActiveMask &&
+                (!vuMeter || previous.MeterLevel == step.MeterLevel))
             {
                 previous.DurationMilliseconds = checked(previous.DurationMilliseconds + step.DurationMilliseconds);
                 return;

@@ -28,5 +28,20 @@ namespace MIDIConverter.Tests
             StringAssert.Contains(program, "260 PRINT \"PLAYBACK COMPLETE\":END:REM FINISH");
             Assert.IsFalse(program.Contains("@LOOP@", StringComparison.Ordinal));
         }
+
+        [TestMethod]
+        public void GenerateVuMeterAddsLedDataAndClearsDisplay()
+        {
+            var program = new BasicProgramGenerator().Generate(
+                "test.mid",
+                [new PlaybackStep { DurationMilliseconds = 500, ActiveMask = 1, MeterLevel = 4 }],
+                new MIDIConverterAppSettings { VuMeter = true });
+
+            StringAssert.Contains(program, "READ D,F1,F2,F3,A,G,M");
+            StringAssert.Contains(program, "DATA 500,0,0,0,1,0,15");
+            StringAssert.Contains(program, "DATA 0,0,0,0,0,0,0");
+            StringAssert.Contains(program, "OUT 1,M:REM SHOW ACTIVITY");
+            StringAssert.Contains(program, "OUT 1,0:REM CLEAR DIGITAL I/O LEDS");
+        }
     }
 }
