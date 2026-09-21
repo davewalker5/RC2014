@@ -11,6 +11,7 @@ This directory contains **support source and instructions, not a prebuilt emulat
 - SID-Ulator-style sound through libresidfp, with host playback and optional WAV recording
 - A separate HD44780-compatible 16×2 LCD window, including custom glyphs
 - A Digital I/O window with eight buttons, eight LEDs and optional latched inputs
+- Provisional MG005 speech board I/O, with playback from supplied allophone WAV files
 
 Interaction stays in Terminal; peripheral windows belong to the same emulator process. No browser or physical RC2014 is required.
 
@@ -26,18 +27,21 @@ Intel Macs and other macOS releases need their own native build and validation. 
 
 ## Files in this bundle
 
-| File                                                                                     | Purpose                                                                            |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [macos-local.patch](macos-local.patch)                                                   | Serial fixes, peripheral hooks and build rules for the pinned EmulatorKit revision |
-| [local/](local/)                                                                         | SID, LCD and Digital I/O implementations, interfaces and bitmap font               |
-| [build-sid-library.command](build-sid-library.command)                                   | Builds and locally installs static libresidfp                                      |
-| [build.command](build.command)                                                           | Builds the original `rc2014` and enhanced `rc2014-sid` executables                 |
-| [BASIC.command](BASIC.command), [SCM.command](SCM.command)                               | Terminal setup, configuration loading and ROM-bank selection                       |
-| [sound.conf](sound.conf), [display.conf](display.conf), [digitalio.conf](digitalio.conf) | Peripheral defaults, overridable through environment variables                     |
-| [tests/](tests/)                                                                         | Controller, window, audio and BASIC/SCM checks                                     |
-| [COPYING.libresidfp](COPYING.libresidfp), [local/LICENSE.font](local/LICENSE.font)       | Included third-party license texts                                                 |
+| File                                                                                                                 | Purpose                                                                            |
+| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [macos-local.patch](macos-local.patch)                                                                               | Serial fixes, peripheral hooks and build rules for the pinned EmulatorKit revision |
+| [local/](local/)                                                                                                     | SID, LCD, Digital I/O and MG005 implementations, interfaces and bitmap font        |
+| [apply-to-local-build.py](apply-to-local-build.py), [prepare-speech-samples.py](prepare-speech-samples.py)           | Upgrade an existing build and prepare separately downloaded speech recordings      |
+| [build-sid-library.command](build-sid-library.command)                                                               | Builds and locally installs static libresidfp                                      |
+| [build.command](build.command)                                                                                       | Builds the original `rc2014` and enhanced `rc2014-sid` executables                 |
+| [BASIC.command](BASIC.command), [SCM.command](SCM.command)                                                           | Terminal setup, configuration loading and ROM-bank selection                       |
+| [sound.conf](sound.conf), [display.conf](display.conf), [digitalio.conf](digitalio.conf), [speech.conf](speech.conf) | Peripheral defaults, overridable through environment variables                     |
+| [tests/](tests/)                                                                                                     | Controller, window, audio and BASIC/SCM checks                                     |
+| [COPYING.libresidfp](COPYING.libresidfp), [local/LICENSE.font](local/LICENSE.font)                                   | Included third-party license texts                                                 |
 
-The enhanced executable retains the name `rc2014-sid`, although it supports all three peripherals. The original executable has no SDL dependency.
+The enhanced executable retains the name `rc2014-sid`, although it supports all four peripherals. The original executable has no SDL dependency.
+
+For an existing build made from this bundle before MG005 support, run `python3 apply-to-local-build.py /absolute/path/to/Emulator` from this directory, then run `./build.command` inside that build folder. The helper checks for the previously patched source layout and can be rerun safely.
 
 ## Build on macOS
 
@@ -256,11 +260,11 @@ The default DA/DB ports match the RC2014 LCD module. The display supports DDRAM,
 
 Input and output ports are independent. Port 1 matches the programs in the parent RC2014 project; configure both to 0 for software that expects the hardware's usual port 0.
 
-- Hold a numbered button with the mouse, or hold keys **0–7** while the panel has focus.
-- Click **HOLD** to latch inputs and combine buttons. Click again to release.
-- Press **Space** in the panel to release all inputs.
-- Moving focus releases momentary input; HOLD selections remain set.
-- Closing the panel releases all inputs and hides only that window.
+- Hold a numbered button with the mouse, or hold keys **0–7** while the panel has focus
+- Click **HOLD** to latch inputs and combine buttons. Click again to release
+- Press **Space** in the panel to release all inputs
+- Moving focus releases momentary input; HOLD selections remain set
+- Closing the panel releases all inputs and hides only that window
 
 Bits run from 7 to 0, left to right. `OUT 1,165` lights LEDs 7, 5, 2 and 0. `PRINT INP(1)` reads the active-high button byte. To mirror the buttons onto the LEDs:
 
@@ -270,6 +274,45 @@ Bits run from 7 to 0, left to right. `OUT 1,165` lights LEDs 7, 5, 2 and 0. `PRI
 RUN
 ```
 
+### MG005 speech (provisional)
+
+The SP0256-AL2 bus adapter is enabled by default. The default port is **31** for both `INP` and `OUT`, and ready is **bit 1** (mask 2), following
+a [working MG005 BASIC example](https://diyelectromusic.com/2025/08/02/sp0256a-al2-speech-synthesis/).
+
+The chip takes six-bit allophone codes, rather than ASCII text. Try [`Programs/Speech/hello_z80.bas`](../Programs/Speech/hello_z80.bas).
+
+| Variable                    | Default                        | Meaning                                                |
+| --------------------------- | ------------------------------ | ------------------------------------------------------ |
+| `RC2014_SPEECH`             | `on`                           | `on` or `off`                                          |
+| `RC2014_SPEECH_PORT`        | `31`                           | I/O port, 0–255                                        |
+| `RC2014_SPEECH_READY_BIT`   | `2`                            | Ready status mask, one bit                             |
+| `RC2014_SPEECH_FALLBACK_MS` | `120`                          | Assumed allophone duration without a sample, 0–2000 ms |
+| `RC2014_SPEECH_SAMPLES`     | `speech-samples/` when present | Directory of numbered WAV files for audible output     |
+| `RC2014_SPEECH_TRACE`       | Unset                          | New CSV filename recording accepted allophone codes    |
+
+The adapter plays `00.wav` through `63.wav` from the sample directory when those files exist. SDL converts the WAV format for host playback and uses the sample length for the provisional ready timing. Missing files are silent and use the fallback duration. The bundle does **not** include allophone recordings. Without samples, I/O and status work, but there is no speech audio. `RC2014_SPEECH_TRACE` records codes for checking programs.
+
+For local playback, [Sebastian Tomczak's hardware recording pack](https://little-scale.blogspot.com/2009/02/sp0256-al2-creative-commons-sample-pack.html)
+contains all 59 voiced allophones. The original download is now unavailable; an [archived copy of the author's ZIP](https://web.archive.org/web/20180331044917id_/http://milkcrate.com.au/_other/downloads/sample_sets/little-scale_SP0256-AL2.zip) is available. The ZIP's embedded readme states **CC BY-NC 3.0**; retain it with the samples and credit Sebastian Tomczak. The samples are kept outside the source bundle.
+
+To download and install the pack, run these commands from `EmulatorSupport/`. Replace `/path/to/Emulator` with the folder containing your local emulator build; the converter verifies the downloaded ZIP before installing anything.
+
+```sh
+curl -fL -o ~/Downloads/little-scale_SP0256-AL2.zip 'https://web.archive.org/web/20180331044917id_/http://milkcrate.com.au/_other/downloads/sample_sets/little-scale_SP0256-AL2.zip'
+python3 prepare-speech-samples.py ~/Downloads/little-scale_SP0256-AL2.zip /path/to/Emulator/speech-samples
+```
+
+The converter verifies the archive hash, maps allophone names to chip codes, and generates the five silent pause WAVs. The pack names the `GG1` allophone `GOT.wav`; the converter maps that file to code 36. The resulting folder holds the author's readme and a `SOURCE.txt` provenance note. If the folder is in the emulator build, `speech.conf` finds it automatically. From the build folder, run `./BASIC.command` and try the [`Hello Z80` listing](../Programs/Speech/hello_z80.bas).
+
+```sh
+RC2014_SPEECH_TRACE="$PWD/speech-codes.csv" ./BASIC.command
+RC2014_SPEECH_SAMPLES="/another/speech-samples" ./BASIC.command
+```
+
+The port and ready mask can be changed after checking the assembled board.
+
+The enhanced `bin/rc2014-sid` also enables speech when started directly; run it from the build folder to pick up `speech-samples/` automatically. Set `RC2014_SPEECH=off` to disable speech for a session.
+
 ### Disable peripherals
 
 ```sh
@@ -277,11 +320,13 @@ RUN
 RC2014_SID=off ./BASIC.command
 # Disable Digital I/O only:
 RC2014_DIO=off ./BASIC.command
+# Disable MG005 speech only:
+RC2014_SPEECH=off ./BASIC.command
 # Use the original terminal-only executable:
-RC2014_SID=off RC2014_LCD=off RC2014_DIO=off ./BASIC.command
+RC2014_SID=off RC2014_LCD=off RC2014_DIO=off RC2014_SPEECH=off ./BASIC.command
 ```
 
-All three features default to off when invoking `bin/rc2014-sid` directly; the launchers enable them through configuration. Disabling them at runtime does not remove the enhanced binary's library dependencies.
+Speech defaults to on when invoking `bin/rc2014-sid` directly; SID, LCD and Digital I/O default to off. The launchers enable the other peripherals through configuration. Disabling them at runtime does not remove the enhanced binary's library dependencies.
 
 ## Check your build
 
@@ -300,6 +345,9 @@ RC2014_DIO=on RC2014_LCD=on SDL_VIDEODRIVER=dummy python3 tests/regression.py
 c++ -std=c++17 tests/sid-smoke.cpp source/sidulator.o sid-prefix/lib/libresidfp.a $(sdl2-config --libs) -o test-output/sid-smoke
 RC2014_SID=8580 RC2014_SID_OUTPUT=wav RC2014_SID_WAV="$PWD/test-output/sid-8580.wav" ./test-output/sid-smoke
 python3 tests/check-sid-wave.py test-output/sid-8580.wav
+
+c++ -std=c++17 -Wall $(sdl2-config --cflags) tests/speech-smoke.cpp local/speech.cpp $(sdl2-config --libs) -o test-output/speech-smoke
+RC2014_SPEECH=on RC2014_SPEECH_TRACE="$PWD/test-output/speech-codes.csv" ./test-output/speech-smoke
 ```
 
 Choose a new WAV filename for each run. Repeat the audio check with `RC2014_SID=6581` and another filename to test that model. Omit `SDL_VIDEODRIVER=dummy` from the window test to open native windows briefly; also launch BASIC normally to check your actual audio device and desktop interaction.
@@ -329,7 +377,7 @@ To build **only the terminal emulator**, apply the patch and prepare the ROM as 
 ```sh
 make -C source rc2014 CFLAGS='-Wall -g3 -O2 -DSOL_TCP=IPPROTO_TCP -I../include'
 cp source/rc2014 bin/rc2014
-RC2014_SID=off RC2014_LCD=off RC2014_DIO=off ./BASIC.command
+RC2014_SID=off RC2014_LCD=off RC2014_DIO=off RC2014_SPEECH=off ./BASIC.command
 ```
 
 This macOS-only command needs no SDL or libresidfp; the supplied `build.command` intentionally builds both targets and therefore requires them.
@@ -340,6 +388,7 @@ This macOS-only command needs no SDL or libresidfp; the supplied `build.command`
 - SID synthesis approximates the hardware SID-Ulator/SwinSID sound. There is no SID readback, paddle input, second SID or C64 `.sid` file player. Only the default D4/D5 mapping has end-to-end validation; alternate ports can overlap other emulated devices
 - LCD support is fixed at 16×2, 8-bit transfers and 5×8 glyphs. Four-bit mode, 5×10 fonts, exact power-on timing and the physical data-read prefetch pipeline are not modelled. The built-in font differs from some original LCD character ROMs
 - Digital I/O represents one card, starts with zero outputs and omits switch bounce and external electrical signals. Roughly 20 ms refresh and host input scheduling make it unsuitable for precise reaction-time measurements; short LED pulses may not be visible
+- MG005 support uses a provisional ready timer and separately supplied allophone recordings. The exact status timing and sound have not been compared with the board
 - MIDI, Compact Flash and other expansion devices have not been configured or validated by these launch profiles
 
 | Symptom                                              | Check                                                                                          |
@@ -368,6 +417,6 @@ The LCD and Digital I/O behaviour was implemented from the hardware's documented
 
 The underlying Z80/RC2014 emulator is **EtchedPixels EmulatorKit**, with local patches for serial input, peripheral integration and building on macOS. This project therefore provides custom peripheral support built on existing emulation and multimedia libraries.
 
-EmulatorKit, official firmware and libresidfp are separate upstream projects; their files retain their own copyright and license notices. The local SID, LCD and Digital I/O implementations identify themselves as GPL-2.0-or-later. The bundle includes the [GPLv2 text distributed with libresidfp](COPYING.libresidfp) and the [GPLv3 text from the pinned EmulatorKit source](COPYING.EmulatorKit). The EmulatorKit patch follows its upstream GPLv3 terms.
+EmulatorKit, official firmware and libresidfp are separate upstream projects; their files retain their own copyright and license notices. The local SID, LCD, Digital I/O and MG005 implementations identify themselves as GPL-2.0-or-later. The bundle includes the [GPLv2 text distributed with libresidfp](COPYING.libresidfp) and the [GPLv3 text from the pinned EmulatorKit source](COPYING.EmulatorKit). The EmulatorKit patch follows its upstream GPLv3 terms.
 
 The bitmap font is adapted from Adafruit GFX's classic font and retains its [BSD license notice](local/LICENSE.font). Keep that notice with the font. The support bundle does not relicense upstream code or firmware; consult each downloaded project's notices for its terms.
