@@ -1,0 +1,291 @@
+{
+  "allophones": {
+    "PA1": 0,
+    "PA2": 1,
+    "PA3": 2,
+    "PA4": 3,
+    "PA5": 4,
+    "OY": 5,
+    "AY": 6,
+    "EH": 7,
+    "KK3": 8,
+    "PP": 9,
+    "JH": 10,
+    "NN1": 11,
+    "IH": 12,
+    "TT2": 13,
+    "RR1": 14,
+    "AX": 15,
+    "MM": 16,
+    "TT1": 17,
+    "DH1": 18,
+    "IY": 19,
+    "EY": 20,
+    "DD1": 21,
+    "UW1": 22,
+    "AO": 23,
+    "AA": 24,
+    "YY2": 25,
+    "AE": 26,
+    "HH1": 27,
+    "BB1": 28,
+    "TH": 29,
+    "UH": 30,
+    "UW2": 31,
+    "AW": 32,
+    "DD2": 33,
+    "GG3": 34,
+    "VV": 35,
+    "GG1": 36,
+    "SH": 37,
+    "ZH": 38,
+    "RR2": 39,
+    "FF": 40,
+    "KK2": 41,
+    "KK1": 42,
+    "ZZ": 43,
+    "NG": 44,
+    "LL": 45,
+    "WW": 46,
+    "XR": 47,
+    "WH": 48,
+    "YY1": 49,
+    "CH": 50,
+    "ER1": 51,
+    "ER2": 52,
+    "OW": 53,
+    "DH2": 54,
+    "SS": 55,
+    "NN2": 56,
+    "HH2": 57,
+    "OR1": 58,
+    "AR": 59,
+    "YR": 60,
+    "GG2": 61,
+    "EL": 62,
+    "BB2": 63
+  },
+  "words": {
+    "A": "AX",
+    "AN": "AE NN1",
+    "AND": "AE NN1 DD1",
+    "ARE": "AR",
+    "BE": "BB1 IY",
+    "CAN": "KK1 AE NN1",
+    "COMPUTER": "KK1 AX MM PP YY1 UW1 TT2 ER1",
+    "DAVE": "DD1 EY VV",
+    "EIGHT": "EY TT2",
+    "EIGHTY": "EY TT2 IY",
+    "EMULATOR": "EH MM YY1 UW1 LL EY TT2 ER1",
+    "FISH": "FF IH SH",
+    "FOR": "FF OR1",
+    "FROM": "FF RR1 AX MM",
+    "GOOD": "GG1 UH DD1",
+    "HELLO": "HH1 EH LL OW",
+    "HI": "HH1 AY",
+    "I": "AY",
+    "IS": "IH ZZ",
+    "IT": "IH TT2",
+    "MY": "MM AY",
+    "NO": "NN1 OW",
+    "ONE": "WW AX NN1",
+    "RC": "AR SS IY",
+    "SAY": "SS EY",
+    "SPEAK": "SS PP IY KK3",
+    "SPEECH": "SS PP IY CH",
+    "THE": "DH1 AX",
+    "THIS": "DH1 IH SS",
+    "THREE": "TH RR1 IY",
+    "TO": "TT2 UW1",
+    "TWO": "TT2 UW1",
+    "WORLD": "WW ER1 LL DD1",
+    "YES": "YY1 EH SS",
+    "YOU": "YY1 UW1",
+    "YOUR": "YY1 OR1",
+    "Z": "ZZ EH DD1",
+    "ZED": "ZZ EH DD1",
+    "ZERO": "ZZ IY RR1 OW",
+    "TEN": "TT2 EH NN1",
+    "TWENTY": "TT2 WW EH NN1 TT2 IY",
+    "THIRTY": "TH ER1 TT2 IY",
+    "FORTY": "FF OR1 TT2 IY",
+    "FIFTY": "FF IH FF TT2 IY",
+    "SIXTY": "SS IH KK1 SS TT2 IY",
+    "SEVENTY": "SS EH VV AX NN1 TT2 IY",
+    "NINETY": "NN1 AY NN1 TT2 IY",
+    "HUNDRED": "HH1 AX NN1 DD1 RR1 IH DD1",
+    "THOUSAND": "TH AW ZZ AX NN1 DD1"
+  },
+  "units": [
+    "",
+    "ONE",
+    "TWO",
+    "THREE",
+    "FOUR",
+    "FIVE",
+    "SIX",
+    "SEVEN",
+    "EIGHT",
+    "NINE",
+    "TEN",
+    "ELEVEN",
+    "TWELVE",
+    "THIRTEEN",
+    "FOURTEEN",
+    "FIFTEEN",
+    "SIXTEEN",
+    "SEVENTEEN",
+    "EIGHTEEN",
+    "NINETEEN"
+  ],
+  "tens": [
+    "",
+    "",
+    "TWENTY",
+    "THIRTY",
+    "FORTY",
+    "FIFTY",
+    "SIXTY",
+    "SEVENTY",
+    "EIGHTY",
+    "NINETY"
+  ],
+  "patterns": [
+    {
+      "spelling": "TION",
+      "sounds": "SH AX NN1"
+    },
+    {
+      "spelling": "SION",
+      "sounds": "ZH AX NN1"
+    },
+    {
+      "spelling": "TCH",
+      "sounds": "CH"
+    },
+    {
+      "spelling": "IGH",
+      "sounds": "AY"
+    },
+    {
+      "spelling": "OUGH",
+      "sounds": "OW"
+    },
+    {
+      "spelling": "CH",
+      "sounds": "CH"
+    },
+    {
+      "spelling": "SH",
+      "sounds": "SH"
+    },
+    {
+      "spelling": "TH",
+      "sounds": "TH"
+    },
+    {
+      "spelling": "PH",
+      "sounds": "FF"
+    },
+    {
+      "spelling": "NG",
+      "sounds": "NG"
+    },
+    {
+      "spelling": "QU",
+      "sounds": "KK1 WW"
+    },
+    {
+      "spelling": "CK",
+      "sounds": "KK1"
+    },
+    {
+      "spelling": "EE",
+      "sounds": "IY"
+    },
+    {
+      "spelling": "EA",
+      "sounds": "IY"
+    },
+    {
+      "spelling": "OO",
+      "sounds": "UW1"
+    },
+    {
+      "spelling": "OU",
+      "sounds": "AW"
+    },
+    {
+      "spelling": "OW",
+      "sounds": "OW"
+    },
+    {
+      "spelling": "OY",
+      "sounds": "OY"
+    },
+    {
+      "spelling": "OI",
+      "sounds": "OY"
+    },
+    {
+      "spelling": "AI",
+      "sounds": "EY"
+    },
+    {
+      "spelling": "AY",
+      "sounds": "EY"
+    },
+    {
+      "spelling": "ER",
+      "sounds": "ER1"
+    },
+    {
+      "spelling": "AR",
+      "sounds": "AR"
+    },
+    {
+      "spelling": "OR",
+      "sounds": "OR1"
+    },
+    {
+      "spelling": "UR",
+      "sounds": "ER1"
+    },
+    {
+      "spelling": "IR",
+      "sounds": "ER1"
+    },
+    {
+      "spelling": "WH",
+      "sounds": "WH"
+    }
+  ],
+  "letters": {
+    "A": "AE",
+    "B": "BB1",
+    "C": "KK1",
+    "D": "DD1",
+    "E": "EH",
+    "F": "FF",
+    "G": "GG1",
+    "H": "HH1",
+    "I": "IH",
+    "J": "JH",
+    "K": "KK1",
+    "L": "LL",
+    "M": "MM",
+    "N": "NN1",
+    "O": "AO",
+    "P": "PP",
+    "Q": "KK1",
+    "R": "RR1",
+    "S": "SS",
+    "T": "TT2",
+    "U": "UH",
+    "V": "VV",
+    "W": "WW",
+    "X": "KK1 SS",
+    "Y": "YY1",
+    "Z": "ZZ"
+  }
+}
