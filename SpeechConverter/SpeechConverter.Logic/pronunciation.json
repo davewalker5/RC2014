@@ -84,6 +84,7 @@
     "HELLO": "HH1 EH LL OW",
     "HI": "HH1 AY",
     "I": "AY",
+    "I'M": "AY MM",
     "IS": "IH ZZ",
     "IT": "IH TT2",
     "MY": "MM AY",
@@ -114,7 +115,8 @@
     "SEVENTY": "SS EH VV AX NN1 TT2 IY",
     "NINETY": "NN1 AY NN1 TT2 IY",
     "HUNDRED": "HH1 AX NN1 DD1 RR1 IH DD1",
-    "THOUSAND": "TH AW ZZ AX NN1 DD1"
+    "THOUSAND": "TH AW ZZ AX NN1 DD1",
+    "EXTERMINATE": "EH KK1 SS TT2 ER1 MM IH NN1 AE YY1 TT2"
   },
   "units": [
     "",

@@ -2,10 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>SpeechConverter.Logic</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
-    <ReleaseVersion>1.0.0.0</ReleaseVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <ProductVersion>1.0.0</ProductVersion>
+    <PackageVersion>1.1.0.0</PackageVersion>
+    <ReleaseVersion>1.1.0.0</ReleaseVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <ProductVersion>1.1.0</ProductVersion>
     <Authors>Dave Walker</Authors>
     <Copyright>Copyright (c) 2026 Dave Walker</Copyright>
     <Owners>Dave Walker</Owners>
