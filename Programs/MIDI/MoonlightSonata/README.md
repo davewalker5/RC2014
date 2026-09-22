@@ -4,10 +4,10 @@ An RC2014 SID-Ulator arrangement of the first movement of Ludwig van Beethoven's
 
 ## Files
 
-| Filename              | Description                                                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `MoonlightSonata.mid` | Original MIDI source downloaded from [NotaGen](https://www.notagen.ai/)                                                       |
-| `MoonlightSonata.bas` | RC2014 BASIC arrangement generated from the MIDI file using this repository's [MIDI Converter](../../MIDIConverter/README.md) |
+| Filename              | Description                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| `MoonlightSonata.mid` | Original MIDI source downloaded from [NotaGen](https://www.notagen.ai/)                      |
+| `MoonlightSonata.bas` | RC2014 BASIC arrangement generated from the MIDI file using this repository's MIDI Converter |
 
 The converter reads the MIDI notes and timing, quantises the music, reduces its polyphony to the SID's three voices, converts each selected pitch into a SID frequency word, and writes a self-contained Microsoft BASIC player followed by the music as `DATA` statements.
 

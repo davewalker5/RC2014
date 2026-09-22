@@ -33,11 +33,9 @@ and practical utilities.
 
 ## Music
 
-| Folder          | Language | Description                                                                                                                                             |
-| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| MapleLeafRag    | BASIC    | SID-Ulator arrangement of Scott Joplin's *Maple Leaf Rag*, generated from a MIDI file                                                                   |
-| MoonlightSonata | BASIC    | SID-Ulator arrangement of the first movement of Ludwig van Beethoven's *Piano Sonata No. 14 in C-sharp minor, Op. 27 No. 2*, generated from a MIDI file |
-| PineappleRag    | BASIC    | SID-Ulator arrangement of Scott Joplin's *Pineapple Rag*, generated from a MIDI file                                                                    |
+| Folder | Language | Description                             |
+| ------ | -------- | --------------------------------------- |
+| MIDI   | BASIC    | SID-Ulator arrangements from MIDI files |
 
 ## Mathematics & Science
 
@@ -54,14 +52,14 @@ and practical utilities.
 
 ## Computing & Algorithms
 
-| Folder        | Language             | Description                                                                             |
-| ------------- | -------------------- | --------------------------------------------------------------------------------------- |
-| Assembly      | Z80 Assembly         | Small Z80 assembly programs for the RC2014 Mini II running Small Computer Monitor (SCM) |
-| Logic         | BASIC                | Truth-table and Digital I/O demonstrations of common logic gates                        |
-| MachineCode   | BASIC / Z80 Assembly | Classic `DATA`/`POKE` example for loading and executing Z80 machine code from BASIC     |
-| Neuron        | BASIC                | Fixed single-input artificial neuron with an inspectable forward pass                   |
-| StackAndQueue | BASIC                | Demonstration implementations of a stack and a FIFO queue                               |
-| TrainableNeuron | BASIC              | Single-input sigmoid neuron that learns from examples, with terminal, LED and LCD output |
+| Folder          | Language             | Description                                                                              |
+| --------------- | -------------------- | ---------------------------------------------------------------------------------------- |
+| Assembly        | Z80 Assembly         | Small Z80 assembly programs for the RC2014 Mini II running Small Computer Monitor (SCM)  |
+| Logic           | BASIC                | Truth-table and Digital I/O demonstrations of common logic gates                         |
+| MachineCode     | BASIC / Z80 Assembly | Classic `DATA`/`POKE` example for loading and executing Z80 machine code from BASIC      |
+| Neuron          | BASIC                | Fixed single-input artificial neuron with an inspectable forward pass                    |
+| StackAndQueue   | BASIC                | Demonstration implementations of a stack and a FIFO queue                                |
+| TrainableNeuron | BASIC                | Single-input sigmoid neuron that learns from examples, with terminal, LED and LCD output |
 
 ## Hardware & Digital I/O
 
@@ -70,6 +68,7 @@ and practical utilities.
 | DigitalIO | BASIC    | A set of programs that use the RC2014 Digital I/O card                                                |
 | LCD       | BASIC    | A set of programs that use the RC2014 LCD Driver Module                                               |
 | Sound     | BASIC    | Scale, lasers, siren, gunshots, explosions, engine sounds and bubbles using the SID-Ulator sound card |
+| Speech    | BASIC    | Demonstrations using the MG005 speech synthesiser                                                     |
 
 ## Utilities & Converters
 

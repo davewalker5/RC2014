@@ -4,11 +4,11 @@ An RC2014 SID-Ulator arrangement of Scott Joplin's *Maple Leaf Rag* (1899).
 
 ## Files
 
-| Filename              | Description                                                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `MapleLeafRag.mid`    | Original MIDI source downloaded from [NotaGen](https://www.notagen.ai/)                                                       |
-| `MapleLeafRag.bas`    | RC2014 BASIC arrangement generated from the MIDI file using this repository's [MIDI Converter](../../MIDIConverter/README.md) |
-| `MapleLeafRag_io.bas` | As `MapleLeafRag.bas` but with support for an activity meter using the Digital I/O card                                       |
+| Filename              | Description                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| `MapleLeafRag.mid`    | Original MIDI source downloaded from [NotaGen](https://www.notagen.ai/)                      |
+| `MapleLeafRag.bas`    | RC2014 BASIC arrangement generated from the MIDI file using this repository's MIDI Converter |
+| `MapleLeafRag_io.bas` | As `MapleLeafRag.bas` but with support for an activity meter using the Digital I/O card      |
 
 The converter reads the MIDI notes and timing, quantises the music, reduces its polyphony to the SID's three voices, converts each selected pitch into a SID frequency word, and writes a self-contained Microsoft BASIC player followed by the music as `DATA` statements.
 
