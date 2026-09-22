@@ -13,17 +13,15 @@ The programs require:
 
 ## Program Files
 
-| File            | Description                                           |
-| --------------- | ----------------------------------------------------- |
-| `hello_z80.bas` | Says “Hello Z80” through the MG005 speech synthesiser |
+| File                   | Description                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------- |
+| `allophone_player.bas` | Prompts for a string of space-separate allophones and plays them on the MG005    |
+| `exterminate.bas`      | Says the Dalek catch-phrase, “Exterminate”, through the MG005 speech synthesiser |
+| `hello_z80.bas`        | Says “Hello Z80” through the MG005 speech synthesiser                            |
 
 ## Running the Program
 
-Load `hello_z80.bas` into BASIC and enter `RUN`. The phrase is spoken once.
-
-## Implementation Notes
-
-The `DATA` statement contains the allophone sequence `HH1 EH LL OW`, `ZZ EH DD1`, `EY TT2 IY`, with pause codes between words and at the end. The loop reads each code, waits until the ready bit is set, then writes the code.
+Load the required program from the table, above, into BASIC and enter `RUN`. The phrase is spoken once.
 
 ## Acknowledgements
 
