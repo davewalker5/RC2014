@@ -76,6 +76,29 @@ namespace SpeechConverter.Tests
             }
         }
 
+        [TestMethod]
+        public void KnownContractionUsesDictionaryForStraightAndCurlyApostrophes()
+        {
+            var converter = new EnglishPronunciationConverter();
+
+            foreach (var message in new[] { "I'm", "I’m" })
+            {
+                CollectionAssert.AreEqual(
+                    new[] { 6, 16, 0 },
+                    converter.Convert(message).Select(sound => sound.Code).ToArray());
+            }
+        }
+
+        [TestMethod]
+        public void UnknownContractionUsesExistingSplitWordBehavior()
+        {
+            var converter = new EnglishPronunciationConverter();
+
+            CollectionAssert.AreEqual(
+                new[] { 6, 2, 35, 7, 0 },
+                converter.Convert("I'VE").Select(sound => sound.Code).ToArray());
+        }
+
         /// <summary>
         /// Rejects references to allophones missing from the mapping.
         /// </summary>

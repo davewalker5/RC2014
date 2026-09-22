@@ -98,9 +98,8 @@ The word list and spelling rules are deliberately modest.
 
 For unfamiliar words, abbreviations, contractions and names, it is advisable to inspect the `REM` lines and listen to the result.
 
-A permanent pronunciation amendment can be made in `pronunciation.json` without changing C# code. Add a word to `words`, using space-separated allophone names from `allophones`. For example:
+A permanent pronunciation amendment can be made in `pronunciation.json` without changing C# code. Add a word to `words`, using space-separated allophone names from `allophones`. Dictionary entries may contain apostrophes, such as `"I'M": "AY MM"`. Straight and curly apostrophes in input both match that entry; contractions without an entry are split and processed by the existing word rules. For example:
 
 `"HELLO": "HH1 EH LL OW"`.
 
 There is currently no pronunciation override option in the command line.
-

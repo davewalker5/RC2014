@@ -54,27 +54,35 @@ namespace SpeechConverter.Logic.Pronunciation
                     continue;
                 }
 
-                if (result.Count > 0)
-                {
-                    AddSound(result, pendingPause == 0 ? "PA3" : "PA5");
-                }
+                var token = match.Value.Replace('\u2019', '\'').ToUpperInvariant();
+                var words = token.Contains('\'') && !_words.ContainsKey(token)
+                    ? token.Split('\'', StringSplitOptions.RemoveEmptyEntries)
+                    : [token];
 
-                pendingPause = 0;
-                if (char.IsDigit(match.Value[0]))
+                foreach (var wordToken in words)
                 {
-                    foreach (var word in ExpandNumber(match.Value))
+                    if (result.Count > 0)
                     {
-                        if (result.Count > 0 && result[^1].Code > 4)
-                        {
-                            AddSound(result, "PA2");
-                        }
-
-                        AddWord(result, word);
+                        AddSound(result, pendingPause == 0 ? "PA3" : "PA5");
                     }
-                }
-                else
-                {
-                    AddWord(result, match.Value.ToUpperInvariant());
+
+                    pendingPause = 0;
+                    if (char.IsDigit(wordToken[0]))
+                    {
+                        foreach (var word in ExpandNumber(wordToken))
+                        {
+                            if (result.Count > 0 && result[^1].Code > 4)
+                            {
+                                AddSound(result, "PA2");
+                            }
+
+                            AddWord(result, word);
+                        }
+                    }
+                    else
+                    {
+                        AddWord(result, wordToken);
+                    }
                 }
             }
 
@@ -187,7 +195,7 @@ namespace SpeechConverter.Logic.Pronunciation
         /// Matches English words, unsigned integers and pause punctuation.
         /// </summary>
         /// <returns>The compiled token expression.</returns>
-        [GeneratedRegex(@"[A-Za-z]+|[0-9]+|[.,!?;:]")]
+        [GeneratedRegex(@"[A-Za-z]+(?:['’][A-Za-z]+)*|[0-9]+|[.,!?;:]")]
         private static partial Regex TokenPattern();
     }
 }
