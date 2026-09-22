@@ -27,13 +27,14 @@ This produces the following output:
 50 OUT 31,A
 60 NEXT I
 70 END
-80 REM HH1 EH LL OW PA3 ZZ EH DD1 PA3 EY TT2 IY
-90 DATA 27,7,45,53,2,43,7,21,2,20,13,19
-100 REM PA1
-110 DATA 0
+80 REM PHRASE: Hello Z80
+90 REM HH1 EH LL OW PA3 ZZ EH DD1 PA3 EY TT2 IY
+100 DATA 27,7,45,53,2,43,7,21,2,20,13,19
+110 REM PA1
+120 DATA 0
 ```
 
-The `DATA` statements contain the allophone codes; each preceding `REM` statement names the corresponding sounds.
+The phrase appears in one or more `REM` statements before the allophone labels and `DATA` statements. The `DATA` statements contain the allophone codes; each preceding `REM` statement names the corresponding sounds.
 
 ## How It Works
 

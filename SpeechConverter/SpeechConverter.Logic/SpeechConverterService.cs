@@ -30,6 +30,6 @@ namespace SpeechConverter.Logic
         /// <param name="message">Text to speak.</param>
         /// <returns>The complete BASIC listing.</returns>
         public string Convert(string message)
-            => _basicProgramGenerator.Generate(_pronunciationConverter.Convert(message));
+            => _basicProgramGenerator.Generate(_pronunciationConverter.Convert(message), message);
     }
 }

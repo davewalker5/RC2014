@@ -11,7 +11,8 @@ namespace SpeechConverter.Logic.Basic
         /// Builds a program that waits for the MG005 ready bit before each sound.
         /// </summary>
         /// <param name="allophones">Sounds to play.</param>
+        /// <param name="phrase">Original phrase to include in REM statements.</param>
         /// <returns>A numbered BASIC listing.</returns>
-        string Generate(IReadOnlyList<Allophone> allophones);
+        string Generate(IReadOnlyList<Allophone> allophones, string phrase);
     }
 }

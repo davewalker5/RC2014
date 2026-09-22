@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using SpeechConverter.Entities;
 
 namespace SpeechConverter.Logic.Basic
@@ -9,9 +10,10 @@ namespace SpeechConverter.Logic.Basic
     public sealed class BasicProgramGenerator : IBasicProgramGenerator
     {
         /// <inheritdoc />
-        public string Generate(IReadOnlyList<Allophone> allophones)
+        public string Generate(IReadOnlyList<Allophone> allophones, string phrase)
         {
             ArgumentNullException.ThrowIfNull(allophones);
+            ArgumentException.ThrowIfNullOrWhiteSpace(phrase);
             if (allophones.Count == 0)
             {
                 throw new ArgumentException("At least one allophone is required.", nameof(allophones));
@@ -29,6 +31,18 @@ namespace SpeechConverter.Logic.Basic
             };
 
             var lineNumber = 80;
+            var phraseText = Regex.Replace(phrase.Trim(), @"\s+", " ");
+            for (var offset = 0; offset < phraseText.Length; offset += 100)
+            {
+                var length = Math.Min(100, phraseText.Length - offset);
+                lines.Add($"{lineNumber} REM PHRASE: {phraseText.Substring(offset, length)}");
+                lineNumber += 10;
+                if (lineNumber > 65529)
+                {
+                    throw new ArgumentException("The message is too long for BASIC line numbers.", nameof(phrase));
+                }
+            }
+
             // Keep REM labels and DATA records aligned so the spoken sequence can
             // be inspected without changing the player's fixed-length loop.
             foreach (var group in allophones.Chunk(12))
