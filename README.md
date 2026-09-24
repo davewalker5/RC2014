@@ -10,9 +10,9 @@
 
 A collection of programs, experiments and utilities written for the **RC2014 Mini II**, a Zilog Z80-based 8-bit computer.
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-with-expansion-cards.jpg" alt="RC2014 Mini II" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-workbench.jpg" alt="The completed experimental RC2014 hardware configuration" width="600">
 
-*Assembled RC2014 Mini II with backplane and expansion modules*
+*The completed experimental RC2014 hardware configuration*
 
 ## About
 
@@ -27,11 +27,30 @@ The collection now includes:
 * **Aviation** — great-circle calculations, bearings, wind correction, atmospheric calculations and unit conversion
 * **Games & simulations** — including Blackjack, Bulls and Cows, lunar descent, cave exploration and an autonomous virtual octopus
 * **Mathematics & science** — cellular automata, Conway's Game of Life, barycentres, Fibonacci numbers and lunar phases
-* **Computing & algorithms** — logic gates, stacks and queues
-* **Hardware experiments** — programs using the RC2014 Digital I/O and LCD modules
+* **Computing & algorithms** — logic gates, stacks, queues and Z80 assembly experiments
+* **Hardware experiments** — programs using Digital I/O, LCD, sound and speech synthesis
+* **Music** — music for the SID-Ulator, including programs generated from Standard MIDI Files
 * **Utilities & converters** — including base conversion, Morse code, Roman numerals and terminal tests
 
 The complete and current list is maintained in the **[Program Catalogue](Programs/README.md)**.
+
+## The 1979 Machine
+
+The RC2014 used for this project has gradually developed into what I think of as **the 1979 machine**.
+
+It is not intended to be a historically exact recreation of a computer that existed in 1979. Instead, it is my interpretation of the simple, accessible and experimental character of hobby computing around that time, and reflects some of my own earliest experiences of personal computing.
+
+The completed hardware combines a Z80 with a serial terminal, physical buttons and LEDs, a character LCD, programmable sound and hardware speech synthesis. The emphasis is on keeping the relationship between software and hardware visible and understandable.
+
+That also provides a deliberate constraint. This machine is not intended to accumulate every available RC2014 expansion or evolve into a more modern general-purpose computer. Future development will concentrate primarily on finding new ways to use and combine the capabilities already present.
+
+Other directions remain interesting but they will become separate RC2014 projects, each exploring a different aspect of what can be built around the Z80 platform.
+
+For this machine, the hardware is finished.
+
+The more interesting question remains:
+
+> **What can I make this thing do?**
 
 ## Programs
 
@@ -64,10 +83,14 @@ Individual program directories contain their own documentation, source code and 
 
 The machine used for development is an [**RC2014 Mini II**](https://rc2014.co.uk/full-kits/rc2014-mini-ii/).
 
-A number of programs also make use of expansion hardware, particularly:
+A number of programs also make use of expansion hardware, including:
 
 * [RC2014 Digital I/O card](https://rc2014.co.uk/modules/digital-io/)
 * [RC2014 LCD Driver Module](https://rc2014.co.uk/modules/lcd-driver-module/)
+* [SID-Ulator sound module](https://z80kits.com/shop/sid-ulator-sound-module/)
+* [MG005 SP0256-AL2 speech synthesiser](https://www.tindie.com/products/mrgelee/mg005-speech-synthesiser-designed-for-rc2014/)
+
+Together these provide physical input and output through buttons and LEDs, a dedicated character display, programmable sound and music, and hardware speech synthesis.
 
 Programs requiring additional hardware are identified in their individual documentation.
 
