@@ -3,7 +3,8 @@
 [![Releases](https://img.shields.io/github/v/release/davewalker5/RC2014.svg?include_prereleases)](https://github.com/davewalker5/RC2014/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/davewalker5/RC2014/blob/master/LICENSE)
 [![Language](https://img.shields.io/badge/language-BASIC-blue.svg)](https://github.com/davewalker5/RC2014)
-[![Language](https://img.shields.io/badge/language-c%23-blue.svg)](https://github.com/davewalker5/RC2014/)
+[![Language](https://img.shields.io/badge/language-Z80%20Assembly-blue.svg)](https://github.com/davewalker5/RC2014)
+[![Language](https://img.shields.io/badge/language-C%23-blue.svg)](https://github.com/davewalker5/RC2014/)
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/davewalker5/RC2014)](https://github.com/davewalker5/RC2014/)
 
 # RC2014
