@@ -60,9 +60,9 @@ Each program has its own directory and README describing what it does, how it wo
 
 Some programs are practical. Some demonstrate algorithms or computing concepts. Others exist simply because making a Z80 do something unexpected is fun.
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-mini-ii-pc.jpg" alt="RC2014 Mini II connected to a PC and running the Roman Numerals program" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-top-down.jpg" alt="The '1979 Machine' stack: display, SID-Ulator, amplifier power take-off, Digital I/O and MG005 speech synthesiser" width="600">
 
-*RC2014 Mini II connected to a PC and running the Roman Numerals program*
+*The '1979 Machine' stack: display, SID-Ulator, amplifier power take-off, Digital I/O and MG005 speech synthesiser*
 
 ## Exploring the Repository
 
