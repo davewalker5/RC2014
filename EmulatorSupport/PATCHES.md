@@ -8,7 +8,7 @@ The pinned checkout's top-level `COPYING` is reproduced verbatim as [COPYING.Emu
 
 ## Local modifications
 
-The following changes were made for this RC2014 support project by Dave Walker with assistance from OpenAI Codex. Modification record: **19 September 2026**.
+The following changes were made for this RC2014 support project by Dave Walker. Modification record: **19 September 2026**.
 
 | Upstream file     | Local change                                                                                                                         |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
