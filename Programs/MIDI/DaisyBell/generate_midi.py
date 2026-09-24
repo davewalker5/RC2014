@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-"""Generate the original RC2014 three-voice Daisy Bell arrangement (MIT).
+"""
+Generate the original RC2014 three-voice Daisy Bell arrangement (MIT).
 
 Python standard library only. Durations are quarter-note beats; C4 is middle C.
 The historic chorus melody is public domain; accompaniment is newly arranged.
