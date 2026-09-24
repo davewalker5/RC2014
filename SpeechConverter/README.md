@@ -1,6 +1,6 @@
 # Speech Converter
 
-Speech Converter turns a typed English message into a Microsoft BASIC program for the MG005 speech synthesiser. The generated program contains numbered `DATA` statements and matching `REM` statements naming each SP0256-AL2 allophone. It waits for the module's ready bit before sending each code.
+Speech Converter turns an English message or text file into a Microsoft BASIC program for the MG005 speech synthesiser. The generated program contains numbered `DATA` statements and matching `REM` statements naming each SP0256-AL2 allophone. It waits for the module's ready bit before sending each code.
 
 ## Running the Converter
 
@@ -8,7 +8,8 @@ The converter accepts the following command line arguments:
 
 | Setting           | Long option | Short option |                                          Default |
 | ----------------- | ----------- | ------------ | -----------------------------------------------: |
-| Phrase to convert | `--text`    | `-t`         | If omitted, the application prompts for a phrase |
+| Phrase to convert | `--text`    | `-t`         | If no file or text is supplied, prompts for a phrase |
+| Input text file   | `--file`    | `-f`         | Optional; also accepted as a positional filename |
 | Output file path  | `--output`  | `-o`         |               `speech.bas` in the current folder |
 
 For example, from the project root:
@@ -17,7 +18,16 @@ For example, from the project root:
 dotnet run --project SpeechConverter/SpeechConverter -- --text "Hello Z80" --output hello-z80.bas
 ```
 
-This produces the following output:
+To convert an entire text file, use either form (quote paths containing spaces):
+
+```sh
+dotnet run --project SpeechConverter/SpeechConverter -- "message.txt" --output message.bas
+dotnet run --project SpeechConverter/SpeechConverter -- --file "message.txt" --output message.bas
+```
+
+Files are read as UTF-8 by default, with automatic detection of Unicode byte-order marks. Supply only one input file, and do not combine it with `--text`. Unreadable files and empty or non-speakable input report an error and return a nonzero exit code.
+
+The `Hello Z80` example produces the following output:
 
 ```basic
 10 REM MG005 SP0256-AL2 SPEECH
@@ -84,7 +94,7 @@ The application applies pauses according to the following rules:
 | A comma, full stop, exclamation mark, question mark, colon or semicolon between tokens | PA5       | 4    | 200ms        |
 | At the end of every message                                                            | PA1       | 0    | 10ms         |
 
-Punctuation at the very end does not create another pause.
+Line breaks (LF, CRLF or CR) between words use the same PA5 (200 ms) pause as punctuation. Adjacent punctuation and multiple blank lines combine into one pause. Leading and trailing line breaks do not add pauses; punctuation at the very end does not create another pause.
 
 For `Hello Z80`, the resulting sequence is:
 
