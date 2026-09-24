@@ -11,16 +11,18 @@ Electronic Dice turns the RC2014 Digital I/O card into a coin, a D6, a D8, or an
 The program requires:
 
 - An RC2014 Mini II running BASIC
-- An RC2014 Digital I/O card configured to use port 1
+- An RC2014 Digital I/O card
+- For the speech-enabled version, an MG005 speech synthesiser card
 - A serial terminal for instructions and results
 
 No other expansion hardware is required. The implementation notes include details on how to change the programs to use a card configured for a different port.
 
 ## Program Files
 
-| File     | Description                           |
-| -------- | ------------------------------------- |
-| dice.bas | Implementation of the electronic dice |
+| File              | Description                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| `dice.bas`        | Implementation of the electronic dice                                                       |
+| `dice_speech.bas` | Implementation with support for speaking the result using the MG005 speech synthesiser card |
 
 ## Running the Program
 
@@ -70,3 +72,4 @@ To use a Digital I/O card configured for port `P` instead of port 1, replace eve
 ## References
 
 - [RC2014 Digital I/O](https://rc2014.co.uk/modules/digital-io/), RC2014
+- [MG005 Speech Synthesiser](https://www.tindie.com/products/mrgelee/mg005-speech-synthesiser-designed-for-rc2014/)
