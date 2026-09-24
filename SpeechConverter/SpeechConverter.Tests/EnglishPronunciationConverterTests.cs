@@ -9,6 +9,31 @@ namespace SpeechConverter.Tests
     [TestClass]
     public sealed class EnglishPronunciationConverterTests
     {
+        [TestMethod]
+        [DataRow("\n")]
+        [DataRow("\r\n")]
+        [DataRow("\r")]
+        [DataRow("\n\n")]
+        [DataRow(".\r\n")]
+        public void LineBreaksUseOnePunctuationPause(string separator)
+        {
+            var converter = new EnglishPronunciationConverter();
+
+            CollectionAssert.AreEqual(
+                new[] { 27, 7, 45, 53, 4, 43, 7, 21, 0 },
+                converter.Convert($"Hello{separator}Z").Select(sound => sound.Code).ToArray());
+        }
+
+        [TestMethod]
+        public void LeadingAndTrailingLineBreaksDoNotAddPauses()
+        {
+            var converter = new EnglishPronunciationConverter();
+
+            CollectionAssert.AreEqual(
+                converter.Convert("Hello").ToArray(),
+                converter.Convert("\r\nHello\r\n").ToArray());
+        }
+
         /// <summary>
         /// Keeps the existing demonstration's pronunciation stable.
         /// </summary>

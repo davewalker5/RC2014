@@ -48,7 +48,7 @@ namespace SpeechConverter.Logic.Pronunciation
 
             foreach (Match match in TokenPattern().Matches(message))
             {
-                if (char.IsPunctuation(match.Value[0]))
+                if (char.IsPunctuation(match.Value[0]) || match.Value[0] is '\r' or '\n')
                 {
                     pendingPause = Math.Max(pendingPause, 4);
                     continue;
@@ -192,10 +192,10 @@ namespace SpeechConverter.Logic.Pronunciation
         }
 
         /// <summary>
-        /// Matches English words, unsigned integers and pause punctuation.
+        /// Matches English words, unsigned integers, pause punctuation and line breaks.
         /// </summary>
         /// <returns>The compiled token expression.</returns>
-        [GeneratedRegex(@"[A-Za-z]+(?:['’][A-Za-z]+)*|[0-9]+|[.,!?;:]")]
+        [GeneratedRegex(@"[A-Za-z]+(?:['’][A-Za-z]+)*|[0-9]+|[.,!?;:]|\r\n|[\r\n]")]
         private static partial Regex TokenPattern();
     }
 }
