@@ -70,6 +70,8 @@ The best place to start is the **[Program Catalogue](Programs/README.md)**, whic
 
 Each program has its own directory containing source code, instructions for running it and, where appropriate, hardware configuration and supporting material.
 
+The repository also includes host-side utilities that support development, maintenance and transfer of software to the RC2014.
+
 ## Hardware
 
 The machine used for development is an [**RC2014 Mini II**](https://rc2014.co.uk/full-kits/rc2014-mini-ii/).
@@ -85,15 +87,7 @@ Together these provide physical input and output through buttons and LEDs, a ded
 
 Programs requiring additional hardware are identified in their individual documentation.
 
-## Getting Started
-
-Browse the **[Program Catalogue](Programs/README.md)** and choose something that looks interesting.
-
-Each program's README contains the relevant instructions for running it and, where necessary, configuring it for the hardware being used.
-
-For more information about RC2014 computers, kits and expansion modules, see:
-
-https://rc2014.co.uk
+For more information about RC2014 computers, kits and expansion modules, see the [official RC2014 website](https://rc2014.co.uk).
 
 ## Licences
 
