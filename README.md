@@ -66,18 +66,9 @@ Some programs are practical. Some demonstrate algorithms or computing concepts. 
 
 ## Exploring the Repository
 
-A good place to start is the **[Programs](Programs/)** directory.
+The best place to start is the **[Program Catalogue](Programs/README.md)**, which provides a categorised overview of the available programs and experiments.
 
-The programs are grouped in the catalogue into:
-
-* Aviation
-* Games & Simulations
-* Mathematics & Science
-* Computing & Algorithms
-* Hardware & Digital I/O
-* Utilities & Converters
-
-Individual program directories contain their own documentation, source code and any supporting material.
+Each program has its own directory containing source code, instructions for running it and, where appropriate, hardware configuration and supporting material.
 
 ## Hardware
 
