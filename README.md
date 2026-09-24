@@ -54,7 +54,7 @@ The more interesting question remains:
 
 ## Programs
 
-The programs are predominantly in **BASIC**, with a small number of assembly and machine code programs, and are intended to run directly on the RC2014.
+The programs are written primarily in **BASIC**, with Z80 assembly and machine code used where appropriate, and are designed to run directly on the RC2014.
 
 Each program has its own directory and README describing what it does, how it works and how to run it. Where appropriate, the documentation also covers configuration for optional hardware such as the Digital I/O card.
 
