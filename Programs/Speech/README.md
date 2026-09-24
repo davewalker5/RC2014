@@ -29,4 +29,5 @@ The MG005 port and ready-bit protocol follow
 
 ## References
 
+- [MG005 Speech Synthesiser](https://www.tindie.com/products/mrgelee/mg005-speech-synthesiser-designed-for-rc2014/)
 - [SP0256-AL2 allophone codes](https://fddrsn.net/pcomp/examples/SP0256/sp0256code-allophones.html)
