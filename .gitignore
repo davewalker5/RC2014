@@ -414,3 +414,6 @@ published/
 Published/
 .~lock.*
 *.bin
+Emulator/
+/build/
+Programs/Private/
