@@ -10,7 +10,7 @@
 
 A collection of programs, experiments and utilities written for the **RC2014 Mini II**, a Zilog Z80-based 8-bit computer.
 
-<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-workbench.jpg" alt="The completed experimental RC2014 hardware configuration" width="600">
+<img src="https://github.com/davewalker5/RC2014/blob/main/Images/rc2014-front-panel.jpg" alt="The completed experimental RC2014 hardware configuration" width="600">
 
 *The completed experimental RC2014 hardware configuration*
 
