@@ -50,11 +50,17 @@ The generator's `CUES` table contains individual syllable timings and codes. Tim
 |     8.5 | swer     | SS WW ER1                           |
 |       9 | do       | DD1 UW2                             |
 
-The original line's allophones are preserved in order; its sentence pauses are replaced by separately cued groups with short PA1 terminations. Vowels finish naturally, leaving space during held notes. Adjust pronunciation by ear. The chip's readiness means it can accept a command, not necessarily that the previous sound has ended; audible cue offsets need tuning on real hardware.
+The original line's allophones are preserved in order; its sentence pauses are replaced by separately cued groups with short PA1 terminations. Vowels finish naturally, leaving space during held notes. The chip's readiness means it can accept a command, not necessarily that the previous sound has ended.
 
 If speech falls behind, codes remain in order and are sent when possible. The music does not wait.
 
-`LATE SYLLABLES` counts groups whose first code was submitted more than four software ticks after its cue; this is a diagnostic, not a measurement of audible latency. After the music ends, pending speech gets up to four nominal seconds to finish submitting. A card that remains unready therefore produces a timeout rather than an infinite wait. An absent card cannot reliably be detected from an unconnected input port. A final short drain delay follows successful submission; the program cannot confirm acoustic completion from the ready bit alone.
+`LATE SYLLABLES` counts groups whose first code was submitted more than four software ticks after its cue; this is a diagnostic, not a measurement of audible latency.
+
+After the music ends, pending speech gets up to four nominal seconds to finish submitting.
+
+A card that remains unready therefore produces a timeout rather than an infinite wait. An absent card cannot reliably be detected from an unconnected input port.
+
+A final short drain delay follows successful submission; the program cannot confirm acoustic completion from the ready bit alone.
 
 If you interrupt playback, mute the SID with:
 
@@ -74,7 +80,13 @@ The standard-library-only generator reads `Programs/MIDI/DaisyBell/DaisyBell.mid
 
 Channels map consistently to SID voices: melody, bass, accompaniment. Note events are rounded to the nearest 25 ms table tick (at most 12.5 ms error).
 
-The final event releases all three voices. It does not modify the source MIDI or the original speech files. Regeneration resets manual edits to `daisy-line-1.bas`. Make persistent player edits, including line 40, in `player.bas.template`; edit syllable cues in `generate.py`. The generator reads the template relative to its own location, so it also works when launched from another directory. Template lines must be numbered in ascending order within 1–999; the generator appends the counts and playback `DATA` from line 1000 onwards.
+The final event releases all three voices.
+
+Regeneration resets manual edits to `daisy-line-1.bas` so persistent player edits, including line 40, should be made in `player.bas.template`.
+
+Syllable cues should be edited in in `generate.py`. 
+
+Template lines must be numbered in ascending order within 1–999; the generator appends the counts and playback `DATA` from line 1000 onwards.
 
 ## Generator Tests
 
@@ -84,4 +96,4 @@ The generator uses only the Python standard library. Run its regression checks f
 python3 -B -m unittest discover -s Programs/Singing -p 'test_*.py' -v
 ```
 
-The checks cover excerpt boundaries, running-status MIDI, malformed input, polyphonic input, template edits, output preservation on template errors, and launching from another directory. The template extraction preserves the generated BASIC byte for byte, including `TA=1.25` and the earlier “give” and “me” cues.
+The checks cover excerpt boundaries, running-status MIDI, malformed input, polyphonic input, template edits, output preservation on template errors, and launching from another directory.
