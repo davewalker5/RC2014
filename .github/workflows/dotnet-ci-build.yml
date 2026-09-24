@@ -17,12 +17,21 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - name: Machine Code Converter
+            project: MachineCodeConverter/MachineCodeConverter.Tests/MachineCodeConverter.Tests.csproj
+            results: TestResults/MachineCodeConverter
+          - name: MIDI Converter
+            project: MIDIConverter/MIDIConverter.Tests/MIDIConverter.Tests.csproj
+            results: TestResults/MIDIConverter
           - name: Renumber
             project: Renumber/Renumber.Tests/Renumber.Tests.csproj
             results: TestResults/Renumber
           - name: Serial Sender
             project: SerialSender/SerialSender.Tests/SerialSender.Tests.csproj
             results: TestResults/SerialSender
+          - name: Speech Converter
+            project: SpeechConverter/SpeechConverter.Tests/SpeechConverter.Tests.csproj
+            results: TestResults/SpeechConverter
 
     steps:
       - name: Check out repository
