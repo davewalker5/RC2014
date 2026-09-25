@@ -10,7 +10,7 @@ namespace SerialSender.Entities.Serial
     [ExcludeFromCodeCoverage]
     public class SerialSenderSerialPort : ISerialPort
     {
-        private SerialPort _serialPort;
+        private readonly SerialPort _serialPort;
 
         public SerialSenderSerialPort(ISerialSenderAppSettings settings)
         {
@@ -42,9 +42,9 @@ namespace SerialSender.Entities.Serial
         public void Close() => _serialPort.Close();
 
         /// <summary>
-        /// Write a string to the serial port
+        /// Write exactly the supplied text; the caller supplies any line endings
         /// </summary>
         /// <param name="text"></param>
-        public void Write(string text) => _serialPort.WriteLine(text);
+        public void Write(string text) => _serialPort.Write(text);
     }
 }
