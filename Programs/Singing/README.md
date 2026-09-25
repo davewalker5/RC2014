@@ -318,17 +318,3 @@ ruff format --check Programs/Singing/generate.py Programs/Singing/test_generate.
 ```
 
 Ruff is a development tool, not a runtime dependency of the generator.
-
-#### What the Tests Do Not Establish
-
-The CPU harness does not boot SCM, synthesise audio or reproduce the physical
-SP0256's buffering and allophone durations. Separately verify HEX loading,
-playback, return to the monitor, result bytes and repeat playback through SCM.
-Listen on the real cards to assess pronunciation, alignment and volume after
-changing cues or settings.
-
-Both versions have been played successfully on the physical RC2014, with the
-assembly version reported to sound better. The original CPU-harness run took
-approximately 16.18 seconds including the tail, and completed with no late
-syllables under its uniform 120 ms speech-busy model. That is an emulator result
-for the supplied settings, not a guarantee of identical physical-card timing.
