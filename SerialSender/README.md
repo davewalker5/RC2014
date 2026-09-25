@@ -177,3 +177,26 @@ To find the device name, compare the output of `ls -1 /dev/tty*` with the FTDI c
 ## References
 
 - [Small Computer Monitor Tutorial](https://smallcomputercentral.files.wordpress.com/2018/05/scmon-v1-0-tutorial-e1-0-0.pdf), Stephen C. Cousins, Edition 1.0.0
+
+## Verifying the Transmitted Bytes
+
+The serial-port wrapper must use `SerialPort.Write`, not `WriteLine`: the writer
+already sends individual characters and adds the configured line ending once
+per source line. An extra newline after each character corrupts Intel HEX input
+and can cause SCM to leave its loader and report `Bad command` on the remaining
+text. There is no command-line setting that compensates for that wrapper bug;
+use a rebuilt sender containing the fix.
+
+In addition to the .NET unit tests, the following macOS/Linux regression check
+uses a pseudo-terminal to inspect bytes from the real executable and port wrapper.
+It does not access the RC2014 or a physical serial port:
+
+```sh
+dotnet build SerialSender/SerialSender/SerialSender.csproj
+python3 SerialSender/tests/verify_serial_bytes.py \
+  SerialSender/SerialSender/bin/Debug/net10.0/SerialSender.dll
+```
+
+The script also accepts a published `SerialSender` executable path. It checks
+that two HEX records arrive unchanged, with exactly one configured CRLF per
+record. This catches port-wrapper defects that mock-based writer tests cannot.

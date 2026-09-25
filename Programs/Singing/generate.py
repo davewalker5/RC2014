@@ -1,16 +1,25 @@
 """
-Build the Daisy Bell singing prototype from MIDI and a BASIC template
+Build the Daisy Bell singing prototype from MIDI and BASIC or assembly templates
 """
 
+import argparse
 import struct
+import subprocess
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE.parent / "MIDI/DaisyBell/DaisyBell.mid"
 TEMPLATE = HERE / "player.bas.template"
 OUTPUT = HERE / "daisy-line-1.bas"
+ASM_TEMPLATE = HERE / "player.asm.template"
+ASM_OUTPUT = HERE / "daisy-line-1.asm"
+ASM_ORIGIN = 0xE000
+ASM_RAM_END = 0xFC00  # SCM reserves RAM from FC00 upwards.
+ASM_TICK_MS = 5
+SID_WAVEFORM = 16
 TICK_MS = 25
 TEMPO_MICROSECONDS = 500_000  # 120 quarter notes per minute.
 INTRO_SECONDS = 3
@@ -319,6 +328,191 @@ def _validate_template(listing: str) -> None:
         previous_line = line_number
 
 
-if __name__ == "__main__":
-    generated_path = generate()
+def _sid_writes(record: MusicRecord, previous_mask: int) -> list[tuple[int, int]]:
+    """
+    Precompute the SID writes performed by BASIC's three voice subroutine calls.
+
+    :param record: Time, three frequencies, active mask and retrigger mask.
+    :param previous_mask: Active voices before this event (bits 0-2).
+    :return: Ordered register/value pairs, including gate transitions.
+    """
+    _, *frequencies, active_mask, retrigger_mask = record
+    writes: list[tuple[int, int]] = []
+    for voice, frequency in enumerate(frequencies):
+        voice_bit = 1 << voice
+        register_base = voice * 7
+        control_register = register_base + 4
+        active = bool(active_mask & voice_bit)
+        previous = bool(previous_mask & voice_bit)
+        retrigger = bool(retrigger_mask & voice_bit)
+        if previous and not active:
+            writes.append((control_register, SID_WAVEFORM))
+        if retrigger:
+            writes.append((control_register, SID_WAVEFORM))
+        if active:
+            writes.extend(
+                ((register_base, frequency & 255), (register_base + 1, frequency >> 8))
+            )
+            if not previous or retrigger:
+                writes.append((control_register, SID_WAVEFORM + 1))
+    return writes
+
+
+def _assembly_music(music: list[MusicRecord]) -> str:
+    """
+    Encode SID events as standalone z80asm directives with 5 ms timestamps.
+
+    :param music: Ordered BASIC-compatible SID state records.
+    :return: Assembly table including a FFFF end marker.
+    """
+    lines = []
+    previous_mask = 0
+    for record in music:
+        writes = _sid_writes(record, previous_mask)
+        tick = record[0] * TICK_MS // ASM_TICK_MS
+        lines.extend(
+            (
+                f"    dw {tick} ; {record[0] * TICK_MS} ms",
+                f"    db {len(writes)} ; register/value pair count",
+            )
+        )
+        for register, value in writes:
+            # Keep waveform selection editable in the assembly template.
+            encoded = str(value)
+            if register in (4, 11, 18):
+                encoded = "WAVEFORM+1" if value & 1 else "WAVEFORM"
+            lines.append(f"    db {register},{encoded}")
+        previous_mask = record[4]
+    lines.append("    dw 65535 ; end of music")
+    return "\n".join(lines)
+
+
+def _assembly_speech(speech: list[SpeechRecord]) -> str:
+    """
+    Encode allophones with a flag identifying the first code of each syllable.
+
+    :param speech: Ordered absolute BASIC tick/allophone pairs.
+    :return: Assembly table with 5 ms timestamps and a FFFF end marker.
+    """
+    lines = []
+    previous_tick = None
+    for tick, code in speech:
+        first_code = int(tick != previous_tick)
+        lines.extend(
+            (
+                f"    dw {tick * TICK_MS // ASM_TICK_MS}",
+                f"    db {code},{first_code} ; allophone, first-code flag",
+            )
+        )
+        previous_tick = tick
+    lines.append("    dw 65535 ; end of speech")
+    return "\n".join(lines)
+
+
+def generate_asm(
+    source: Path = SOURCE,
+    template: Path = ASM_TEMPLATE,
+    output: Path = ASM_OUTPUT,
+) -> Path:
+    """
+    Insert shared MIDI and speech data into the commented assembly template.
+
+    :param source: MIDI arrangement to extract.
+    :param template: UTF-8 z80asm template with one marker per event table.
+    :param output: Assembly source file to create or replace.
+    :return: Generated source path; assembly is a separate optional step.
+    :raises OSError: An input cannot be read or output cannot be written.
+    :raises ValueError: Input data or template markers are invalid.
+    """
+    music = _assembly_music(music_records(source))
+    speech = _assembly_speech(_speech_records(CUES))
+    listing = template.read_text(encoding="utf-8")
+    for marker, table in (("@MUSIC_DATA@", music), ("@SPEECH_DATA@", speech)):
+        if listing.count(marker) != 1:
+            raise ValueError(f"Assembly template requires exactly one {marker}")
+        listing = listing.replace(marker, table)
+    output.write_text(listing, encoding="utf-8")
+    return output
+
+
+def _intel_hex(binary: bytes, origin: int) -> str:
+    """
+    Encode a contiguous binary as checked, 16-byte Intel HEX records.
+
+    :param binary: Machine-code image to encode.
+    :param origin: Unsigned 16-bit load address.
+    :return: ASCII Intel HEX text with an end-of-file record.
+    :raises ValueError: The image is empty or exceeds the 16-bit address space.
+    """
+    if not binary or not 0 <= origin < 65536 or origin + len(binary) > 65536:
+        raise ValueError("Binary must fit within the 16-bit load address space")
+    lines = []
+    for offset in range(0, len(binary), 16):
+        payload = binary[offset : offset + 16]
+        address = origin + offset
+        record = bytes((len(payload), address >> 8, address & 255, 0)) + payload
+        checksum = (-sum(record)) & 255
+        lines.append(":" + (record + bytes((checksum,))).hex().upper())
+    lines.append(":00000001FF")
+    return "\n".join(lines) + "\n"
+
+
+def assemble(source: Path, assembler: str = "z80asm") -> tuple[Path, Path]:
+    """
+    Build a checked E000-FBFF binary and an SCM-loadable Intel HEX file.
+
+    :param source: Generated assembly source to assemble.
+    :param assembler: Standalone z80asm executable name or path.
+    :return: Binary and Intel HEX paths beside the source.
+    :raises OSError: The assembler or files cannot be accessed.
+    :raises subprocess.CalledProcessError: Assembly fails.
+    :raises ValueError: The image has a wrong origin/header or exceeds safe RAM.
+    """
+    with TemporaryDirectory() as directory:
+        temporary_binary = Path(directory) / "player.bin"
+        subprocess.run(
+            [assembler, "-o", str(temporary_binary), str(source.resolve())],
+            check=True,
+        )
+        binary = temporary_binary.read_bytes()
+    # The fixed public header is JP E007, result, late count and tick word.
+    # Reject relocations unless the loading contract is deliberately updated.
+    if binary[:3] != bytes((0xC3, 0x07, 0xE0)):
+        raise ValueError("Player must retain its E000 origin and seven-byte header")
+    if len(binary) > ASM_RAM_END - ASM_ORIGIN:
+        raise ValueError("Player exceeds E000-FBFF; SCM workspace must stay intact")
+    binary_path = source.with_suffix(".bin")
+    hex_path = source.with_suffix(".hex")
+    hex_text = _intel_hex(binary, ASM_ORIGIN)
+    binary_path.write_bytes(binary)
+    hex_path.write_text(hex_text, encoding="ascii")
+    return binary_path, hex_path
+
+
+def main() -> None:
+    """
+    Generate BASIC by default, or assembly and optional loadable artifacts.
+
+    Command-line errors are reported by argparse; generation/build errors retain
+    their original exception and a nonzero exit status.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--format", choices=("basic", "asm"), default="basic")
+    parser.add_argument(
+        "--assemble",
+        action="store_true",
+        help="also build .bin and Intel .hex (requires --format asm)",
+    )
+    parser.add_argument("--assembler", default="z80asm", help="z80asm executable")
+    args = parser.parse_args()
+    if args.assemble and args.format != "asm":
+        parser.error("--assemble requires --format asm")
+    generated_path = generate_asm() if args.format == "asm" else generate()
     print(f"Generated {generated_path}")
+    if args.assemble:
+        for path in assemble(generated_path, args.assembler):
+            print(f"Built {path}")
+
+
+if __name__ == "__main__":
+    main()
