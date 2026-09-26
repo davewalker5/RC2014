@@ -20,13 +20,13 @@
 ;   E005: current tick, little-endian; one tick is nominally 5 ms
 ; All state is reset on every entry, so G E000 can replay the loaded image.
 
-PLAYER_ORIGIN: equ 0e000h
-SID_REGISTER:  equ 0d4h
-SID_DATA:      equ 0d5h
-SPEECH_PORT:   equ 01fh
-SPEECH_READY:  equ 2
-WAVEFORM:      equ 16             ; Triangle, with gate bit initially clear.
-VOLUME:        equ 2              ; SID master volume 0-15; matches BASIC tuning.
+PLAYER_ORIGIN: EQU 0E000H
+SID_REGISTER:  EQU 0D4H
+SID_DATA:      EQU 0D5H
+SPEECH_PORT:   EQU 01FH
+SPEECH_READY:  EQU 2
+WAVEFORM:      EQU 16             ; Triangle, with gate bit initially clear.
+VOLUME:        EQU 2              ; SID master volume 0-15; matches BASIC tuning.
 
 ; Delay calibration: DEC BC / LD A,B / OR C / JR NZ costs 26 T-states
 ; per iteration, except the final branch (5 fewer). Including CALL, LD BC
@@ -37,263 +37,255 @@ VOLUME:        equ 2              ; SID master volume 0-15; matches BASIC tuning
 ; allow more time for speech; decrease it to speed up. Use 1-65535, never 0.
 ; Changing CPU speed requires proportional recalibration; SID pitch still
 ; assumes a separate 1 MHz SID clock. BASIC's TA/DL do not apply to this player.
-DELAY_LOOPS:   equ 1416
-LATE_TICKS:    equ 20             ; More than 20 ticks = more than 100 ms late.
-DRAIN_TICKS:   equ 200            ; Nominal second after the final command.
-TIMEOUT_TICK:  equ 3800           ; 15 seconds of music plus 4 seconds backlog.
+DELAY_LOOPS:   EQU 1416
+LATE_TICKS:    EQU 20             ; More than 20 ticks = more than 100 ms late.
+DRAIN_TICKS:   EQU 200            ; Nominal second after the final command.
+TIMEOUT_TICK:  EQU 3800           ; 15 seconds of music plus 4 seconds backlog.
 
-    org PLAYER_ORIGIN
-    jp start
-result:
-    db 255
-late_syllables:
-    db 0
-current_tick:
-    dw 0
+    ORG PLAYER_ORIGIN
+    JP START
+RESULT:
+    DB 255
+LATE_SYLLABLES:
+    DB 0
+CURRENT_TICK:
+    DW 0
 
-start:
+START:
     ; Keep the caller's stack and register values so SCM can resume normally.
-    push af
-    push bc
-    push de
-    push hl
-    push ix
-    push iy
+    PUSH AF
+    PUSH BC
+    PUSH DE
+    PUSH HL
+    PUSH IX
+    PUSH IY
 
-    xor a
-    ld (late_syllables),a
-    ld (music_done),a
-    ld (speech_done),a
-    ld hl,0
-    ld (current_tick),hl
-    ld (drain_until),hl
-    ld a,255
-    ld (result),a
-    ld ix,music_data
-    ld iy,speech_data
+    XOR A
+    LD (LATE_SYLLABLES),A
+    LD (MUSIC_DONE),A
+    LD (SPEECH_DONE),A
+    LD HL,0
+    LD (CURRENT_TICK),HL
+    LD (DRAIN_UNTIL),HL
+    LD A,255
+    LD (RESULT),A
+    LD IX,MUSIC_DATA
+    LD IY,SPEECH_DATA
 
     ; Clear all 25 SID registers, including volume and gates, before setup.
     ; OUT uses the low eight address bits, as in the project's BASIC examples.
-    ld b,25
-    ld c,0
-
-clear_sid:
-    ld a,c
-    out (SID_REGISTER),a
-    xor a
-    out (SID_DATA),a
-    inc c
-    djnz clear_sid
+    LD B,25
+    LD C,0
+CLEAR_SID:
+    LD A,C
+    OUT (SID_REGISTER),A
+    XOR A
+    OUT (SID_DATA),A
+    INC C
+    DJNZ CLEAR_SID
 
     ; Three identical envelopes: immediate attack/decay, full sustain and
     ; immediate release. The tables carry the per-voice triangle/gate writes.
-    ld a,6
-    out (SID_REGISTER),a
-    ld a,240
-    out (SID_DATA),a
-    ld a,13
-    out (SID_REGISTER),a
-    ld a,240
-    out (SID_DATA),a
-    ld a,20
-    out (SID_REGISTER),a
-    ld a,240
-    out (SID_DATA),a
-    ld a,24
-    out (SID_REGISTER),a
-    ld a,VOLUME
-    out (SID_DATA),a
+    LD A,6
+    OUT (SID_REGISTER),A
+    LD A,240
+    OUT (SID_DATA),A
+    LD A,13
+    OUT (SID_REGISTER),A
+    LD A,240
+    OUT (SID_DATA),A
+    LD A,20
+    OUT (SID_REGISTER),A
+    LD A,240
+    OUT (SID_DATA),A
+    LD A,24
+    OUT (SID_REGISTER),A
+    LD A,VOLUME
+    OUT (SID_DATA),A
 
-playback_loop:
+PLAYBACK_LOOP:
     ; Always service due SID events first. A busy speech chip must never
     ; hold up music. IX and IY retain the next unconsumed table positions.
-    call service_music
-    call service_speech
+    CALL SERVICE_MUSIC
+    CALL SERVICE_SPEECH
 
-    ld a,(music_done)
-    ld b,a
-    ld a,(speech_done)
-    and b
-    jr z,check_timeout
+    LD A,(MUSIC_DONE)
+    LD B,A
+    LD A,(SPEECH_DONE)
+    AND B
+    JR Z,CHECK_TIMEOUT
 
     ; Both streams are submitted, but ready is not an acoustic completion
     ; signal. Allow a short tail for the final allophone and terminating PA1.
-    ld hl,(drain_until)
-    ld a,h
-    or l
-    jr nz,check_drain
-    ld hl,(current_tick)
-    ld de,DRAIN_TICKS
-    add hl,de
-    ld (drain_until),hl
+    LD HL,(DRAIN_UNTIL)
+    LD A,H
+    OR L
+    JR NZ,CHECK_DRAIN
+    LD HL,(CURRENT_TICK)
+    LD DE,DRAIN_TICKS
+    ADD HL,DE
+    LD (DRAIN_UNTIL),HL
+CHECK_DRAIN:
+    LD DE,(DRAIN_UNTIL)
+    LD HL,(CURRENT_TICK)
+    OR A                        ; Clear carry before unsigned subtraction.
+    SBC HL,DE
+    JR C,NEXT_TICK
+    XOR A                       ; Result 0: all commands submitted.
+    JR FINISH
 
-check_drain:
-    ld de,(drain_until)
-    ld hl,(current_tick)
-    or a                        ; Clear carry before unsigned subtraction.
-    sbc hl,de
-    jr c,next_tick
-    xor a                       ; Result 0: all commands submitted.
-    jr finish
-
-check_timeout:
+CHECK_TIMEOUT:
     ; The music table ends at tick 3000. Keep servicing any remaining speech
     ; until tick 3800, then return instead of hanging on a permanently busy card.
-    ld hl,(current_tick)
-    ld de,TIMEOUT_TICK
-    or a
-    sbc hl,de
-    jr c,next_tick
-    ld a,1                      ; Result 1: speech still pending at the deadline.
-    jr finish
+    LD HL,(CURRENT_TICK)
+    LD DE,TIMEOUT_TICK
+    OR A
+    SBC HL,DE
+    JR C,NEXT_TICK
+    LD A,1                      ; Result 1: speech still pending at the deadline.
+    JR FINISH
 
-next_tick:
-    call wait_tick
-    ld hl,(current_tick)
-    inc hl
-    ld (current_tick),hl
-    jr playback_loop
+NEXT_TICK:
+    CALL WAIT_TICK
+    LD HL,(CURRENT_TICK)
+    INC HL
+    LD (CURRENT_TICK),HL
+    JR PLAYBACK_LOOP
 
-finish:
-    ld (result),a
+FINISH:
+    LD (RESULT),A
     ; Every exit releases all gates and mutes the SID. A speech command already
     ; accepted by the MG005 cannot be cancelled through this interface.
-    ld a,4
-    out (SID_REGISTER),a
-    ld a,WAVEFORM
-    out (SID_DATA),a
-    ld a,11
-    out (SID_REGISTER),a
-    ld a,WAVEFORM
-    out (SID_DATA),a
-    ld a,18
-    out (SID_REGISTER),a
-    ld a,WAVEFORM
-    out (SID_DATA),a
-    ld a,24
-    out (SID_REGISTER),a
-    xor a
-    out (SID_DATA),a
-    pop iy
-    pop ix
-    pop hl
-    pop de
-    pop bc
-    pop af
-    ret
+    LD A,4
+    OUT (SID_REGISTER),A
+    LD A,WAVEFORM
+    OUT (SID_DATA),A
+    LD A,11
+    OUT (SID_REGISTER),A
+    LD A,WAVEFORM
+    OUT (SID_DATA),A
+    LD A,18
+    OUT (SID_REGISTER),A
+    LD A,WAVEFORM
+    OUT (SID_DATA),A
+    LD A,24
+    OUT (SID_REGISTER),A
+    XOR A
+    OUT (SID_DATA),A
+    POP IY
+    POP IX
+    POP HL
+    POP DE
+    POP BC
+    POP AF
+    RET
 
-service_music:
+SERVICE_MUSIC:
     ; Record: DW absolute tick, DB pair count, then register/value byte pairs.
     ; FFFF is an end marker, never a real cue. IX advances only after an event
     ; is due. Registers changed: AF, BC, HL, IX. Other table state is untouched.
-    ld a,(music_done)
-    or a
-    ret nz
+    LD A,(MUSIC_DONE)
+    OR A
+    RET NZ
+MUSIC_NEXT:
+    LD C,(IX+0)
+    LD B,(IX+1)
+    LD A,B
+    AND C
+    CP 255
+    JR Z,MUSIC_FINISHED
+    LD HL,(CURRENT_TICK)
+    OR A
+    SBC HL,BC
+    RET C                       ; The next event belongs to a future tick.
+    LD B,(IX+2)
+    INC IX
+    INC IX
+    INC IX
+    LD A,B
+    OR A
+    JR Z,MUSIC_NEXT              ; A no-op event is valid; avoid DJNZ underflow.
+MUSIC_WRITE:
+    LD A,(IX+0)
+    OUT (SID_REGISTER),A
+    LD A,(IX+1)
+    OUT (SID_DATA),A
+    INC IX
+    INC IX
+    DJNZ MUSIC_WRITE
+    JR MUSIC_NEXT               ; Consume every event due at this tick.
+MUSIC_FINISHED:
+    LD A,1
+    LD (MUSIC_DONE),A
+    RET
 
-music_next:
-    ld c,(ix+0)
-    ld b,(ix+1)
-    ld a,b
-    and c
-    cp 255
-    jr z,music_finished
-    ld hl,(current_tick)
-    or a
-    sbc hl,bc
-    ret c                       ; The next event belongs to a future tick.
-    ld b,(ix+2)
-    inc ix
-    inc ix
-    inc ix
-    ld a,b
-    or a
-    jr z,music_next              ; A no-op event is valid; avoid DJNZ underflow.
-
-music_write:
-    ld a,(ix+0)
-    out (SID_REGISTER),a
-    ld a,(ix+1)
-    out (SID_DATA),a
-    inc ix
-    inc ix
-    djnz music_write
-    jr music_next               ; Consume every event due at this tick.
-
-music_finished:
-    ld a,1
-    ld (music_done),a
-    ret
-
-service_speech:
+SERVICE_SPEECH:
     ; Record: DW absolute tick, DB allophone, DB first-code flag (0 or 1).
     ; All codes of a syllable share a cue. Send at most one per scheduler pass:
     ; the next pass checks readiness again, leaving time for the hardware
     ; handshake. Never spin waiting for the chip, or drop a late allophone.
     ; Registers changed: AF, BC, DE, HL, IY.
-    ld a,(speech_done)
-    or a
-    ret nz
-    ld c,(iy+0)
-    ld b,(iy+1)
-    ld a,b
-    and c
-    cp 255
-    jr z,speech_finished
-    ld hl,(current_tick)
-    or a
-    sbc hl,bc
-    ret c
-    in a,(SPEECH_PORT)
-    and SPEECH_READY
-    ret z                       ; Card cannot accept another allophone yet.
-    ld a,(iy+3)
-    or a
-    jr z,speech_send
+    LD A,(SPEECH_DONE)
+    OR A
+    RET NZ
+    LD C,(IY+0)
+    LD B,(IY+1)
+    LD A,B
+    AND C
+    CP 255
+    JR Z,SPEECH_FINISHED
+    LD HL,(CURRENT_TICK)
+    OR A
+    SBC HL,BC
+    RET C
+    IN A,(SPEECH_PORT)
+    AND SPEECH_READY
+    RET Z                       ; Card cannot accept another allophone yet.
+    LD A,(IY+3)
+    OR A
+    JR Z,SPEECH_SEND
     ; HL is current_tick - due_tick. Count only the first code of each group,
     ; once, when it is actually submitted. Equality at 100 ms is not late.
-    ld de,LATE_TICKS+1
-    or a
-    sbc hl,de
-    jr c,speech_send
-    ld a,(late_syllables)
-    inc a
-    ld (late_syllables),a
+    LD DE,LATE_TICKS+1
+    OR A
+    SBC HL,DE
+    JR C,SPEECH_SEND
+    LD A,(LATE_SYLLABLES)
+    INC A
+    LD (LATE_SYLLABLES),A
+SPEECH_SEND:
+    LD A,(IY+2)
+    OUT (SPEECH_PORT),A
+    INC IY
+    INC IY
+    INC IY
+    INC IY
+    RET
+SPEECH_FINISHED:
+    LD A,1
+    LD (SPEECH_DONE),A
+    RET
 
-speech_send:
-    ld a,(iy+2)
-    out (SPEECH_PORT),a
-    inc iy
-    inc iy
-    inc iy
-    inc iy
-    ret
-
-speech_finished:
-    ld a,1
-    ld (speech_done),a
-    ret
-
-wait_tick:
+WAIT_TICK:
     ; Busy-loop delay uses BC and AF only. Interrupts remain in the caller's
     ; state. Ctrl-C is not polled: let playback return, or use hardware reset.
-    ld bc,DELAY_LOOPS
-
-wait_tick_loop:
-    dec bc
-    ld a,b
-    or c
-    jr nz,wait_tick_loop
-    ret
+    LD BC,DELAY_LOOPS
+WAIT_TICK_LOOP:
+    DEC BC
+    LD A,B
+    OR C
+    JR NZ,WAIT_TICK_LOOP
+    RET
 
 ; Private writable state follows code. Tables are read-only during playback.
-music_done:
-    db 0
-speech_done:
-    db 0
-drain_until:
-    dw 0
+MUSIC_DONE:
+    DB 0
+SPEECH_DONE:
+    DB 0
+DRAIN_UNTIL:
+    DW 0
 
-music_data:
+MUSIC_DATA:
     dw 0 ; 0 ms
     db 4 ; register/value pair count
     db 11,WAVEFORM
@@ -744,7 +736,7 @@ music_data:
     db 0 ; register/value pair count
     dw 65535 ; end of music
 
-speech_data:
+SPEECH_DATA:
     dw 600
     db 33,1 ; allophone, first-code flag
     dw 600
@@ -811,4 +803,4 @@ speech_data:
     db 0,0 ; allophone, first-code flag
     dw 65535 ; end of speech
 
-image_end:
+IMAGE_END:

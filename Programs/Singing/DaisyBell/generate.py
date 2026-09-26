@@ -1,8 +1,9 @@
 """
-Build the Daisy Bell singing prototype from MIDI and BASIC or assembly templates
+Build the full Daisy Bell chorus as Z80 assembly from MIDI and speech data.
 """
 
 import argparse
+import re
 import struct
 import subprocess
 from dataclasses import dataclass
@@ -11,11 +12,10 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 HERE = Path(__file__).resolve().parent
-SOURCE = HERE.parent / "MIDI/DaisyBell/DaisyBell.mid"
-TEMPLATE = HERE / "player.bas.template"
-OUTPUT = HERE / "daisy-line-1.bas"
+SOURCE = HERE.parent.parent / "MIDI/DaisyBell/DaisyBell.mid"
+SPEECH_SOURCE = HERE.parent.parent / "Speech/DaisyBell"
 ASM_TEMPLATE = HERE / "player.asm.template"
-ASM_OUTPUT = HERE / "daisy-line-1.asm"
+ASM_OUTPUT = HERE / "daisy-chorus.asm"
 ASM_ORIGIN = 0xE000
 ASM_RAM_END = 0xFC00  # SCM reserves RAM from FC00 upwards.
 ASM_TICK_MS = 5
@@ -23,28 +23,81 @@ SID_WAVEFORM = 16
 TICK_MS = 25
 TEMPO_MICROSECONDS = 500_000  # 120 quarter notes per minute.
 INTRO_SECONDS = 3
-EXCERPT_BEATS = 30  # Two introduction bars and eight chorus bars.
 SID_CLOCK_HZ = 1_000_000
 VOICE_COUNT = 3
-DATA_START_LINE = 1000
-DATA_LINE_INCREMENT = 10
-
-# Seconds from chorus start and the existing line-1 allophones. PA1 terminates
-# independently cued syllables; the timeline replaces the sentence pauses.
-CUES = (
-    (0, "Dai", (33, 20, 0)),
-    (1.5, "sy", (55, 19, 0)),
-    (3, "Dai", (33, 20, 0)),
-    (4.5, "sy", (55, 19, 0)),
-    (5.9, "give", (36, 12, 35, 0)),
-    (6.4, "me", (16, 20, 0)),
-    (7, "your", (49, 58, 0)),
-    (7.5, "an", (26, 11, 0)),
-    (8.5, "swer", (55, 46, 51, 0)),
-    (9, "do", (21, 31, 0)),
+# Cue times are seconds from chorus start. Each count consumes that many
+# non-pause allophones from the corresponding tuned speech line. The musical
+# timeline replaces sentence pauses; PA1 terminates each independently cued group.
+# The first line retains the prototype's early "give" and "me" cues.
+CUE_GROUPS = (
+    (
+        (0, "Dai", 2),
+        (1.5, "sy", 2),
+        (3, "Dai", 2),
+        (4.5, "sy", 2),
+        (5.9, "give", 3),
+        (6.4, "me", 2),
+        (7, "your", 2),
+        (7.5, "an", 2),
+        (8.5, "swer", 3),
+        (9, "do", 2),
+    ),
+    (
+        (12, "I'm", 2),
+        (13.5, "half", 3),
+        (15, "cra", 3),
+        (16.5, "zy", 2),
+        (18, "all", 2),
+        (18.5, "for", 2),
+        (19, "the", 2),
+        (19.5, "love", 3),
+        (20.5, "of", 2),
+        (21, "you", 2),
+    ),
+    (
+        (23.5, "It", 2),
+        (24, "won't", 4),
+        (24.5, "be", 2),
+        (25, "a", 1),
+        (25.5, "sty", 3),
+        (26.5, "lish", 3),
+        (27, "mar", 3),
+        (28, "riage", 2),
+    ),
+    (
+        (28.5, "I", 1),
+        (29.5, "can't", 4),
+        (30, "af", 2),
+        (30.5, "ford", 3),
+        (31, "a", 1),
+        (31.5, "car", 3),
+        (32.5, "riage", 2),
+    ),
+    (
+        (35.5, "But", 3),
+        (36, "you'll", 4),
+        (37, "look", 3),
+        (37.5, "sweet", 4),
+    ),
+    (
+        (38.5, "Up", 2),
+        (39, "on", 2),
+        (40, "the", 2),
+        (40.5, "seat", 3),
+    ),
+    (
+        (41, "Of", 2),
+        (41.5, "a", 1),
+        (42, "bi", 2),
+        (42.5, "cy", 2),
+        (43, "cle", 2),
+        (43.5, "made", 3),
+        (44.5, "for", 2),
+        (45, "two", 2),
+    ),
 )
 
-# BASIC DATA records: tick, three frequencies, active mask, retrigger mask.
+# Internal SID states: tick, three frequencies, active mask, retrigger mask.
 MusicRecord = tuple[int, int, int, int, int, int]
 SpeechRecord = tuple[int, int]
 SpeechCue = tuple[float, str, tuple[int, ...]]
@@ -107,12 +160,12 @@ def _read_chunk(stream: BytesIO, expected_tag: bytes) -> bytes:
     return _read_bytes(stream, length)
 
 
-def _read_track(payload: bytes) -> tuple[list[NoteEvent], list[tuple[int, int]]]:
+def _read_track(payload: bytes) -> tuple[list[NoteEvent], list[tuple[int, int]], int]:
     """
     Decode note transitions and tempo changes from one MIDI track.
 
     :param payload: Track bytes without their chunk header.
-    :return: Note events and (absolute tick, microseconds per beat) tempo pairs.
+    :return: Note events, tempo pairs, and the final track tick.
     :raises ValueError: An event is malformed or notes use channels beyond 0-2.
     """
     stream = BytesIO(payload)
@@ -153,15 +206,15 @@ def _read_track(payload: bytes) -> tuple[list[NoteEvent], list[tuple[int, int]]]
                     raise ValueError("Expected melody, bass and accompaniment only")
                 is_on = kind == 0x9 and event_data[1] != 0
                 notes.append(NoteEvent(tick, channel, event_data[0], is_on))
-    return notes, tempos
+    return notes, tempos, tick
 
 
-def read_midi(path: Path) -> tuple[int, list[NoteEvent]]:
+def read_midi(path: Path) -> tuple[int, list[NoteEvent], int]:
     """
-    Read the prototype's format-1, constant-120-BPM MIDI arrangement.
+    Read the format-1, constant-120-BPM MIDI arrangement.
 
     :param path: Source MIDI file with positive quarter-note tick resolution.
-    :return: Ticks per quarter note and note transitions across all tracks.
+    :return: Ticks per quarter note and note transitions across all tracks, plus the end tick.
     :raises OSError: The source cannot be read.
     :raises ValueError: MIDI data or its layout/timing is unsupported.
     """
@@ -176,13 +229,15 @@ def read_midi(path: Path) -> tuple[int, list[NoteEvent]]:
         raise ValueError("Expected positive quarter-note MIDI tick resolution")
     notes: list[NoteEvent] = []
     tempos: list[tuple[int, int]] = []
+    end_tick = 0
     for _ in range(track_count):
-        track_notes, track_tempos = _read_track(_read_chunk(stream, b"MTrk"))
+        track_notes, track_tempos, track_end = _read_track(_read_chunk(stream, b"MTrk"))
+        end_tick = max(end_tick, track_end)
         notes.extend(track_notes)
         tempos.extend(track_tempos)
     if tempos != [(0, TEMPO_MICROSECONDS)]:
-        raise ValueError("Prototype expects one initial tempo of 120 BPM")
-    return ticks_per_quarter, notes
+        raise ValueError("Player expects one initial tempo of 120 BPM")
+    return ticks_per_quarter, notes, end_tick
 
 
 def _sid_frequency(pitch: int | None) -> int:
@@ -204,18 +259,16 @@ def _sid_frequency(pitch: int | None) -> int:
 
 def music_records(source: Path = SOURCE) -> list[MusicRecord]:
     """
-    Build three-voice SID states for the introduction and first chorus line.
+    Build three-voice SID states for the entire arrangement, including introduction and closing bars.
 
     :param source: Constant-120-BPM MIDI with three monophonic channels.
     :return: Absolute 25 ms tick records ending with an all-voices-off record.
     :raises OSError: The MIDI source cannot be read.
     :raises ValueError: MIDI is unsupported, polyphonic, or outside SID range.
     """
-    ticks_per_quarter, notes = read_midi(source)
+    ticks_per_quarter, notes, end_tick = read_midi(source)
     events: dict[int, list[NoteEvent]] = {}
     for note in notes:
-        if note.tick >= EXCERPT_BEATS * ticks_per_quarter:
-            continue
         step = round(
             note.tick * TEMPO_MICROSECONDS / 1000 / ticks_per_quarter / TICK_MS
         )
@@ -247,7 +300,11 @@ def music_records(source: Path = SOURCE) -> list[MusicRecord]:
                 retrigger_mask,
             )
         )
-    end_step = round(EXCERPT_BEATS * TEMPO_MICROSECONDS / 1000 / TICK_MS)
+    end_step = round(
+        end_tick * TEMPO_MICROSECONDS / 1000 / ticks_per_quarter / TICK_MS
+    )
+    if end_step * TICK_MS // ASM_TICK_MS >= 65535 - 1000:
+        raise ValueError("Arrangement exceeds the player tick range including timeout")
     records.append((end_step, 0, 0, 0, 0, 0))
     return records
 
@@ -283,54 +340,36 @@ def _speech_records(cues: tuple[SpeechCue, ...]) -> list[SpeechRecord]:
     return records
 
 
-def generate(
-    source: Path = SOURCE,
-    template: Path = TEMPLATE,
-    output: Path = OUTPUT,
-) -> Path:
-    """
-    Append generated DATA records to the external BASIC player template.
+def speech_cues(directory: Path = SPEECH_SOURCE) -> tuple[SpeechCue, ...]:
+    """Read tuned allophones from seven speech DATA files and apply lyric cues.
 
-    :param source: MIDI arrangement to extract.
-    :param template: UTF-8 BASIC player, with numbered lines below 1000.
-    :param output: BASIC file to create or replace after successful generation.
-    :return: Path of the generated BASIC program.
-    :raises OSError: A source/template cannot be read or output cannot be written.
-    :raises ValueError: MIDI, speech cues or template line numbers are invalid.
+    Only DATA payloads are read; the standalone speech players are not generated
+    or executed. Reject changed pronunciations whose lengths no longer match the
+    explicit syllable boundaries instead of silently dropping trailing codes.
     """
-    music = music_records(source)
-    speech = _speech_records(CUES)
-    listing = template.read_text(encoding="utf-8").rstrip("\n") + "\n"
-    _validate_template(listing)
-    rows = [(len(music), len(speech)), *music, *speech]
-    for index, row in enumerate(rows):
-        line_number = DATA_START_LINE + index * DATA_LINE_INCREMENT
-        listing += f"{line_number} DATA " + ",".join(map(str, row)) + "\n"
-    output.write_text(listing, encoding="utf-8")
-    return output
-
-
-def _validate_template(listing: str) -> None:
-    """
-    Check that player lines cannot collide with appended BASIC DATA lines.
-
-    :param listing: Nonempty line-numbered BASIC player text.
-    :raises ValueError: Lines are unnumbered, unordered, duplicated or too high.
-    """
-    previous_line = 0
-    for line in listing.splitlines():
-        fields = line.split(maxsplit=1)
-        if len(fields) != 2 or not fields[0].isdigit():
-            raise ValueError("BASIC template requires a number and statement per line")
-        line_number = int(fields[0])
-        if not previous_line < line_number < DATA_START_LINE:
-            raise ValueError("BASIC template lines must increase within 1-999")
-        previous_line = line_number
+    cues = []
+    for line_number, groups in enumerate(CUE_GROUPS, 1):
+        path = directory / f"daisy-chorus-line-{line_number}.bas"
+        codes = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            match = re.fullmatch(r"\s*\d+\s+DATA\s+(.+)", line, re.IGNORECASE)
+            if match:
+                codes.extend(int(value.strip()) for value in match[1].split(","))
+        if not codes or any(not 0 <= code <= 63 for code in codes):
+            raise ValueError(f"{path.name}: expected allophone DATA in range 0-63")
+        spoken = [code for code in codes if code > 4]
+        if len(spoken) != sum(count for _, _, count in groups):
+            raise ValueError(f"{path.name}: pronunciation no longer matches cue groups")
+        offset = 0
+        for seconds, label, count in groups:
+            cues.append((seconds, label, (*spoken[offset : offset + count], 0)))
+            offset += count
+    return tuple(cues)
 
 
 def _sid_writes(record: MusicRecord, previous_mask: int) -> list[tuple[int, int]]:
     """
-    Precompute the SID writes performed by BASIC's three voice subroutine calls.
+    Precompute three-voice SID writes, including gate transitions.
 
     :param record: Time, three frequencies, active mask and retrigger mask.
     :param previous_mask: Active voices before this event (bits 0-2).
@@ -362,7 +401,7 @@ def _assembly_music(music: list[MusicRecord]) -> str:
     """
     Encode SID events as standalone z80asm directives with 5 ms timestamps.
 
-    :param music: Ordered BASIC-compatible SID state records.
+    :param music: Ordered SID state records on the 25 ms music grid.
     :return: Assembly table including a FFFF end marker.
     """
     lines = []
@@ -372,8 +411,8 @@ def _assembly_music(music: list[MusicRecord]) -> str:
         tick = record[0] * TICK_MS // ASM_TICK_MS
         lines.extend(
             (
-                f"    dw {tick} ; {record[0] * TICK_MS} ms",
-                f"    db {len(writes)} ; register/value pair count",
+                f"    DW {tick} ; {record[0] * TICK_MS} ms",
+                f"    DB {len(writes)} ; register/value pair count",
             )
         )
         for register, value in writes:
@@ -381,9 +420,9 @@ def _assembly_music(music: list[MusicRecord]) -> str:
             encoded = str(value)
             if register in (4, 11, 18):
                 encoded = "WAVEFORM+1" if value & 1 else "WAVEFORM"
-            lines.append(f"    db {register},{encoded}")
+            lines.append(f"    DB {register},{encoded}")
         previous_mask = record[4]
-    lines.append("    dw 65535 ; end of music")
+    lines.append("    DW 65535 ; end of music")
     return "\n".join(lines)
 
 
@@ -391,7 +430,7 @@ def _assembly_speech(speech: list[SpeechRecord]) -> str:
     """
     Encode allophones with a flag identifying the first code of each syllable.
 
-    :param speech: Ordered absolute BASIC tick/allophone pairs.
+    :param speech: Ordered absolute 25 ms tick/allophone pairs.
     :return: Assembly table with 5 ms timestamps and a FFFF end marker.
     """
     lines = []
@@ -400,12 +439,12 @@ def _assembly_speech(speech: list[SpeechRecord]) -> str:
         first_code = int(tick != previous_tick)
         lines.extend(
             (
-                f"    dw {tick * TICK_MS // ASM_TICK_MS}",
-                f"    db {code},{first_code} ; allophone, first-code flag",
+                f"    DW {tick * TICK_MS // ASM_TICK_MS}",
+                f"    DB {code},{first_code} ; allophone, first-code flag",
             )
         )
         previous_tick = tick
-    lines.append("    dw 65535 ; end of speech")
+    lines.append("    DW 65535 ; end of speech")
     return "\n".join(lines)
 
 
@@ -413,21 +452,32 @@ def generate_asm(
     source: Path = SOURCE,
     template: Path = ASM_TEMPLATE,
     output: Path = ASM_OUTPUT,
+    speech_source: Path = SPEECH_SOURCE,
 ) -> Path:
     """
-    Insert shared MIDI and speech data into the commented assembly template.
+    Insert full-chorus MIDI and speech data into the commented assembly template.
 
     :param source: MIDI arrangement to extract.
-    :param template: UTF-8 z80asm template with one marker per event table.
+    :param template: UTF-8 z80asm template with table and timeout markers.
     :param output: Assembly source file to create or replace.
+    :param speech_source: Directory containing the seven tuned speech lines.
     :return: Generated source path; assembly is a separate optional step.
     :raises OSError: An input cannot be read or output cannot be written.
     :raises ValueError: Input data or template markers are invalid.
     """
-    music = _assembly_music(music_records(source))
-    speech = _assembly_speech(_speech_records(CUES))
+    records = music_records(source)
+    music = _assembly_music(records)
+    speech_records = _speech_records(speech_cues(speech_source))
+    if speech_records[-1][0] > records[-1][0]:
+        raise ValueError("Speech cues extend beyond the MIDI arrangement")
+    speech = _assembly_speech(speech_records)
+    timeout = str(records[-1][0] * TICK_MS // ASM_TICK_MS + 800)
     listing = template.read_text(encoding="utf-8")
-    for marker, table in (("@MUSIC_DATA@", music), ("@SPEECH_DATA@", speech)):
+    for marker, table in (
+        ("@MUSIC_DATA@", music),
+        ("@SPEECH_DATA@", speech),
+        ("@TIMEOUT_TICK@", timeout),
+    ):
         if listing.count(marker) != 1:
             raise ValueError(f"Assembly template requires exactly one {marker}")
         listing = listing.replace(marker, table)
@@ -491,23 +541,20 @@ def assemble(source: Path, assembler: str = "z80asm") -> tuple[Path, Path]:
 
 def main() -> None:
     """
-    Generate BASIC by default, or assembly and optional loadable artifacts.
+    Generate assembly and optional loadable artifacts.
 
     Command-line errors are reported by argparse; generation/build errors retain
     their original exception and a nonzero exit status.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--format", choices=("basic", "asm"), default="basic")
     parser.add_argument(
         "--assemble",
         action="store_true",
-        help="also build .bin and Intel .hex (requires --format asm)",
+        help="also build .bin and Intel .hex",
     )
     parser.add_argument("--assembler", default="z80asm", help="z80asm executable")
     args = parser.parse_args()
-    if args.assemble and args.format != "asm":
-        parser.error("--assemble requires --format asm")
-    generated_path = generate_asm() if args.format == "asm" else generate()
+    generated_path = generate_asm()
     print(f"Generated {generated_path}")
     if args.assemble:
         for path in assemble(generated_path, args.assembler):

@@ -15,18 +15,17 @@ Host-side generation requires **Python 3.10 or later** and its standard library.
 
 ## Program Files
 
-| File                           | Description                                                             |
-| ------------------------------ | ----------------------------------------------------------------------- |
-| `daisy-line-1.asm`             | Generated, self-contained Z80 source for standalone `z80asm`            |
-| `daisy-line-1.bas`             | Generated BASIC player with music and speech DATA                       |
-| `daisy-line-1.bin`             | Raw assembled bytes; local build output ignored by Git                  |
-| `daisy-line-1.hex`             | Intel HEX image with load addresses and checksums, ready to send to SCM |
-| `generate.py`                  | Generator for BASIC or Z80 assembly, with an optional binary/HEX build  |
-| `player.asm.template`          | Editable Z80 Assembly player                                            |
-| `player.bas.template`          | Editable BASIC player template                                          |
-| `test_generate.py`             | MIDI parsing and BASIC generation tests                                 |
-| `test_asm.py`                  | Assembly generation, build and execution tests                          |
-| `test_player.c`                | CPU execution harness compiled by `test_asm.py`                         |
+| File                  | Description                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
+| `daisy-line-1.asm`    | Generated, self-contained Z80 source for standalone `z80asm`            |
+| `daisy-line-1.bas`    | Generated BASIC player with music and speech DATA                       |
+| `daisy-line-1.hex`    | Intel HEX image with load addresses and checksums, ready to send to SCM |
+| `generate.py`         | Generator for BASIC or Z80 assembly, with an optional binary/HEX build  |
+| `player.asm.template` | Editable Z80 Assembly player                                            |
+| `player.bas.template` | Editable BASIC player template                                          |
+| `test_generate.py`    | MIDI parsing and BASIC generation tests                                 |
+| `test_asm.py`         | Assembly generation, build and execution tests                          |
+| `test_player.c`       | CPU execution harness compiled by `test_asm.py`                         |
 
 ---
 
@@ -82,7 +81,7 @@ OUT 212,24:OUT 213,0
 To generate the BASIC program, run the following from the repository root:
 
 ```bash
-python3 Programs/Singing/generate.py --format basic
+python3 Programs/Singing/Prototype/generate.py --format basic
 ```
 
 The standard-library-only generator reads `Programs/MIDI/DaisyBell/DaisyBell.mid` directly and extracts its first 30 quarter-note beats, excluding the next phrase. It expects the existing constant 120 BPM arrangement and three monophonic MIDI channels.
@@ -102,7 +101,7 @@ Template lines must be numbered in ascending order within 1–999; the generator
 Load `daisy-line-1.bas` into BASIC. If using Serial Sender from the repository root, use:
 
 ```bash
-SerialSender --send Programs/Singing/daisy-line-1.bas
+SerialSender --send Programs/Singing/Prototype/daisy-line-1.bas
 ```
 
 Once the program has been transferred, enter `RUN`. The program plays the MIDI's two-bar introduction, then speaks the first chorus line over its melody, bass and waltz accompaniment. The intended musical length is 15 seconds at 120 BPM. This is rhythmically cued speech, not pitched singing.
@@ -124,13 +123,13 @@ The final music event releases the SID voices, pending speech has a bounded time
 To generate and assemble the Assembly program, run the following from the repository root:
 
 ```bash
-python3 Programs/Singing/generate.py --format asm --assemble
+python3 Programs/Singing/Prototype/generate.py --format asm --assemble
 ```
 
 To generate the Assembly program without assembling it, run the following from the repository root:
 
 ```bash
-python3 Programs/Singing/generate.py --format asm
+python3 Programs/Singing/Prototype/generate.py --format asm
 ```
 
 The build uses the standalone **z80asm** also used by the repository's [MachineCode example](../MachineCode/README.md), not z88dk's similarly named tool. On macOS, install it with `brew install z80asm` if necessary. An alternative executable path can be supplied with `--assembler /path/to/z80asm`.
@@ -145,7 +144,7 @@ Make persistent assembly changes in `player.asm.template` and rebuild with `--fo
 4. If using the repository's Serial Sender from the repository root, use:
 
     ```bash
-    SerialSender --send Programs/Singing/daisy-line-1.hex --sendreset false
+    SerialSender --send Programs/Singing/Prototype/daisy-line-1.hex --sendreset false
     ```
 
 5. SCM recognises the leading colon of Intel HEX records and loads their addressed bytes silently; the record text is not normally echoed
@@ -164,11 +163,11 @@ Make persistent assembly changes in `player.asm.template` and rebuild with `--fo
 
 The player mutes the SID and returns to the monitor when finished. Enter `G E000` again to replay. After it returns, enter `M E000` and inspect the header bytes (then press **Escape** to return to the prompt):
 
-| Address     | Meaning                                                               |
-| ----------- | --------------------------------------------------------------------- |
-| `E003`      | Result: `00` completed, `01` speech timeout, `FF` running/not yet run |
-| `E004`      | Number of syllables whose first code was submitted over 20 software ticks late (nominally 100 ms)   |
-| `E005–E006` | Final software tick, low byte first; nominally 5 ms per tick          |
+| Address     | Meaning                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------- |
+| `E003`      | Result: `00` completed, `01` speech timeout, `FF` running/not yet run                             |
+| `E004`      | Number of syllables whose first code was submitted over 20 software ticks late (nominally 100 ms) |
+| `E005–E006` | Final software tick, low byte first; nominally 5 ms per tick                                      |
 
 The player records these results in RAM rather than printing through a firmware API. At the default settings, normal completion is usually tick 3200 (`80 0C` in memory): the 15-second score plus a nominal one-second tail. Pending speech times out at tick 3800 (`D8 0E`), nominally 19 seconds from the start. If speech finishes submitting after the music, the tail starts later. Result `00` confirms submission, not measured acoustic completion.
 
@@ -213,16 +212,21 @@ This API reports the monitor's free-memory ceiling; it is not an allocation or a
 
 For example, to load the program at D000 instead of E000:
 
-| Location              | Required change for D000                                                                            |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| `player.asm.template` | Change `PLAYER_ORIGIN` from `0E000h` to `0D000h`.                                                   |
-| `generate.py`         | Change `ASM_ORIGIN` from `0xE000` to `0xD000`, so the HEX file loads the bytes at the new address.  |
-| Build validation      | Change the expected opening jump from `JP E007` to `JP D007`: bytes `C3 07 D0`.                     |
-| Loading instructions  | Use `G D000` to run and `M D000` to inspect the header.                                             |
-| Diagnostic addresses  | Result becomes **D003**, late count **D004**, and tick count **D005–D006**.                         |
-| Tests                 | Update hardcoded addresses and any test memory or stack locations that conflict with the new image. |
+| Location                         | Required change for D000                                                                                                                                                                                                                                                                                                                            |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `player.asm.template`            | Change `PLAYER_ORIGIN` from `0E000H` to `0D000H`.                                                                                                                                                                                                                                                                                                   |
+| `generate.py`                    | Change `ASM_ORIGIN` from `0xE000` to `0xD000`. Keep `ASM_RAM_END = 0xFC00` if the firmware ceiling is unchanged.                                                                                                                                                                                                                                    |
+| Build validation in `assemble()` | Change the expected opening bytes to `bytes((0xC3, 0x07, 0xD0))`, representing `JP D007`.                                                                                                                                                                                                                                                           |
+| Loading instructions             | Use `G D000` and `M D000`; the initial seven bytes become `C3 07 D0 FF 00 00 00`.                                                                                                                                                                                                                                                                   |
+| Diagnostic addresses             | Result becomes **D003**, late count **D004**, and tick count **D005–D006**.                                                                                                                                                                                                                                                                         |
+| `test_asm.py`                    | Update the expected entry bytes and size allowance to `0x2C00`. Change the intentional wrong-origin fixture to relocate away from D000, for example to E000, so it still tests rejection. Match the uppercase template text exactly, for example `.replace("EQU 0D000H", "EQU 0E000H")`; the existing lowercase replacement must also be corrected. |
+| `test_player.c`                  | Change the image load address, initial PC, permitted image-write range and diagnostic reads to D000-based addresses; change the load capacity from `0x1C00` to `0x2C00`. Move its synthetic stack as described below.                                                                                                                               |
 
-After changing the origin, regenerate **and reassemble**; labels and absolute references inside the assembly are then recalculated automatically. Changing only the Intel HEX load addresses would move the bytes without fixing those references. For a move to D000, also relocate the C harness's synthetic stack at D000 so it does not overlap the player. Update address-related comments and error messages alongside the executable checks.
+The HEX round-trip unit test uses E000 as an independent sample address; it may retain that fixture because it does not load the player.
+
+For the C harness, one suitable replacement stack is **C000**, with permitted stack writes in **BF00–C001**. Update initial SP, the two synthetic return-address bytes, the expected final SP (**C002**) and the stack-write guard together. The current stack at D000 would overwrite the relocated player's entry bytes. This is a test-harness change: the real player continues to use SCM's caller stack and must not set SP to C000 merely because the test does.
+
+After changing the origin, regenerate **and reassemble**; labels and absolute references inside the assembly are then recalculated automatically. Changing only the Intel HEX load addresses would move the bytes without fixing those references. Update address-related comments and error messages, then run the assembly and CPU execution tests with the revised addresses.
 
 ### Timing Controls
 
@@ -259,12 +263,12 @@ The test suite covers both generators, MIDI parsing, assembly builds, Intel HEX 
 
 #### Available Tests
 
-| Test group                                        | Location                             | Requirements                                             | Coverage                                                                                                                                                                                                                                                                     |
-| ------------------------------------------------- | ------------------------------------ | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| MIDI and BASIC generator: 7 tests                 | `test_generate.py`                   | Python standard library                                  | Excerpt boundaries, template changes, generation from another working directory, running-status MIDI, zero-velocity note releases, malformed MIDI, variable-length quantities, rejection of polyphonic input, and preservation of existing output when a template is invalid |
-| Assembly generation: 4 tests                      | `test_asm.py`                        | Python standard library                                  | SID gate transitions, speech group flags and tick conversion, template insertion markers, and Intel HEX checksums, addresses and round-trip decoding                                                                                                                         |
-| Assembly build: 1 test                            | `test_asm.py`                        | Python and standalone `z80asm` on `PATH`                 | Successful assembly, expected entry jump, image size limit, EOF record, and rejection of a changed origin without replacing the existing binary                                                                                                                              |
-| Z80 execution: 1 test with three speech scenarios | `test_asm.py`, using `test_player.c` | Python, `z80asm`, `cc`, and the emulator's libz80 source | Actual instruction execution with immediately ready, 120 ms busy and permanently busy speech-card models                                                                                                                                                                     |
+| Test group               | Location                             | Requirements                                             | Coverage                                                                                                                                                                                                                                                                     |
+| ------------------------ | ------------------------------------ | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| MIDI and BASIC generator | `test_generate.py`                   | Python standard library                                  | Excerpt boundaries, template changes, generation from another working directory, running-status MIDI, zero-velocity note releases, malformed MIDI, variable-length quantities, rejection of polyphonic input, and preservation of existing output when a template is invalid |
+| Assembly generation      | `test_asm.py`                        | Python standard library                                  | SID gate transitions, speech group flags and tick conversion, template insertion markers, and Intel HEX checksums, addresses and round-trip decoding                                                                                                                         |
+| Assembly build           | `test_asm.py`                        | Python and standalone `z80asm` on `PATH`                 | Successful assembly, expected entry jump, image size limit, EOF record, and rejection of a changed origin without replacing the existing binary                                                                                                                              |
+| Z80 execution            | `test_asm.py`, using `test_player.c` | Python, `z80asm`, `cc`, and the emulator's libz80 source | Actual instruction execution with immediately ready, 120 ms busy and permanently busy speech-card models                                                                                                                                                                     |
 
 The Z80 execution test checks SID register writes, allophone order, cues not being sent early, overall duration, completion/timeout status and final muting. Its C harness also checks stack balance, register and interrupt-state preservation, and that memory writes stay inside the player and stack regions. The Python test compiles and invokes the harness automatically; there is no separate manual C build step.
 
@@ -280,7 +284,7 @@ There are currently **13 tests**. Without additional tools, the 11 Python-only t
 
 The build test runs when `z80asm` is installed; the execution test also needs `cc` and `SINGING_Z80_SOURCE`. Missing optional prerequisites produce explicit `skipped` results. `OK (skipped=...)` therefore does not mean the machine-code execution checks ran.
 
-To enable all 13 tests, point `SINGING_Z80_SOURCE` at the `libz80` directory in an [EtchedPixels EmulatorKit](https://github.com/EtchedPixels/EmulatorKit) source checkout. This contains Gabriel Gambetta's Z80 CPU core (`z80.c`, `z80.h` and the `codegen` folder). The tests compile that core directly; a built emulator application is not required:
+To enable all the tests, point `SINGING_Z80_SOURCE` at the `libz80` directory in an [EtchedPixels EmulatorKit](https://github.com/EtchedPixels/EmulatorKit) source checkout. This contains Gabriel Gambetta's Z80 CPU core (`z80.c`, `z80.h` and the `codegen` folder). The tests compile that code directly; a built emulator application is not required:
 
 ```bash
 SINGING_Z80_SOURCE=/path/to/Emulator/source/libz80 \
@@ -313,8 +317,8 @@ The same optional-tool skip rules apply when running a subset.
 With Ruff installed, check formatting, imports, lint rules and type annotations without modifying the files:
 
 ```bash
-ruff check --select E,F,I,ANN Programs/Singing/generate.py Programs/Singing/test_generate.py Programs/Singing/test_asm.py
-ruff format --check Programs/Singing/generate.py Programs/Singing/test_generate.py Programs/Singing/test_asm.py
+ruff check --select E,F,I,ANN Programs/Singing/Prototype/generate.py Programs/Singing/Prototype/test_generate.py Programs/Singing/Prototype/test_asm.py
+ruff format --check Programs/Singing/Prototype/generate.py Programs/Singing/Prototype/test_generate.py Programs/Singing/Prototype/test_asm.py
 ```
 
 Ruff is a development tool, not a runtime dependency of the generator.

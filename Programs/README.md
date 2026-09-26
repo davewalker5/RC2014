@@ -33,9 +33,10 @@ and practical utilities.
 
 ## Music
 
-| Folder | Language | Description                             |
-| ------ | -------- | --------------------------------------- |
-| MIDI   | BASIC    | SID-Ulator arrangements from MIDI files |
+| Folder  | Language            | Description                                    |
+| ------- | ------------------- | ---------------------------------------------- |
+| MIDI    | BASIC               | SID-Ulator arrangements from MIDI files        |
+| Singing | BASIC, Z80 Assembly | Synchronised SID-Ulator music and MG005 speech |
 
 ## Mathematics & Science
 
