@@ -103,6 +103,42 @@ class GeneratorTests(unittest.TestCase):
             [seconds for seconds, _ in melody],
         )
 
+    def test_final_line_preserves_rest_and_eighth_note_pickups(self) -> None:
+        """Align the final lyric with the melody after the rest following seat."""
+        # The first two notes are only half a quarter-note beat apart. Checking
+        # the actual MIDI catches both an early entry during the preceding rest
+        # and incorrectly spacing these pickups like the later syllables.
+        resolution, notes, _ = generate.read_midi(generate.SOURCE)
+        melody = [
+            (note.tick / resolution * 0.5 - generate.INTRO_SECONDS, note.pitch)
+            for note in notes
+            if note.channel == 0
+            and note.is_on
+            and 44 <= note.tick / resolution * 0.5 <= 48
+        ]
+        self.assertEqual(
+            melody,
+            [
+                (41.5, 76),
+                (41.75, 77),
+                (42, 79),
+                (42.5, 76),
+                (43, 72),
+                (43.5, 74),
+                (44.5, 67),
+                (45, 72),
+            ],
+        )
+        cues = generate.speech_cues()[-8:]
+        self.assertEqual(
+            [label for _, label, _ in cues],
+            ["Of", "a", "bi", "cy", "cle", "made", "for", "two"],
+        )
+        self.assertEqual(
+            [seconds for seconds, _, _ in cues],
+            [seconds for seconds, _ in melody],
+        )
+
     def test_changed_speech_is_read_and_mismatched_groups_rejected(self) -> None:
         """Read pronunciation edits from source and reject incompatible lengths."""
         with TemporaryDirectory() as directory:

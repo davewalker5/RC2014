@@ -88,8 +88,10 @@ CUE_GROUPS = (
         (40.5, "seat", 3),
     ),
     (
-        (41, "Of", 2),
-        (41.5, "a", 1),
+        # Leave the rest after "seat" intact. "Of a" uses two eighth-note
+        # pickups (250 ms each at 120 BPM), before "bi" on the next beat.
+        (41.5, "Of", 2),
+        (41.75, "a", 1),
         (42, "bi", 2),
         (42.5, "cy", 2),
         (43, "cle", 2),

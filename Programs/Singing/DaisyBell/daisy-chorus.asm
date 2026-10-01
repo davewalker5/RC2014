@@ -2254,15 +2254,15 @@ SPEECH_DATA:
     DB 13,0 ; allophone, first-code flag
     DW 8700
     DB 0,0 ; allophone, first-code flag
-    DW 8800
+    DW 8900
     DB 23,1 ; allophone, first-code flag
-    DW 8800
+    DW 8900
     DB 40,0 ; allophone, first-code flag
-    DW 8800
+    DW 8900
     DB 0,0 ; allophone, first-code flag
-    DW 8900
+    DW 8950
     DB 15,1 ; allophone, first-code flag
-    DW 8900
+    DW 8950
     DB 0,0 ; allophone, first-code flag
     DW 9000
     DB 28,1 ; allophone, first-code flag

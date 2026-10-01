@@ -39,9 +39,11 @@ Speech comes from the seven tuned `daisy-chorus-line-1.bas` through `daisy-choru
 | I can't afford a carriage               |                  29.5 seconds |
 | But you'll look sweet                   |                  35.5 seconds |
 | Upon the seat                           |                  38.5 seconds |
-| Of a bicycle made for two               |                    41 seconds |
+| Of a bicycle made for two               |                  41.5 seconds |
 
 The last “two” starts at chorus-relative 45 seconds. Add three seconds to these values for time from program start. The first line retains the prototype's slightly early “give” and “me” cues. Later cues are aligned to melody onsets. The melody note for the ending of “marriage” begins at 27.5 seconds and spans two seconds; “I can't afford a carriage” follows at 29.5, 30, 31, 31.5, 32.5, 33 and 33.5 seconds for its seven syllable groups.
+
+The final line preserves the rest after “seat”: “Of” enters at 41.5 seconds and “a” at 41.75 seconds, followed by “bi” at 42 seconds. These two opening syllables are eighth-note pickups, a quarter-second apart at 120 BPM.
 
 ## Generate and Build
 
