@@ -11,7 +11,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 HERE = Path(__file__).resolve().parent
-SOURCE = HERE.parent / "MIDI/DaisyBell/DaisyBell.mid"
+SOURCE = HERE.parent.parent / "MIDI/DaisyBell/DaisyBell.mid"
 TEMPLATE = HERE / "player.bas.template"
 OUTPUT = HERE / "daisy-line-1.bas"
 ASM_TEMPLATE = HERE / "player.asm.template"

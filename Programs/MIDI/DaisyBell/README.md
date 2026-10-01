@@ -7,36 +7,50 @@ An original three-voice MIDI arrangement of the familiar chorus of **Daisy Bell 
 
 ## Files
 
-| File               | Description                                                                                  |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| `DaisyBell.mid`    | Standard MIDI File, format 1: conductor track plus three musical tracks                      |
-| `DaisyBell.bas`    | RC2014 BASIC arrangement generated from the MIDI file using this repository's MIDI Converter |
-| `generate_midi.py` | Editable arrangement and deterministic MIDI generator; Python 3 standard library only        |
+| File                      | Description                                                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `DaisyBell.mid`           | Three-voice MIDI arrangement with a two-bar introduction, chorus melody, waltz accompaniment and closing chord         |
+| `DaisyBellSimplified.mid` | Simplified MIDI arrangement preserving the introduction, followed by the sung melody alone for easier BASIC conversion |
+| `DaisyBell.bas`           | RC2014 BASIC arrangement generated from the MIDI file using the MIDI Converter                                         |
+| `DaisyBellSimplified.bas` | RC2014 BASIC arrangement generated from the simplified MIDI file using the MIDI Converter                              |
+| `generate_midi.py`        | Generates the original three-voice MIDI arrangement                                                                    |
+| `generate_midi_simple.py` | Generates the simplified MIDI arrangement with the original introduction and unaccompanied chorus melody               |
 
-To regenerate the MIDI file from the repository root:
+To regenerate the MIDI files from the repository root:
 
-```sh
+```bash
 python3 Programs/MIDI/DaisyBell/generate_midi.py
+python3 Programs/MIDI/DaisyBell/generate_midi_simple.py
 ```
 
 The conversion can then be regenerated from the repository root with:
 
-```sh
+```bash
 dotnet run --project MIDIConverter/MIDIConverter -- \
   --convert Programs/MIDI/DaisyBell/DaisyBell.mid \
   --output Programs/MIDI/DaisyBell/DaisyBell.bas \
   --overwrite true
+
+dotnet run --project MIDIConverter/MIDIConverter -- \
+  --convert Programs/MIDI/DaisyBell/DaisyBellSimplified.mid \
+  --output Programs/MIDI/DaisyBell/DaisyBellSimplified.bas \
+  --overwrite true
 ```
 
-The generated program requires an RC2014 Mini II running Microsoft BASIC and a SID-Ulator sound module configured for register port D4 and data port D5.
+The generated programs require an RC2014 Mini II running Microsoft BASIC and a SID-Ulator sound module configured for register port D4 and data port D5.
 
-Load `DaisyBell.bas`, then enter:
+Load `DaisyBell.bas` or `DaisyBellSimplified.bas`, then enter:
 
 ```text
 RUN
 ```
 
 ## Arrangement
+
+The chorus pitches and rhythms follow the vocal line on printed page 5 of the
+[1892 sheet music](https://www.sheetmusicsinger.com/wp-content/uploads/2022/08/Daisy-Bell.pdf),
+transposed from G major to C major. Tied notes are combined, written rests are
+preserved, and the small ornamental turn on “marriage” is omitted.
 
 - C major, 3/4 time, 120 quarter notes per minute
 - Two-bar introduction, one 32-bar chorus, and a two-bar closing tonic
@@ -46,6 +60,11 @@ RUN
 - General MIDI acoustic grand piano on channels 1–3; no percussion or sound samples
 
 This is a short instrumental chorus arrangement, not the complete song with verses. The three lines have separate tracks and channels so they can be edited or assigned to different instruments. A MIDI synthesizer supplies the playback sound.
+
+The simplified version keeps the same two-bar introduction, then plays only
+the chorus melody, with no closing chord. It spans 34 bars / 51 seconds,
+including a final one-second rest; the MIDI Converter omits that trailing rest,
+so its BASIC playback lasts 50 seconds before interpreter overhead.
 
 ## Attribution and licensing
 

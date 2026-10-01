@@ -1,0 +1,294 @@
+; Daisy Bell: SID-Ulator plus MG005, Z80 player for the RC2014 Mini II.
+; Assemble the GENERATED daisy-chorus.asm with standalone z80asm.
+; This labelled source is NOT input for SCM's interactive assembler.
+;
+; Python inserts music and speech tables at the two markers below. Musical
+; timestamps come from the full MIDI arrangement and tuned speech lines. Python
+; also calculates SID frequency bytes and gate changes: no floating-point
+; arithmetic or string processing occurs during playback.
+;
+; Entry: CALL PLAYER_ORIGIN (or SCM G E000), with a valid caller stack.
+; Exit: RET, preserving AF/BC/DE/HL/IX/IY and leaving alternate registers alone.
+; Interrupt mode and enable state are untouched. No firmware calls are made.
+; Caller interrupts/wait states add time; use the normal 7.3728 MHz CPU clock.
+; The image and private variables must be in writable RAM reserved from BASIC.
+;
+; Fixed header, useful from SCM's M command or a future BASIC USR loader:
+;   E000: JP start
+;   E003: result (255 = running, 0 = complete, 1 = speech timeout)
+;   E004: count of syllables submitted more than 100 ms after their cue
+;   E005: current tick, little-endian; one tick is nominally 5 ms
+; All state is reset on every entry, so G E000 can replay the loaded image.
+
+PLAYER_ORIGIN: EQU 0E000H
+SID_REGISTER:  EQU 0D4H
+SID_DATA:      EQU 0D5H
+SPEECH_PORT:   EQU 01FH
+SPEECH_READY:  EQU 2
+WAVEFORM:      EQU 16             ; Triangle, with gate bit initially clear.
+VOLUME:        EQU 2              ; SID master volume 0-15.
+
+; Delay calibration: DEC BC / LD A,B / OR C / JR NZ costs 26 T-states
+; per iteration, except the final branch (5 fewer). Including CALL, LD BC
+; and RET, the complete delay costs 26 * DELAY_LOOPS + 32 T-states.
+; 1416 gives 36848 T-states, about 4.998 ms at 7.3728 MHz.
+; The scheduler adds a small, variable overhead. This is NOT a hardware clock
+; or a fully cycle-balanced loop. Increase DELAY_LOOPS to slow the tune and
+; allow more time for speech; decrease it to speed up. Use 1-65535, never 0.
+; Changing CPU speed requires proportional recalibration; SID pitch still
+; assumes a separate 1 MHz SID clock.
+DELAY_LOOPS:   EQU 1416
+LATE_TICKS:    EQU 20             ; More than 20 ticks = more than 100 ms late.
+DRAIN_TICKS:   EQU 200            ; Nominal second after the final command.
+TIMEOUT_TICK:  EQU @TIMEOUT_TICK@ ; Music duration plus 4 seconds backlog.
+
+    ORG PLAYER_ORIGIN
+    JP START
+RESULT:
+    DB 255
+LATE_SYLLABLES:
+    DB 0
+CURRENT_TICK:
+    DW 0
+
+START:
+    ; Keep the caller's stack and register values so SCM can resume normally.
+    PUSH AF
+    PUSH BC
+    PUSH DE
+    PUSH HL
+    PUSH IX
+    PUSH IY
+
+    XOR A
+    LD (LATE_SYLLABLES),A
+    LD (MUSIC_DONE),A
+    LD (SPEECH_DONE),A
+    LD HL,0
+    LD (CURRENT_TICK),HL
+    LD (DRAIN_UNTIL),HL
+    LD A,255
+    LD (RESULT),A
+    LD IX,MUSIC_DATA
+    LD IY,SPEECH_DATA
+
+    ; Clear all 25 SID registers, including volume and gates, before setup.
+    ; OUT uses the low eight address bits, as in the project's BASIC examples.
+    LD B,25
+    LD C,0
+CLEAR_SID:
+    LD A,C
+    OUT (SID_REGISTER),A
+    XOR A
+    OUT (SID_DATA),A
+    INC C
+    DJNZ CLEAR_SID
+
+    ; Three identical envelopes: immediate attack/decay, full sustain and
+    ; immediate release. The tables carry the per-voice triangle/gate writes.
+    LD A,6
+    OUT (SID_REGISTER),A
+    LD A,240
+    OUT (SID_DATA),A
+    LD A,13
+    OUT (SID_REGISTER),A
+    LD A,240
+    OUT (SID_DATA),A
+    LD A,20
+    OUT (SID_REGISTER),A
+    LD A,240
+    OUT (SID_DATA),A
+    LD A,24
+    OUT (SID_REGISTER),A
+    LD A,VOLUME
+    OUT (SID_DATA),A
+
+PLAYBACK_LOOP:
+    ; Always service due SID events first. A busy speech chip must never
+    ; hold up music. IX and IY retain the next unconsumed table positions.
+    CALL SERVICE_MUSIC
+    CALL SERVICE_SPEECH
+
+    LD A,(MUSIC_DONE)
+    LD B,A
+    LD A,(SPEECH_DONE)
+    AND B
+    JR Z,CHECK_TIMEOUT
+
+    ; Both streams are submitted, but ready is not an acoustic completion
+    ; signal. Allow a short tail for the final allophone and terminating PA1.
+    LD HL,(DRAIN_UNTIL)
+    LD A,H
+    OR L
+    JR NZ,CHECK_DRAIN
+    LD HL,(CURRENT_TICK)
+    LD DE,DRAIN_TICKS
+    ADD HL,DE
+    LD (DRAIN_UNTIL),HL
+CHECK_DRAIN:
+    LD DE,(DRAIN_UNTIL)
+    LD HL,(CURRENT_TICK)
+    OR A                        ; Clear carry before unsigned subtraction.
+    SBC HL,DE
+    JR C,NEXT_TICK
+    XOR A                       ; Result 0: all commands submitted.
+    JR FINISH
+
+CHECK_TIMEOUT:
+    ; Allow four seconds after the full arrangement for pending speech,
+    ; then return instead of hanging on a permanently busy card.
+    LD HL,(CURRENT_TICK)
+    LD DE,TIMEOUT_TICK
+    OR A
+    SBC HL,DE
+    JR C,NEXT_TICK
+    LD A,1                      ; Result 1: speech still pending at the deadline.
+    JR FINISH
+
+NEXT_TICK:
+    CALL WAIT_TICK
+    LD HL,(CURRENT_TICK)
+    INC HL
+    LD (CURRENT_TICK),HL
+    JR PLAYBACK_LOOP
+
+FINISH:
+    LD (RESULT),A
+    ; Every exit releases all gates and mutes the SID. A speech command already
+    ; accepted by the MG005 cannot be cancelled through this interface.
+    LD A,4
+    OUT (SID_REGISTER),A
+    LD A,WAVEFORM
+    OUT (SID_DATA),A
+    LD A,11
+    OUT (SID_REGISTER),A
+    LD A,WAVEFORM
+    OUT (SID_DATA),A
+    LD A,18
+    OUT (SID_REGISTER),A
+    LD A,WAVEFORM
+    OUT (SID_DATA),A
+    LD A,24
+    OUT (SID_REGISTER),A
+    XOR A
+    OUT (SID_DATA),A
+    POP IY
+    POP IX
+    POP HL
+    POP DE
+    POP BC
+    POP AF
+    RET
+
+SERVICE_MUSIC:
+    ; Record: DW absolute tick, DB pair count, then register/value byte pairs.
+    ; FFFF is an end marker, never a real cue. IX advances only after an event
+    ; is due. Registers changed: AF, BC, HL, IX. Other table state is untouched.
+    LD A,(MUSIC_DONE)
+    OR A
+    RET NZ
+MUSIC_NEXT:
+    LD C,(IX+0)
+    LD B,(IX+1)
+    LD A,B
+    AND C
+    CP 255
+    JR Z,MUSIC_FINISHED
+    LD HL,(CURRENT_TICK)
+    OR A
+    SBC HL,BC
+    RET C                       ; The next event belongs to a future tick.
+    LD B,(IX+2)
+    INC IX
+    INC IX
+    INC IX
+    LD A,B
+    OR A
+    JR Z,MUSIC_NEXT              ; A no-op event is valid; avoid DJNZ underflow.
+MUSIC_WRITE:
+    LD A,(IX+0)
+    OUT (SID_REGISTER),A
+    LD A,(IX+1)
+    OUT (SID_DATA),A
+    INC IX
+    INC IX
+    DJNZ MUSIC_WRITE
+    JR MUSIC_NEXT               ; Consume every event due at this tick.
+MUSIC_FINISHED:
+    LD A,1
+    LD (MUSIC_DONE),A
+    RET
+
+SERVICE_SPEECH:
+    ; Record: DW absolute tick, DB allophone, DB first-code flag (0 or 1).
+    ; All codes of a syllable share a cue. Send at most one per scheduler pass:
+    ; the next pass checks readiness again, leaving time for the hardware
+    ; handshake. Never spin waiting for the chip, or drop a late allophone.
+    ; Registers changed: AF, BC, DE, HL, IY.
+    LD A,(SPEECH_DONE)
+    OR A
+    RET NZ
+    LD C,(IY+0)
+    LD B,(IY+1)
+    LD A,B
+    AND C
+    CP 255
+    JR Z,SPEECH_FINISHED
+    LD HL,(CURRENT_TICK)
+    OR A
+    SBC HL,BC
+    RET C
+    IN A,(SPEECH_PORT)
+    AND SPEECH_READY
+    RET Z                       ; Card cannot accept another allophone yet.
+    LD A,(IY+3)
+    OR A
+    JR Z,SPEECH_SEND
+    ; HL is current_tick - due_tick. Count only the first code of each group,
+    ; once, when it is actually submitted. Equality at 100 ms is not late.
+    LD DE,LATE_TICKS+1
+    OR A
+    SBC HL,DE
+    JR C,SPEECH_SEND
+    LD A,(LATE_SYLLABLES)
+    INC A
+    LD (LATE_SYLLABLES),A
+SPEECH_SEND:
+    LD A,(IY+2)
+    OUT (SPEECH_PORT),A
+    INC IY
+    INC IY
+    INC IY
+    INC IY
+    RET
+SPEECH_FINISHED:
+    LD A,1
+    LD (SPEECH_DONE),A
+    RET
+
+WAIT_TICK:
+    ; Busy-loop delay uses BC and AF only. Interrupts remain in the caller's
+    ; state. Ctrl-C is not polled: let playback return, or use hardware reset.
+    LD BC,DELAY_LOOPS
+WAIT_TICK_LOOP:
+    DEC BC
+    LD A,B
+    OR C
+    JR NZ,WAIT_TICK_LOOP
+    RET
+
+; Private writable state follows code. Tables are read-only during playback.
+MUSIC_DONE:
+    DB 0
+SPEECH_DONE:
+    DB 0
+DRAIN_UNTIL:
+    DW 0
+
+MUSIC_DATA:
+@MUSIC_DATA@
+
+SPEECH_DATA:
+@SPEECH_DATA@
+
+IMAGE_END:
