@@ -69,6 +69,40 @@ class GeneratorTests(unittest.TestCase):
                                     if int(code) > 4)
         self.assertEqual([code for _, code in records if code > 4], expected)
 
+    def test_marriage_and_carriage_follow_melody(self) -> None:
+        """Keep the held marriage ending and carriage syllables on their notes."""
+        # These melody pitches identify the held B4 ending of "marriage"
+        # followed by C5, E5, B4, A4, B4, A4 and G4 for the next lyric line.
+        # Read the actual MIDI so this checks musical alignment independently
+        # of the generator's speech table, rather than trusting that table.
+        resolution, notes, _ = generate.read_midi(generate.SOURCE)
+        melody = [
+            (note.tick / resolution * 0.5 - generate.INTRO_SECONDS, note.pitch)
+            for note in notes
+            if note.channel == 0
+            and note.is_on
+            and 30.5 <= note.tick / resolution * 0.5 <= 36.5
+        ]
+        self.assertEqual(
+            melody,
+            [
+                (27.5, 71), (29.5, 72), (30, 76), (31, 71),
+                (31.5, 69), (32.5, 71), (33, 69), (33.5, 67),
+            ],
+        )
+        # Include the preceding syllable to protect the two-second held note
+        # that originally caused "I" to enter early. Group lengths also vary:
+        # simply shifting the whole carriage line would not fix its rhythm.
+        cues = generate.speech_cues()[27:35]
+        self.assertEqual(
+            [label for _, label, _ in cues],
+            ["riage", "I", "can't", "af", "ford", "a", "car", "riage"],
+        )
+        self.assertEqual(
+            [seconds for seconds, _, _ in cues],
+            [seconds for seconds, _ in melody],
+        )
+
     def test_changed_speech_is_read_and_mismatched_groups_rejected(self) -> None:
         """Read pronunciation edits from source and reject incompatible lengths."""
         with TemporaryDirectory() as directory:

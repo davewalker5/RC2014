@@ -513,10 +513,13 @@ MUSIC_DATA:
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
+    DW 1690 ; 8450 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,147
+    DB 8,8
     DW 1700 ; 8500 ms
-    DB 8 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 6 ; register/value pair count
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -524,14 +527,9 @@ MUSIC_DATA:
     DB 15,25
     DB 18,WAVEFORM+1
     DW 1775 ; 8875 ms
-    DB 4 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 2 ; register/value pair count
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 1790 ; 8950 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 1800 ; 9000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
@@ -713,10 +711,13 @@ MUSIC_DATA:
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
+    DW 2890 ; 14450 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
     DW 2900 ; 14500 ms
-    DB 8 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 6 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -724,14 +725,9 @@ MUSIC_DATA:
     DB 15,16
     DB 18,WAVEFORM+1
     DW 2975 ; 14875 ms
-    DB 4 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 2 ; register/value pair count
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 2990 ; 14950 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 3000 ; 15000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
@@ -781,8 +777,8 @@ MUSIC_DATA:
     DW 3300 ; 16500 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,147
@@ -790,8 +786,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 3400 ; 17000 ms
     DB 8 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -800,15 +796,15 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 3475 ; 17375 ms
     DB 5 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
     DW 3500 ; 17500 ms
     DB 8 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -817,8 +813,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 3575 ; 17875 ms
     DB 4 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 3590 ; 17950 ms
@@ -827,8 +823,8 @@ MUSIC_DATA:
     DW 3600 ; 18000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,53
@@ -836,8 +832,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 3700 ; 18500 ms
     DB 8 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 7,53
     DB 8,7
     DB 18,WAVEFORM
@@ -846,15 +842,15 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 3775 ; 18875 ms
     DB 5 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 7,53
     DB 8,7
     DB 18,WAVEFORM
     DW 3800 ; 19000 ms
     DB 8 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 7,53
     DB 8,7
     DB 18,WAVEFORM
@@ -863,8 +859,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 3875 ; 19375 ms
     DB 4 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 3890 ; 19450 ms
@@ -873,8 +869,8 @@ MUSIC_DATA:
     DW 3900 ; 19500 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,214
-    DB 1,28
+    DB 0,75
+    DB 1,34
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,185
@@ -882,8 +878,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 4000 ; 20000 ms
     DB 8 ; register/value pair count
-    DB 0,214
-    DB 1,28
+    DB 0,75
+    DB 1,34
     DB 7,185
     DB 8,5
     DB 18,WAVEFORM
@@ -892,15 +888,18 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 4075 ; 20375 ms
     DB 5 ; register/value pair count
-    DB 0,214
-    DB 1,28
+    DB 0,75
+    DB 1,34
     DB 7,185
     DB 8,5
     DB 18,WAVEFORM
+    DW 4090 ; 20450 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,185
+    DB 8,5
     DW 4100 ; 20500 ms
-    DB 8 ; register/value pair count
-    DB 0,214
-    DB 1,28
+    DB 6 ; register/value pair count
     DB 7,185
     DB 8,5
     DB 18,WAVEFORM
@@ -908,14 +907,9 @@ MUSIC_DATA:
     DB 15,14
     DB 18,WAVEFORM+1
     DW 4175 ; 20875 ms
-    DB 4 ; register/value pair count
-    DB 0,214
-    DB 1,28
+    DB 2 ; register/value pair count
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 4190 ; 20950 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 4200 ; 21000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
@@ -1080,10 +1074,13 @@ MUSIC_DATA:
     DB 7,108
     DB 8,6
     DB 11,WAVEFORM+1
+    DW 5190 ; 25950 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
     DW 5200 ; 26000 ms
-    DB 8 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 6 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1091,22 +1088,15 @@ MUSIC_DATA:
     DB 15,22
     DB 18,WAVEFORM+1
     DW 5275 ; 26375 ms
-    DB 5 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 3 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
-    DW 5290 ; 26450 ms
-    DB 3 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 7,108
-    DB 8,6
     DW 5300 ; 26500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,177
-    DB 1,25
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 7,108
     DB 8,6
@@ -1116,8 +1106,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 5375 ; 26875 ms
     DB 4 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 0,52
+    DB 1,43
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 5390 ; 26950 ms
@@ -1126,8 +1116,8 @@ MUSIC_DATA:
     DW 5400 ; 27000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,147
@@ -1141,8 +1131,8 @@ MUSIC_DATA:
     DW 5500 ; 27500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,126
+    DB 1,38
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1152,8 +1142,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 5575 ; 27875 ms
     DB 5 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,126
+    DB 1,38
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1186,8 +1176,8 @@ MUSIC_DATA:
     DW 5700 ; 28500 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,147
@@ -1195,8 +1185,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 5800 ; 29000 ms
     DB 8 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1205,8 +1195,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 5875 ; 29375 ms
     DB 5 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1218,8 +1208,8 @@ MUSIC_DATA:
     DW 5900 ; 29500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,126
+    DB 1,38
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1229,8 +1219,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 5975 ; 29875 ms
     DB 4 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,126
+    DB 1,38
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 5990 ; 29950 ms
@@ -1239,17 +1229,24 @@ MUSIC_DATA:
     DW 6000 ; 30000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,126
-    DB 1,38
+    DB 0,75
+    DB 1,34
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,108
     DB 8,6
     DB 11,WAVEFORM+1
+    DW 6090 ; 30450 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
     DW 6100 ; 30500 ms
-    DB 8 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 10 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 0,94
+    DB 1,32
+    DB 4,WAVEFORM+1
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1258,22 +1255,15 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 6175 ; 30875 ms
     DB 5 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 0,94
+    DB 1,32
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
-    DW 6190 ; 30950 ms
-    DB 3 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 7,108
-    DB 8,6
     DW 6200 ; 31000 ms
-    DB 10 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 0,177
-    DB 1,25
-    DB 4,WAVEFORM+1
+    DB 8 ; register/value pair count
+    DB 0,94
+    DB 1,32
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1282,27 +1272,22 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 6275 ; 31375 ms
     DB 4 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 0,94
+    DB 1,32
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 6290 ; 31450 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 6300 ; 31500 ms
-    DB 8 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
-    DB 4,WAVEFORM+1
+    DB 6 ; register/value pair count
+    DB 0,94
+    DB 1,32
     DB 11,WAVEFORM
     DB 7,147
     DB 8,8
     DB 11,WAVEFORM+1
     DW 6400 ; 32000 ms
     DB 8 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,94
+    DB 1,32
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1311,8 +1296,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 6475 ; 32375 ms
     DB 5 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,94
+    DB 1,32
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1324,8 +1309,8 @@ MUSIC_DATA:
     DW 6500 ; 32500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,94
-    DB 1,32
+    DB 0,75
+    DB 1,34
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1335,8 +1320,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 6575 ; 32875 ms
     DB 4 ; register/value pair count
-    DB 0,94
-    DB 1,32
+    DB 0,75
+    DB 1,34
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 6590 ; 32950 ms
@@ -1345,24 +1330,17 @@ MUSIC_DATA:
     DW 6600 ; 33000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,214
-    DB 1,28
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,185
     DB 8,5
     DB 11,WAVEFORM+1
-    DW 6690 ; 33450 ms
-    DB 3 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 7,185
-    DB 8,5
     DW 6700 ; 33500 ms
-    DB 10 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 0,94
-    DB 1,32
-    DB 4,WAVEFORM+1
+    DB 8 ; register/value pair count
+    DB 0,52
+    DB 1,43
     DB 7,185
     DB 8,5
     DB 18,WAVEFORM
@@ -1371,8 +1349,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 6775 ; 33875 ms
     DB 5 ; register/value pair count
-    DB 0,94
-    DB 1,32
+    DB 0,52
+    DB 1,43
     DB 7,185
     DB 8,5
     DB 18,WAVEFORM
@@ -1384,8 +1362,8 @@ MUSIC_DATA:
     DW 6800 ; 34000 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,94
+    DB 1,32
     DB 4,WAVEFORM+1
     DB 7,185
     DB 8,5
@@ -1395,8 +1373,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 6875 ; 34375 ms
     DB 4 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,94
+    DB 1,32
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 6890 ; 34450 ms
@@ -1437,8 +1415,8 @@ MUSIC_DATA:
     DW 7100 ; 35500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,177
-    DB 1,25
+    DB 0,94
+    DB 1,32
     DB 4,WAVEFORM+1
     DB 7,185
     DB 8,5
@@ -1448,8 +1426,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 7175 ; 35875 ms
     DB 4 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 0,94
+    DB 1,32
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 7190 ; 35950 ms
@@ -1458,17 +1436,24 @@ MUSIC_DATA:
     DW 7200 ; 36000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,177
-    DB 1,25
+    DB 0,214
+    DB 1,28
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,108
     DB 8,6
     DB 11,WAVEFORM+1
+    DW 7290 ; 36450 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
     DW 7300 ; 36500 ms
-    DB 8 ; register/value pair count
+    DB 10 ; register/value pair count
+    DB 4,WAVEFORM
     DB 0,177
     DB 1,25
+    DB 4,WAVEFORM+1
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1498,15 +1483,19 @@ MUSIC_DATA:
     DB 1,25
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 7490 ; 37450 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 7500 ; 37500 ms
-    DB 4 ; register/value pair count
+    DB 6 ; register/value pair count
+    DB 0,177
+    DB 1,25
     DB 11,WAVEFORM
     DB 7,108
     DB 8,6
     DB 11,WAVEFORM+1
+    DW 7590 ; 37950 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
     DW 7600 ; 38000 ms
     DB 6 ; register/value pair count
     DB 7,108
@@ -1544,8 +1533,8 @@ MUSIC_DATA:
     DW 7800 ; 39000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,52
-    DB 1,43
+    DB 0,75
+    DB 1,34
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,147
@@ -1553,8 +1542,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 7900 ; 39500 ms
     DB 8 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,75
+    DB 1,34
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1563,8 +1552,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 7975 ; 39875 ms
     DB 5 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,75
+    DB 1,34
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1576,8 +1565,8 @@ MUSIC_DATA:
     DW 8000 ; 40000 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1587,8 +1576,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 8075 ; 40375 ms
     DB 4 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 8090 ; 40450 ms
@@ -1604,10 +1593,13 @@ MUSIC_DATA:
     DB 7,108
     DB 8,6
     DB 11,WAVEFORM+1
+    DW 8190 ; 40950 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
     DW 8200 ; 41000 ms
-    DB 8 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 6 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1615,23 +1607,12 @@ MUSIC_DATA:
     DB 15,22
     DB 18,WAVEFORM+1
     DW 8275 ; 41375 ms
-    DB 5 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 3 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
-    DW 8290 ; 41450 ms
-    DB 3 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 7,108
-    DB 8,6
     DW 8300 ; 41500 ms
-    DB 10 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 0,177
-    DB 1,25
-    DB 4,WAVEFORM+1
+    DB 6 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1639,19 +1620,14 @@ MUSIC_DATA:
     DB 15,16
     DB 18,WAVEFORM+1
     DW 8375 ; 41875 ms
-    DB 4 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 2 ; register/value pair count
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 8390 ; 41950 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 8400 ; 42000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,52
-    DB 1,43
+    DB 0,75
+    DB 1,34
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,147
@@ -1659,8 +1635,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 8500 ; 42500 ms
     DB 8 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,75
+    DB 1,34
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1669,8 +1645,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 8575 ; 42875 ms
     DB 5 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 0,75
+    DB 1,34
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1682,8 +1658,8 @@ MUSIC_DATA:
     DW 8600 ; 43000 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1693,8 +1669,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 8675 ; 43375 ms
     DB 4 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 8690 ; 43450 ms
@@ -1716,11 +1692,7 @@ MUSIC_DATA:
     DB 7,108
     DB 8,6
     DW 8800 ; 44000 ms
-    DB 10 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 0,52
-    DB 1,43
-    DB 4,WAVEFORM+1
+    DB 6 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1728,22 +1700,15 @@ MUSIC_DATA:
     DB 15,22
     DB 18,WAVEFORM+1
     DW 8875 ; 44375 ms
-    DB 5 ; register/value pair count
-    DB 0,52
-    DB 1,43
+    DB 3 ; register/value pair count
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
-    DW 8890 ; 44450 ms
-    DB 3 ; register/value pair count
-    DB 4,WAVEFORM
-    DB 7,108
-    DB 8,6
     DW 8900 ; 44500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,198
-    DB 1,45
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 7,108
     DB 8,6
@@ -1751,6 +1716,23 @@ MUSIC_DATA:
     DB 14,47
     DB 15,16
     DB 18,WAVEFORM+1
+    DW 8940 ; 44700 ms
+    DB 5 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,108
+    DB 8,6
+    DB 14,47
+    DB 15,16
+    DW 8950 ; 44750 ms
+    DB 8 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 0,198
+    DB 1,45
+    DB 4,WAVEFORM+1
+    DB 7,108
+    DB 8,6
+    DB 14,47
+    DB 15,16
     DW 8975 ; 44875 ms
     DB 4 ; register/value pair count
     DB 0,198
@@ -1763,8 +1745,8 @@ MUSIC_DATA:
     DW 9000 ; 45000 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,52
-    DB 1,43
+    DB 0,97
+    DB 1,51
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,147
@@ -1778,8 +1760,8 @@ MUSIC_DATA:
     DW 9100 ; 45500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1789,8 +1771,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 9175 ; 45875 ms
     DB 5 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 0,52
+    DB 1,43
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1802,8 +1784,8 @@ MUSIC_DATA:
     DW 9200 ; 46000 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,126
-    DB 1,38
+    DB 0,75
+    DB 1,34
     DB 4,WAVEFORM+1
     DB 7,147
     DB 8,8
@@ -1813,8 +1795,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 9275 ; 46375 ms
     DB 4 ; register/value pair count
-    DB 0,126
-    DB 1,38
+    DB 0,75
+    DB 1,34
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 9290 ; 46450 ms
@@ -1823,8 +1805,8 @@ MUSIC_DATA:
     DW 9300 ; 46500 ms
     DB 8 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,177
-    DB 1,25
+    DB 0,126
+    DB 1,38
     DB 4,WAVEFORM+1
     DB 11,WAVEFORM
     DB 7,108
@@ -1832,8 +1814,8 @@ MUSIC_DATA:
     DB 11,WAVEFORM+1
     DW 9400 ; 47000 ms
     DB 8 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 0,126
+    DB 1,38
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1842,8 +1824,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 9475 ; 47375 ms
     DB 5 ; register/value pair count
-    DB 0,177
-    DB 1,25
+    DB 0,126
+    DB 1,38
     DB 7,108
     DB 8,6
     DB 18,WAVEFORM
@@ -1855,8 +1837,8 @@ MUSIC_DATA:
     DW 9500 ; 47500 ms
     DB 10 ; register/value pair count
     DB 4,WAVEFORM
-    DB 0,94
-    DB 1,32
+    DB 0,177
+    DB 1,25
     DB 4,WAVEFORM+1
     DB 7,108
     DB 8,6
@@ -1866,8 +1848,8 @@ MUSIC_DATA:
     DB 18,WAVEFORM+1
     DW 9575 ; 47875 ms
     DB 4 ; register/value pair count
-    DB 0,94
-    DB 1,32
+    DB 0,177
+    DB 1,25
     DB 11,WAVEFORM
     DB 18,WAVEFORM
     DW 9590 ; 47950 ms
@@ -1924,10 +1906,13 @@ MUSIC_DATA:
     DB 7,147
     DB 8,8
     DB 11,WAVEFORM+1
+    DW 9990 ; 49950 ms
+    DB 3 ; register/value pair count
+    DB 4,WAVEFORM
+    DB 7,147
+    DB 8,8
     DW 10000 ; 50000 ms
-    DB 8 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 6 ; register/value pair count
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1935,16 +1920,12 @@ MUSIC_DATA:
     DB 15,21
     DB 18,WAVEFORM+1
     DW 10075 ; 50375 ms
-    DB 5 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 3 ; register/value pair count
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
     DW 10100 ; 50500 ms
-    DB 8 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 6 ; register/value pair count
     DB 7,147
     DB 8,8
     DB 18,WAVEFORM
@@ -1952,14 +1933,9 @@ MUSIC_DATA:
     DB 15,25
     DB 18,WAVEFORM+1
     DW 10175 ; 50875 ms
-    DB 4 ; register/value pair count
-    DB 0,75
-    DB 1,34
+    DB 2 ; register/value pair count
     DB 11,WAVEFORM
     DB 18,WAVEFORM
-    DW 10190 ; 50950 ms
-    DB 1 ; register/value pair count
-    DB 4,WAVEFORM
     DW 10200 ; 51000 ms
     DB 12 ; register/value pair count
     DB 4,WAVEFORM
@@ -2164,57 +2140,57 @@ SPEECH_DATA:
     DB 14,0 ; allophone, first-code flag
     DW 6000
     DB 0,0 ; allophone, first-code flag
-    DW 6200
+    DW 6100
     DB 20,1 ; allophone, first-code flag
-    DW 6200
+    DW 6100
     DB 10,0 ; allophone, first-code flag
-    DW 6200
+    DW 6100
     DB 0,0 ; allophone, first-code flag
-    DW 6300
+    DW 6500
     DB 6,1 ; allophone, first-code flag
-    DW 6300
+    DW 6500
     DB 0,0 ; allophone, first-code flag
-    DW 6500
+    DW 6600
     DB 42,1 ; allophone, first-code flag
-    DW 6500
+    DW 6600
     DB 26,0 ; allophone, first-code flag
-    DW 6500
+    DW 6600
     DB 11,0 ; allophone, first-code flag
-    DW 6500
+    DW 6600
     DB 13,0 ; allophone, first-code flag
-    DW 6500
-    DB 0,0 ; allophone, first-code flag
     DW 6600
+    DB 0,0 ; allophone, first-code flag
+    DW 6800
     DB 26,1 ; allophone, first-code flag
-    DW 6600
+    DW 6800
     DB 40,0 ; allophone, first-code flag
-    DW 6600
+    DW 6800
     DB 0,0 ; allophone, first-code flag
-    DW 6700
+    DW 6900
     DB 40,1 ; allophone, first-code flag
-    DW 6700
+    DW 6900
     DB 58,0 ; allophone, first-code flag
-    DW 6700
+    DW 6900
     DB 21,0 ; allophone, first-code flag
-    DW 6700
+    DW 6900
     DB 0,0 ; allophone, first-code flag
-    DW 6800
+    DW 7100
     DB 15,1 ; allophone, first-code flag
-    DW 6800
+    DW 7100
     DB 0,0 ; allophone, first-code flag
-    DW 6900
+    DW 7200
     DB 42,1 ; allophone, first-code flag
-    DW 6900
+    DW 7200
     DB 24,0 ; allophone, first-code flag
-    DW 6900
+    DW 7200
     DB 14,0 ; allophone, first-code flag
-    DW 6900
+    DW 7200
     DB 0,0 ; allophone, first-code flag
-    DW 7100
+    DW 7300
     DB 20,1 ; allophone, first-code flag
-    DW 7100
+    DW 7300
     DB 10,0 ; allophone, first-code flag
-    DW 7100
+    DW 7300
     DB 0,0 ; allophone, first-code flag
     DW 7700
     DB 28,1 ; allophone, first-code flag

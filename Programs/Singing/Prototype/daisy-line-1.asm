@@ -513,10 +513,13 @@ MUSIC_DATA:
     db 7,147
     db 8,8
     db 18,WAVEFORM
+    dw 1690 ; 8450 ms
+    db 3 ; register/value pair count
+    db 4,WAVEFORM
+    db 7,147
+    db 8,8
     dw 1700 ; 8500 ms
-    db 8 ; register/value pair count
-    db 0,177
-    db 1,25
+    db 6 ; register/value pair count
     db 7,147
     db 8,8
     db 18,WAVEFORM
@@ -524,14 +527,9 @@ MUSIC_DATA:
     db 15,25
     db 18,WAVEFORM+1
     dw 1775 ; 8875 ms
-    db 4 ; register/value pair count
-    db 0,177
-    db 1,25
+    db 2 ; register/value pair count
     db 11,WAVEFORM
     db 18,WAVEFORM
-    dw 1790 ; 8950 ms
-    db 1 ; register/value pair count
-    db 4,WAVEFORM
     dw 1800 ; 9000 ms
     db 8 ; register/value pair count
     db 4,WAVEFORM
@@ -713,10 +711,13 @@ MUSIC_DATA:
     db 7,108
     db 8,6
     db 18,WAVEFORM
+    dw 2890 ; 14450 ms
+    db 3 ; register/value pair count
+    db 4,WAVEFORM
+    db 7,108
+    db 8,6
     dw 2900 ; 14500 ms
-    db 8 ; register/value pair count
-    db 0,177
-    db 1,25
+    db 6 ; register/value pair count
     db 7,108
     db 8,6
     db 18,WAVEFORM
@@ -724,14 +725,9 @@ MUSIC_DATA:
     db 15,16
     db 18,WAVEFORM+1
     dw 2975 ; 14875 ms
-    db 4 ; register/value pair count
-    db 0,177
-    db 1,25
+    db 2 ; register/value pair count
     db 11,WAVEFORM
     db 18,WAVEFORM
-    dw 2990 ; 14950 ms
-    db 1 ; register/value pair count
-    db 4,WAVEFORM
     dw 3000 ; 15000 ms
     db 0 ; register/value pair count
     dw 65535 ; end of music

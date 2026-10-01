@@ -62,16 +62,18 @@ CUE_GROUPS = (
         (25.5, "sty", 3),
         (26.5, "lish", 3),
         (27, "mar", 3),
-        (28, "riage", 2),
+        (27.5, "riage", 2),
     ),
     (
-        (28.5, "I", 1),
-        (29.5, "can't", 4),
-        (30, "af", 2),
-        (30.5, "ford", 3),
-        (31, "a", 1),
-        (31.5, "car", 3),
-        (32.5, "riage", 2),
+        # The preceding B4 on "-riage" lasts four beats. "I" enters on
+        # C5 at 29.5 s; preserve the unequal note lengths within this line.
+        (29.5, "I", 1),
+        (30, "can't", 4),
+        (31, "af", 2),
+        (31.5, "ford", 3),
+        (32.5, "a", 1),
+        (33, "car", 3),
+        (33.5, "riage", 2),
     ),
     (
         (35.5, "But", 3),
