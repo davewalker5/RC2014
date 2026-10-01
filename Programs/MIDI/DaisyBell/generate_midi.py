@@ -9,14 +9,22 @@ import struct
 
 PPQN = 480
 BPM = 120
-# Four eight-bar phrases of the familiar chorus, transposed to C major.
+# Four eight-bar phrases, transposed from G major to C major, checked against
+# the 1892 vocal score (chorus, printed page 5):
+# https://www.sheetmusicsinger.com/wp-content/uploads/2022/08/Daisy-Bell.pdf
+# Ties are combined; the small ornamental turn on "marriage" is omitted.
+# R denotes a written rest. Durations are quarter-note beats.
 PHRASES = [
-    'G5:3 E5:3 C5:3 G4:3 A4:1 B4:1 C5:1 A4:2 C5:1 G4:6',
-    'D5:3 E5:3 C5:3 A4:3 A4:1 B4:1 C5:1 D5:2 E5:1 D5:5 G4:1',
-    'C5:1 C5:1 C5:1 E5:2 C5:1 D5:2 G4:1 C5:2 B4:1 '
-    'A4:1 B4:1 C5:1 A4:2 G4:1 G4:3 R:2 G4:1',
-    'E5:2 C5:1 D5:2 G4:1 E5:2 C5:1 D5:1 E5:1 F5:1 '
-    'E5:1 C5:1 D5:1 G4:2 B4:1 C5:6',
+    # Daisy, Daisy, give me your answer, do.
+    'G5:3 E5:3 C5:3 G4:2 R:1 A4:1 B4:1 C5:1 A4:2 C5:1 G4:5 R:1',
+    # I'm half crazy, all for the love of you. ("It" is a pickup.)
+    'D5:3 G5:3 E5:3 C5:2 R:1 A4:1 B4:1 C5:1 D5:2 E5:1 D5:4 R:1 E5:1',
+    # It won't be a stylish marriage; I can't afford a carriage.
+    'E5:1 D5:1 C5:1 G5:2 D5:1 C5:1 B4:4 C5:1 '
+    'E5:2 B4:1 A4:2 B4:1 A4:1 G4:3 R:1 G4:1',
+    # But you'll look sweet on the seat of a bicycle built for two.
+    'C5:2 E5:1 D5:1 R:2 C5:2 E5:1 D5:1 R:1 E5:0.5 F5:0.5 '
+    'G5:1 E5:1 C5:1 D5:2 G4:1 C5:4 R:2',
 ]
 # Each harmony supplies a bass root and two separate offbeat notes.
 HARMONY = {
@@ -85,7 +93,7 @@ def generate():
         start = position
         for token in phrase.split():
             name, beats = token.split(':')
-            duration = int(beats)
+            duration = float(beats)
             if name != 'R':
                 note(0, position, duration - 0.125, name, 88)
             position += duration
@@ -95,7 +103,7 @@ def generate():
     # Two-bar closing tonic, with all three voices sustained and released.
     for part, name, velocity in [(0, 'C5', 76), (1, 'C3', 58), (2, 'E4', 46)]:
         note(part, position, 5.5, name, velocity)
-    end = (position + 6) * PPQN
+    end = round((position + 6) * PPQN)
     conductor = [
         (0, 0, meta(3, b'Daisy Bell - original RC2014 arrangement')),
         (0, 0, meta(1, b'Harry Dacre (1892); public-domain composition. '
