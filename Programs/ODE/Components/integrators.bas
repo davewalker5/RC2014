@@ -3,12 +3,15 @@
 3020 LET Y(I) = Y(I - 1) + ST * F
 3030 RETURN
 3100 REM Predict : Euler integration: y = y + st * f(t, y)
-3110 LET OY = Y(I) : LET FY = F : LET Y(I) = Y(I) + ST * F
-3120 REM Correct
-3130 LET T(I) = T(I) + ST : GOSUB 2000
-3140 LET Y(I + 1) = OY + ST * (FY + F) / 2.0
-3150 LET Y(I) = OY : LET T = T - ST : LET I = I + 1
-3160 RETURN
+3110 LET OT = T(I)
+3120 LET OY = Y(I)
+3130 LET FY = F
+3140 LET Y(I) = Y(I) + ST * F
+3150 REM Correct
+3160 LET T(I) = T(I) + ST : GOSUB 2000
+3170 LET Y(I + 1) = OY + ST * (FY + F) / 2.0
+3180 LET Y(I) = OY : LET T(I) = OT : LET I = I + 1
+3190 RETURN
 3200 REM 4th-Order Runge-Kutta integration
 3210 LET OY = Y(I) : LET OT = T(I)
 3220 GOSUB 2000 : LET K1 = ST * F

@@ -1,5 +1,5 @@
 10 REM Solve an Ordinary Differential Equation (ODE)
-20 REM using the Euler method
+20 REM using a choice of integration methods
 30 REM Allocate more string space before dimensioning arrays
 40 CLEAR 2000
 50 LET MS = 1000 : DIM Y(1000), T(1000)
@@ -16,38 +16,48 @@
 160 IF MT$ = "P" OR MT$ = "p" THEN GOTO 190
 170 IF MT$ = "R" OR MT$ = "r" THEN GOTO 190
 180 PRINT "Invalid method" : GOTO 130
-190 PRINT "Initial Y "; : INPUT Y0
-200 PRINT "Limit of T "; : INPUT TL
-210 IF TL <= 0 THEN PRINT "Invalid limit" : GOTO 180
-220 PRINT "Step Size "; : INPUT ST
-230 IF ST <= 0 THEN PRINT "Invalid step size" : GOTO 180
-240 IF (TL / ST) > MS THEN PRINT "Too many steps" : GOTO 180
-250 PRINT "Tabulated or charted output (T/C) "; : INPUT OP$
-260 IF OP$ = "T" OR OP$ = "t" THEN GOTO 290
-270 IF OP$ = "C" OR OP$ = "c" THEN GOTO 290
-280 PRINT "Invalid output type" : GOTO 250
-290 REM f() Parameter Initialisation
-300 GOSUB 1000
-310 REM First step initialisation
-320 LET I = 1
-330 LET Y(I) = Y0
-340 LET CW=15
-350 REM Solution loop
-360 FOR Z = 0.0 TO TL STEP ST
-370 PRINT "."; : LET T(I) = Z
-380 REM Output the current parameters
-390 REM Evaluate f() for this step
-400 GOSUB 2000
-410 REM Integrate
-420 IF MT$ = "E" OR MT$ = "e" THEN GOSUB 3000
-430 IF MT$ = "P" OR MT$ = "p" THEN GOSUB 3100
-440 IF MT$ = "R" OR MT$ = "r" THEN GOSUB 3200
-450 NEXT Z
-460 REM Tabulate the results
-470 IF OP$ = "T" OR OP$ = "t" THEN GOSUB 4000
-480 REM Chart the results
-490 IF OP$ = "C" OR OP$ = "c" THEN GOSUB 5000
-500 END
+190 PRINT "Adaptive or fixed step size (A/F) ";
+200 INPUT AS$
+210 IF AS$ = "A" OR AS$ = "a" THEN GOTO 240
+220 IF AS$ = "F" OR AS$ = "f" THEN GOTO 260
+230 PRINT "Invalid step size type" : GOTO 190
+240 PRINT "Tolerance "; : INPUT DL
+250 IF DL <= 0 THEN PRINT "Invalid tolerance" : GOTO 240
+260 PRINT "Initial Y "; : INPUT Y0
+270 PRINT "Limit of T "; : INPUT TL
+280 IF TL <= 0 THEN PRINT "Invalid limit" : GOTO 180
+290 PRINT "Step Size "; : INPUT ST
+300 IF ST <= 0 THEN PRINT "Invalid step size" : GOTO 180
+310 IF (TL / ST) > MS THEN PRINT "Too many steps" : GOTO 180
+320 PRINT "Tabulated or charted output (T/C) "; : INPUT OP$
+330 IF OP$ = "T" OR OP$ = "t" THEN GOTO 360
+340 IF OP$ = "C" OR OP$ = "c" THEN GOTO 360
+350 PRINT "Invalid output type" : GOTO 320
+360 REM f() Parameter Initialisation
+370 GOSUB 1000
+380 REM First step initialisation
+390 LET I = 1
+400 LET Y(I) = Y0 : LET Z = 0
+410 LET CW=15
+420 REM Solution loop
+430 IF Z > TL THEN GOTO 560
+440 IF I >= MS THEN PRINT "Point limit reached" : GOTO 560
+450 PRINT "."; : LET T(I) = Z
+460 REM Output the current parameters
+470 REM Evaluate f() for this step
+480 GOSUB 2000
+490 REM Integrate : Adaptive step size
+500 IF AS$ = "A" OR AS$ = "a" THEN GOSUB 3400 : GOTO 550
+510 REM Integrate : Fixed step size
+520 IF MT$ = "E" OR MT$ = "e" THEN GOSUB 3000
+530 IF MT$ = "P" OR MT$ = "p" THEN GOSUB 3100
+540 IF MT$ = "R" OR MT$ = "r" THEN GOSUB 3200
+550 LET Z = T(I - 1) + ST : GOTO 430
+560 REM Tabulate the results
+570 IF OP$ = "T" OR OP$ = "t" THEN GOSUB 4000
+580 REM Chart the results
+590 IF OP$ = "C" OR OP$ = "c" THEN GOSUB 5000
+600 END
 1000 REM Function parameter initialisation
 1010 PRINT "A "; : INPUT A
 1020 RETURN
@@ -80,6 +90,50 @@
 3290 LET Y(I + 1) = OY + (K1 + 2 * K2 + 2 * K3 + K4) / 6.0
 3300 LET T(I) = OT : LET Y(I) = OY : LET I = I + 1
 3310 RETURN
+3400 REM Integration with adaptive step size. Calculate the
+3410 REM difference between full and half-step solutions,
+3420 REM reducing the step size between each pass if the
+3430 REM difference is > tolerance
+3440 OI = I : OS = ST : AY = Y(I) : AT = T(I)
+3450 REM Calculate for the full step first
+3455 GOSUB 2000
+3460 IF MT$ = "E" OR MT$ = "e" THEN GOSUB 3000
+3470 IF MT$ = "P" OR MT$ = "p" THEN GOSUB 3100
+3480 IF MT$ = "R" OR MT$ = "r" THEN GOSUB 3200
+3490 REM Capture the result and reset the index and Y
+3500 REM T remains unchanged by the integrators
+3510 Y1 = Y(I) : I = OI : Y(I) = AY : T(I) = AT
+3520 REM Now calculate for two half-steps
+3530 ST = ST / 2.0
+3535 IF AT + ST = AT THEN PRINT "Step size too small" : END
+3540 REM First half-step
+3545 GOSUB 2000
+3550 IF MT$ = "E" OR MT$ = "e" THEN GOSUB 3000
+3560 IF MT$ = "P" OR MT$ = "p" THEN GOSUB 3100
+3570 IF MT$ = "R" OR MT$ = "r" THEN GOSUB 3200
+3580 REM Copy the mid-point Y value back, as this is the
+3590 REM starting point for the next half-step, reset the
+3600 REM index and increment T
+3610 Y(OI) = Y(I) : I = OI : T(I) = AT + ST
+3620 REM Second half-step
+3625 GOSUB 2000
+3630 IF MT$ = "E" OR MT$ = "e" THEN GOSUB 3000
+3640 IF MT$ = "P" OR MT$ = "p" THEN GOSUB 3100
+3650 IF MT$ = "R" OR MT$ = "r" THEN GOSUB 3200
+3660 REM Capture the result and calculate the difference
+3670 T2 = AT + OS : Y2 = Y(I) : DY = ABS(Y2 - Y1)
+3680 REM Restore the original values
+3690 I = OI : ST = OS : Y(I) = AY : T(I) = AT
+3700 REM If the difference is > tolerance, halve the step
+3710 REM size and try again
+3720 IF DY > DL THEN ST = ST / 2.0 : GOTO 3400
+3730 REM Step size has produced a difference lying within
+3740 REM the required tolerance - capture the values as
+3750 REM the next step in the solution
+3760 LET I = I + 1
+3770 LET T(I) = T2
+3780 LET Y(I) = Y2
+3790 RETURN
 4000 REM Tabulate the results
 4010 PRINT : PRINT
 4020 REM Print table column headers
