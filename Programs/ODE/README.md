@@ -23,6 +23,7 @@ No additional hardware is required. The display uses plain text and does not req
 | `euler_fixed_step.bas`               | Solve `dy/dt = Ay` using the Euler method and fixed step size                     |
 | `predictor_corrector_fixed_step.bas` | Solve `dy/dt = Ay` using the Euler Predictor-Corrector method and fixed step size |
 | `runge_kutta_4k_fixed_step.bas`      | Solve `dy/dt = Ay` using the 4th-Order Runge-Kutta method and fixed step size     |
+| `fixed_step_solver.bas`              | Solve `dy/dt = Ay` using a choice of method and fixed step size                   |
 
 ## Running the Program
 
@@ -37,9 +38,17 @@ The programs are split into distinct subroutines, as follows:
 | 0001 - 0999  | Main program flow                                                                                                                                  |
 | 1000 - 1999  | Initialise parameters used by the function to be solved                                                                                            |
 | 2000 - 2999  | Calculate the function to be solved from the current independent and dependent variables, T(I) and Y(I), and any parameters set on lines 1000-1999 |
-| 3000 - 3999  | Integration method                                                                                                                                 |
+| 3000 - 3999  | Integration methods                                                                                                                                |
 | 4000 - 4999  | Text table implementation                                                                                                                          |
 | 5000 - 5999  | Text chart implementation                                                                                                                          |
+
+For the programs that offer a choice of integration method, lines 3000 - 3999 are further sub-divided as follows:
+
+| Line Numbers | Purpose                          |
+| ------------ | -------------------------------- |
+| 3000 - 3099  | Euler Method                     |
+| 3100 - 3199  | Euler Predictor-Corrector Method |
+| 3200 - 3399  | 4th-Order Runge-Kutta Method     |
 
 ## References
 
