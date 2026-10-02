@@ -24,10 +24,11 @@ No additional hardware is required. The display uses plain text and does not req
 | `predictor_corrector_fixed_step.bas` | Solve `dy/dt = Ay` using the Euler Predictor-Corrector method and fixed step size |
 | `runge_kutta_4k_fixed_step.bas`      | Solve `dy/dt = Ay` using the 4th-Order Runge-Kutta method and fixed step size     |
 | `fixed_step_solver.bas`              | Solve `dy/dt = Ay` using a choice of method and fixed step size                   |
+| `adaptive_step_solver.bas`           | Solve `dy/dt = Ay` using a choice of method and adaptive step size support        |
 
 ## Running the Program
 
-Load the required `fixed_step` program from the table, above, into BASIC and enter `RUN`
+Load the required `fixed_step` program or `adaptive_step_solver.bas` from the table, above, into BASIC and enter `RUN`
 
 ## Implementation Notes
 
@@ -49,6 +50,12 @@ For the programs that offer a choice of integration method, lines 3000 - 3999 ar
 | 3000 - 3099  | Euler Method                     |
 | 3100 - 3199  | Euler Predictor-Corrector Method |
 | 3200 - 3399  | 4th-Order Runge-Kutta Method     |
+
+For the programs that support adaptive step-size, the following are also present in the line number range 3000-3999:
+
+| Line Numbers | Purpose                        |
+| ------------ | ------------------------------ |
+| 3400 - 3999  | Adaptive step-size calculation |
 
 ## References
 
