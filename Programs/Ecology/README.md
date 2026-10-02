@@ -1,5 +1,11 @@
 # Ecology Modelling
 
+This collection explores ecology and wildlife through programs written for the RC2014, combining mathematical modelling, numerical methods and data analysis to investigate patterns and processes in the natural world.
+
+The programs draw on my interests in wildlife observation and ecological research, including work documented in my [Field Notes Journal](https://fieldnotesjournal.uk/). They range from simulations of ecological processes to tools for analysing and interpreting observational data.
+
+The aim is not to produce comprehensive scientific software, but to explore ecological questions through relatively simple, understandable programs while investigating what can be achieved on an 8-bit computer.
+
 ## Hardware
 
 The programs require:
