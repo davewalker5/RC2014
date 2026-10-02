@@ -414,6 +414,7 @@ published/
 Published/
 .~lock.*
 *.bin
+*.bak
 Emulator/
 /build/
 Programs/Private/
