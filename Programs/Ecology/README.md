@@ -11,11 +11,12 @@ No additional hardware is required. The display uses plain text and does not req
 
 ## Program Files
 
-| File / Folder           | Description                                                                                                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Components`            | Separate files for each subroutine for independent amendment and numbering                                                                                                |
-| `seasonal_presence.bas` | Seasonal presence model, describing detectability for species where activity is confined to a bounded window                                                              |
-| `winter_visitor.bas`    | Winter visitor model, describing detectability for species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring |
+| File / Folder                | Description                                                                                                                                                                         |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Components`                 | Separate files for each subroutine for independent amendment and numbering                                                                                                          |
+| `seasonal_presence.bas`      | Seasonal presence model, describing detectability for species where activity is confined to a bounded window                                                                        |
+| `winter_visitor.bas`         | Winter visitor model, describing detectability for species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring           |
+| `resident_detectability.bas` | Resident detectability model, describing detectability for species present throughout the year but whose likelihood of being observed varies with seasonal conditions and behaviour |
 
 ## Running the Programs
 
@@ -27,7 +28,7 @@ These programs explore three complementary approaches to seasonal modelling:
 
 - **Seasonal presence:** Species whose observable activity is confined to a particular part of the year, such as spring flowers and migratory birds
 - **Resident detectability:** Species present throughout the year but whose likelihood of being observed varies with seasonal conditions and behaviour
-- **Winter presence:** Species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring
+- **Winter visitor:** Species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring
 
 The models are deliberately simplified. Their purpose is to investigate how a small number of interacting processes might produce patterns resembling those found in observational data, rather than to provide detailed biological simulations or predict future observations.
 
@@ -50,7 +51,7 @@ Together, these processes produce a seasonal curve that can rise gradually, reac
 
 The program uses numerical integration to solve the model, with a choice of integration methods and optional adaptive step sizing. Results can be displayed as either a numerical table or a plain-text chart, allowing the model to be explored using a simple serial terminal.
 
-The illustrated example simulates the seasonal presence of bluebells (_Hyacinthoides non-scripta_), run using the following parameters:
+The illustrated example simulates the seasonal presence of the bluebell (_Hyacinthoides non-scripta_), run using the following parameters:
 
 | Parameter          | Value                 |
 | ------------------ | --------------------- |
@@ -94,7 +95,44 @@ The illustrated example simulates the seasonal presence of the redwing (_Turdus 
 
 For a more detailed explanation of the model, its parameters and its relationship to observed wildlife data, see [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/) in Field Notes Journal.
 
+### Resident Detectability Model
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Ecology/blackbird-detectability.png" alt="Blackbird Resident Detectability" width="600">
+
+The Resident Detectability Model represents species that remain present throughout the year but whose likelihood of being observed varies with seasonal conditions, behaviour and activity. Examples include resident birds such as blackbirds, whose visibility and activity can change considerably between seasons without the species becoming absent.
+
+The model uses an ordinary differential equation (ODE) to simulate changes in detectability over a continuous annual cycle. It defines a seasonal target towards which modelled detectability adjusts over time, combining five components:
+
+- **Persistent baseline:** Represents continuous year-round detectability, ensuring that seasonal variation does not imply seasonal absence
+- **Winter component:** Represents increased visibility or activity during winter or early spring
+- **Autumn component:** Optionally represents a distinct increase in detectability during autumn or early winter
+- **Summer suppression:** Reduces detectability during the summer months without implying that the species is absent
+- **Spring carry-over:** Optionally allows elevated detectability to persist into late spring or early summer before declining
+
+The seasonal target is constructed from smooth, periodic functions operating over a continuous 12-month cycle. Separate growth and decay rates control how quickly modelled detectability responds to changes in the target, allowing seasonal increases and decreases to occur at different rates.
+
+Additional optional mechanisms allow the model to reproduce more complex seasonal behaviour, including delayed summer decline, extended spring persistence and sharper reductions in detectability during late summer.
+
+Together, these processes produce a continuous seasonal curve in which detectability typically increases towards winter or early spring, declines during summer and recovers during autumn. Adjustable parameters control the timing, strength and duration of these variations, allowing the model to represent different patterns of year-round activity.
+
+The program uses numerical integration to solve the model, with a choice of integration methods and optional adaptive step sizing. Results can be displayed as either a numerical table or a plain-text chart, allowing the model to be explored using a simple serial terminal.
+
+The illustrated example simulates the resident detectability of the blackbird (_Turdus merula_), run using the following parameters:
+
+| Parameter          | Value                 |
+| ------------------ | --------------------- |
+| Method             | 4th-Order Runge-Kutta |
+| Adaptive Step Size | Yes                   |
+| Tolerance          | 0.005                 |
+| Initial Y          | 0.944                 |
+| Limit of T         | 12.0                  |
+| Step Size          | 0.1                   |
+
+For a more detailed explanation of the model, its parameters and its relationship to observed wildlife data, see [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/) in Field Notes Journal.
+
 ## Implementation Notes
+
+### Seasonal Modelling Programs
 
 The programs are split into distinct subroutines, as follows:
 
