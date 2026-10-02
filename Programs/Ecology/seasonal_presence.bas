@@ -4,8 +4,8 @@
 40 CLEAR 2000
 50 LET MS = 1000 : DIM Y(1000), T(1000)
 60 PRINT
-70 PRINT "SEASONAL VISITOR"
-80 PRINT "================"
+70 PRINT "SEASONAL PRESENCE"
+80 PRINT "================="
 90 PRINT
 100 PRINT "Integration methods:" : PRINT
 110 PRINT "E) Euler" : PRINT "P) Predictor-Corrector"
