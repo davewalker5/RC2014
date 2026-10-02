@@ -30,6 +30,76 @@ No additional hardware is required. The display uses plain text and does not req
 
 Load the required `fixed_step` program or `adaptive_step_solver.bas` from the table, above, into BASIC and enter `RUN`
 
+## The Differential Equation
+
+The programs use the following first-order Ordinary Differential Equation (ODE) as theirå test problem:
+
+$$
+\frac{dy}{dt}=Ay
+$$
+
+Where:
+
+- $y$ is the dependent variable.
+- $t$ is the independent variable.
+- $A$ is a constant that determines the rate of change.
+
+This equation describes exponential growth or decay, depending on the value of $A$. It has numerous applications in science and engineering, including population growth, radioactive decay and simplified models of electrical circuits.
+
+### The Analytical Solution
+
+One particularly useful property of this equation is that it has a straightforward analytical solution. Given the initial condition:
+
+$$
+y(0)=y_0
+$$
+
+The exact solution is:
+
+$$
+\boxed{y(t)=y_0e^{At}}
+$$
+
+The behaviour of the solution depends on the value of $A$:
+
+| Condition | Behaviour          |
+| --------- | ------------------ |
+| $A>0$   | Exponential growth |
+| $A=0$   | Constant solution  |
+| $A<0$   | Exponential decay  |
+
+For example, with $A=-1$ and $y_0=1$, the exact solution becomes:
+
+$$
+y(t)=e^{-t}
+$$
+
+### Why This Equation?
+
+The existence of an analytical solution makes the equation an excellent test problem.
+
+Rather than simply trusting the results produced by a numerical integration algorithm, we can compare them directly with the mathematically exact solution.
+
+For a numerical approximation $y_n$, calculated at time $t_n$, the absolute error can be expressed as:
+
+$$
+E_n=\left|y_n-y_0e^{At_n}\right|
+$$
+
+This allows us to investigate several important properties of numerical integration:
+
+- **Accuracy:** How closely does each numerical method approximate the analytical solution?
+- **Convergence:** How does reducing the integration step size affect the numerical error?
+- **Computational efficiency:** How much computational effort does each method require to achieve a particular level of accuracy?
+- **Adaptive integration:** How effectively can the solver adjust its step size to control estimated numerical error?
+- **Numerical stability:** How do different integration methods and step sizes behave, particularly for rapidly decaying solutions?
+
+By varying $A$, the initial condition and the integration interval, we can investigate these properties without changing the underlying differential equation.
+
+The analytical solution provides a reference against which the numerical results can be evaluated. Importantly, it also allows us to distinguish between the *estimated local error* used by an adaptive integration algorithm and the *actual error* observed in its numerical solution.
+
+Although the solver has been designed so that other differential equations can be substituted, this simple equation provides a particularly useful foundation for developing, testing and comparing numerical integration algorithms.
+
 ## Implementation Notes
 
 The programs are split into distinct subroutines, as follows:
