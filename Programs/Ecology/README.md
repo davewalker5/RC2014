@@ -11,10 +11,10 @@ No additional hardware is required. The display uses plain text and does not req
 
 ## Program Files
 
-| File / Folder          | Description                                                                                                  |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `Components`           | Separate files for each subroutine for independent amendment and numbering                                   |
-| `seasonal_visitor.bas` | Seasonal presence model, describing detectability for species where activity is confined to a bounded window |
+| File / Folder           | Description                                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `Components`            | Separate files for each subroutine for independent amendment and numbering                                   |
+| `seasonal_presence.bas` | Seasonal presence model, describing detectability for species where activity is confined to a bounded window |
 
 ## Running the Program
 
@@ -49,9 +49,18 @@ Together, these processes produce a seasonal curve that can rise gradually, reac
 
 The program uses numerical integration to solve the model, with a choice of integration methods and optional adaptive step sizing. Results can be displayed as either a numerical table or a plain-text chart, allowing the model to be explored using a simple serial terminal.
 
-The illustrated example simulates the seasonal presence of bluebells.
+The illustrated example simulates the seasonal presence of bluebells, run using the following parameters:
 
-For a more detailed explanation of the model, its parameters and its relationship to observed wildlife data, see [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/) in Field Notes.
+| Parameter          | Value                 |
+| ------------------ | --------------------- |
+| Method             | 4th-Order Runge-Kutta |
+| Adaptive Step Size | Yes                   |
+| Tolerance          | 0.005                 |
+| Initial Y          | 0.0                   |
+| Limit of T         | 12.0                  |
+| Step Size          | 0.1                   |
+
+For a more detailed explanation of the model, its parameters and its relationship to observed wildlife data, see [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/) in Field Notes Journal.
 
 ## Implementation Notes
 
