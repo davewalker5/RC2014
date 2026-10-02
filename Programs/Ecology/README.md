@@ -2,7 +2,7 @@
 
 ## Hardware
 
-The program requires:
+The programs require:
 
 - An RC2014 Mini II running Microsoft BASIC
 - A serial terminal
@@ -11,12 +11,13 @@ No additional hardware is required. The display uses plain text and does not req
 
 ## Program Files
 
-| File / Folder           | Description                                                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `Components`            | Separate files for each subroutine for independent amendment and numbering                                   |
-| `seasonal_presence.bas` | Seasonal presence model, describing detectability for species where activity is confined to a bounded window |
+| File / Folder           | Description                                                                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Components`            | Separate files for each subroutine for independent amendment and numbering                                                                                                |
+| `seasonal_presence.bas` | Seasonal presence model, describing detectability for species where activity is confined to a bounded window                                                              |
+| `winter_visitor.bas`    | Winter visitor model, describing detectability for species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring |
 
-## Running the Program
+## Running the Programs
 
 Load the required program from the table, above, into BASIC and enter `RUN`
 
@@ -49,7 +50,7 @@ Together, these processes produce a seasonal curve that can rise gradually, reac
 
 The program uses numerical integration to solve the model, with a choice of integration methods and optional adaptive step sizing. Results can be displayed as either a numerical table or a plain-text chart, allowing the model to be explored using a simple serial terminal.
 
-The illustrated example simulates the seasonal presence of bluebells, run using the following parameters:
+The illustrated example simulates the seasonal presence of bluebells (_Hyacinthoides non-scripta_), run using the following parameters:
 
 | Parameter          | Value                 |
 | ------------------ | --------------------- |
@@ -57,6 +58,37 @@ The illustrated example simulates the seasonal presence of bluebells, run using 
 | Adaptive Step Size | Yes                   |
 | Tolerance          | 0.005                 |
 | Initial Y          | 0.0                   |
+| Limit of T         | 12.0                  |
+| Step Size          | 0.1                   |
+
+For a more detailed explanation of the model, its parameters and its relationship to observed wildlife data, see [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/) in Field Notes Journal.
+
+### Winter Visitor Model
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Ecology/redwing-presence.png" alt="Redwing Seasonal Presence" width="600">
+
+The Winter Visitor Model represents species whose observable presence is concentrated in the winter months, extending across the calendar year boundary. Examples include migratory birds such as redwings, which typically arrive during autumn, reach peak presence during winter and depart during spring.
+
+The model uses an ordinary differential equation (ODE) to simulate seasonal changes in observable activity. It defines a seasonal target towards which the modelled activity adjusts over time, combining three components:
+
+- **Winter component:** Represents the main period of winter presence and determines the timing and strength of peak activity
+- **Autumn component:** Optionally represents a distinct arrival phase, allowing activity to increase before the main winter peak
+- **Summer suppression:** Reduces activity during the off-season, producing an extended period of near-absence through spring and summer
+
+The seasonal target is constructed from smooth, periodic functions operating over a continuous 12-month cycle. Separate growth and decay rates control how quickly the modelled activity responds to the target as it rises and falls.
+
+Together, these processes produce a winter-centred seasonal curve, with activity increasing through autumn, peaking during winter and declining into spring. Adjustable parameters control the timing, duration and shape of the resulting pattern, including the strength of the autumn arrival phase and the extent of summer suppression.
+
+The program uses numerical integration to solve the model, with a choice of integration methods and optional adaptive step sizing. Results can be displayed as either a numerical table or a plain-text chart, allowing the model to be explored using a simple serial terminal.
+
+The illustrated example simulates the seasonal presence of the redwing (_Turdus iliacus_), run using the following parameters:
+
+| Parameter          | Value                 |
+| ------------------ | --------------------- |
+| Method             | 4th-Order Runge-Kutta |
+| Adaptive Step Size | Yes                   |
+| Tolerance          | 0.005                 |
+| Initial Y          | 0.953                 |
 | Limit of T         | 12.0                  |
 | Step Size          | 0.1                   |
 
