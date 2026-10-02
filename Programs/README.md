@@ -40,27 +40,29 @@ and practical utilities.
 
 ## Mathematics & Science
 
-| Folder      | Language | Description                                                                       |
-| ----------- | -------- | --------------------------------------------------------------------------------- |
-| Atmosphere  | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                 |
-| Automaton   | BASIC    | Nearest-neighbour 1-D cellular automaton                                          |
-| Barycenter  | BASIC    | Calculate the barycenter for a simple two-body problem                            |
-| Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                         |
-| GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports |
-| Life        | BASIC    | Conway's Game of Life on a configurable grid                                      |
-| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading   |
-| MoonPhase   | BASIC    | Calculate the phase of the moon on a specified date                               |
+| Folder      | Language | Description                                                                               |
+| ----------- | -------- | ----------------------------------------------------------------------------------------- |
+| Atmosphere  | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                         |
+| Automaton   | BASIC    | Nearest-neighbour 1-D cellular automaton                                                  |
+| Barycenter  | BASIC    | Calculate the barycenter for a simple two-body problem                                    |
+| Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                                 |
+| GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports         |
+| Life        | BASIC    | Conway's Game of Life on a configurable grid                                              |
+| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading           |
+| MoonPhase   | BASIC    | Calculate the phase of the moon on a specified date                                       |
+| ODE         | BASIC    | A collection of programs using numerical methods to solve ordinary differential equations |
 
 ## Computing & Algorithms
 
-| Folder          | Language             | Description                                                                              |
-| --------------- | -------------------- | ---------------------------------------------------------------------------------------- |
-| Assembly        | Z80 Assembly         | Small Z80 assembly programs for the RC2014 Mini II running Small Computer Monitor (SCM)  |
-| Logic           | BASIC                | Truth-table and Digital I/O demonstrations of common logic gates                         |
-| MachineCode     | BASIC / Z80 Assembly | Classic `DATA`/`POKE` example for loading and executing Z80 machine code from BASIC      |
-| Neuron          | BASIC                | Fixed single-input artificial neuron with an inspectable forward pass                    |
-| StackAndQueue   | BASIC                | Demonstration implementations of a stack and a FIFO queue                                |
-| TrainableNeuron | BASIC                | Single-input sigmoid neuron that learns from examples, with terminal, LED and LCD output |
+| Folder          | Language             | Description                                                                               |
+| --------------- | -------------------- | ----------------------------------------------------------------------------------------- |
+| Assembly        | Z80 Assembly         | Small Z80 assembly programs for the RC2014 Mini II running Small Computer Monitor (SCM)   |
+| Logic           | BASIC                | Truth-table and Digital I/O demonstrations of common logic gates                          |
+| MachineCode     | BASIC / Z80 Assembly | Classic `DATA`/`POKE` example for loading and executing Z80 machine code from BASIC       |
+| Neuron          | BASIC                | Fixed single-input artificial neuron with an inspectable forward pass                     |
+| StackAndQueue   | BASIC                | Demonstration implementations of a stack and a FIFO queue                                 |
+| TrainableNeuron | BASIC                | Single-input sigmoid neuron that learns from examples, with terminal, LED and LCD output  |
+| ODE             | BASIC                | A collection of programs using numerical methods to solve ordinary differential equations |
 
 ## Hardware & Digital I/O
 
