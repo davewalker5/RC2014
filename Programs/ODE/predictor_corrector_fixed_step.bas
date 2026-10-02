@@ -1,5 +1,5 @@
 10 REM Solve an Ordinary Differential Equation (ODE)
-20 REM using the Euler Predictor-Corrector method
+20 REM using the Euler method
 30 LET MS = 1000 : DIM Y(1000), T(1000)
 40 PRINT
 50 PRINT "ODE SOLVER (EULER PREDICTOR-CORRECTOR)"
@@ -14,50 +14,59 @@
 140 REM f() Parameter Initialisation
 150 GOSUB 1000
 160 REM First step initialisation
-170 LET I = 1 : LET Y(I) = Y0 : LET CW=15
+170 LET I = 1
+171 LET Y(I) = Y0
+172 LET CW=15
 180 REM Solution loop
 190 FOR Z = 0.0 TO TL STEP ST
 200 PRINT "."; : LET T(I) = Z
-210 REM Evaluate f() for this step
-220 GOSUB 2000
-230 REM Predict : Euler integration: y = y + st * f(t, y)
-240 LET OY = Y(I) : LET FY = F : LET Y(I) = Y(I) + ST * F
-250 REM Correct
-260 LET T(I) = T(I) + ST : GOSUB 2000
-270 LET Y(I + 1) = OY + ST * (FY + F) / 2.0
-280 LET Y(I) = OY : LET T = T - ST : LET I = I + 1
-290 NEXT Z
-300 REM Tabulate the results
-310 PRINT : PRINT
-320 REM Print table column headers
-330 LET PD$ = " "
-340 LET V$ = "Step" : GOSUB 500 : PRINT " ";
-350 LET V$ = "T" : GOSUB 500 : PRINT " ";
-360 LET V$ = "Y" : GOSUB 500 : PRINT
-370 REM Print table header separator
-380 LET PD$ = "-"
-390 LET V$ = "-" : GOSUB 500 : PRINT " ";
-400 LET V$ = "-" : GOSUB 500 : PRINT " ";
-410 LET V$ = "-" : GOSUB 500 : PRINT
-420 LET PD$ = " "
-430 REM Iterate over and tabulate the results
-440 FOR X = 1 TO I - 1
-450 LET V$ = STR$(X) : GOSUB 500 : PRINT " ";
-460 LET V$ = STR$(T(X)) : GOSUB 500 : PRINT " ";
-470 LET V$ = STR$(Y(X)) : GOSUB 500 : PRINT
-480 NEXT X
-490 END
-500 REM Format and print one column
-510 IF LEFT$(V$,1) = " " THEN V$ = MID$(V$,2)
-520 IF LEN(V$) <= CW THEN GOTO 550
-530 V$ = ""
-540 IF LEN(V$) < CW THEN V$ = V$ + "*" : GOTO 540
-550 IF LEN(V$) < CW THEN V$ = PD$ + V$ : GOTO 550
-560 PRINT V$;
-570 RETURN
+210 REM Output the current parameters
+220 REM Evaluate f() for this step
+230 GOSUB 2000
+240 REM Integrate
+250 GOSUB 3000
+260 NEXT Z
+270 REM Tabulate the results
+280 GOSUB 4000
+290 END
 1000 REM Function parameter initialisation
 1010 PRINT "A "; : INPUT A
 1020 RETURN
 2000 REM Function to Solve : dy/dt = Ay
 2010 LET F = A * Y(I)
 2020 RETURN
+3000 REM Predict : Euler integration: y = y + st * f(t, y)
+3010 LET OY = Y(I) : LET FY = F : LET Y(I) = Y(I) + ST * F
+3020 REM Correct
+3030 LET T(I) = T(I) + ST : GOSUB 2000
+3040 LET Y(I + 1) = OY + ST * (FY + F) / 2.0
+3050 LET Y(I) = OY : LET T = T - ST : LET I = I + 1
+3060 RETURN
+4000 REM Tabulate the results
+4010 PRINT : PRINT
+4020 REM Print table column headers
+4030 LET PD$ = " "
+4040 LET V$ = "Step" : GOSUB 4200 : PRINT " ";
+4050 LET V$ = "T" : GOSUB 4200 : PRINT " ";
+4060 LET V$ = "Y" : GOSUB 4200 : PRINT
+4070 REM Print table header separator
+4080 LET PD$ = "-"
+4090 LET V$ = "-" : GOSUB 4200 : PRINT " ";
+4100 LET V$ = "-" : GOSUB 4200 : PRINT " ";
+4110 LET V$ = "-" : GOSUB 4200 : PRINT
+4120 LET PD$ = " "
+4130 REM Iterate over and tabulate the results
+4140 FOR X = 1 TO I - 1
+4150 LET V$ = STR$(X) : GOSUB 4200 : PRINT " ";
+4160 LET V$ = STR$(T(X)) : GOSUB 4200 : PRINT " ";
+4170 LET V$ = STR$(Y(X)) : GOSUB 4200 : PRINT
+4180 NEXT X
+4190 RETURN
+4200 REM Format and print one column
+4210 IF LEFT$(V$,1) = " " THEN V$ = MID$(V$,2)
+4220 IF LEN(V$) <= CW THEN GOTO 4250
+4230 V$ = ""
+4240 IF LEN(V$) < CW THEN V$ = V$ + "*" : GOTO 4240
+4250 IF LEN(V$) < CW THEN V$ = PD$ + V$ : GOTO 4250
+4260 PRINT V$;
+4270 RETURN
