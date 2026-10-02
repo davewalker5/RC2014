@@ -40,17 +40,18 @@ and practical utilities.
 
 ## Mathematics & Science
 
-| Folder      | Language | Description                                                                               |
-| ----------- | -------- | ----------------------------------------------------------------------------------------- |
-| Atmosphere  | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                         |
-| Automaton   | BASIC    | Nearest-neighbour 1-D cellular automaton                                                  |
-| Barycenter  | BASIC    | Calculate the barycenter for a simple two-body problem                                    |
-| Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                                 |
-| GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports         |
-| Life        | BASIC    | Conway's Game of Life on a configurable grid                                              |
-| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading           |
-| MoonPhase   | BASIC    | Calculate the phase of the moon on a specified date                                       |
-| ODE         | BASIC    | A collection of programs using numerical methods to solve ordinary differential equations |
+| Folder      | Language | Description                                                                                      |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------ |
+| Atmosphere  | BASIC    | Calculate ISA conditions, pressure altitude, and density altitude                                |
+| Automaton   | BASIC    | Nearest-neighbour 1-D cellular automaton                                                         |
+| Barycenter  | BASIC    | Calculate the barycenter for a simple two-body problem                                           |
+| Ecology     | BASIC    | Explore ecology and wildlife through mathematical modelling, numerical methods and data analysis |
+| Fibonacci   | BASIC    | Calculate numbers in the Fibonacci series                                                        |
+| GreatCircle | BASIC    | Calculate great circle distances manually or from a position to selected airports                |
+| Life        | BASIC    | Conway's Game of Life on a configurable grid                                                     |
+| Mandelbrot  | BASIC    | Draw a text Mandelbrot set with configurable dimensions and escape-time shading                  |
+| MoonPhase   | BASIC    | Calculate the phase of the moon on a specified date                                              |
+| ODE         | BASIC    | A collection of programs using numerical methods to solve ordinary differential equations        |
 
 ## Computing & Algorithms
 
