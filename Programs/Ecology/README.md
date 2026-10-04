@@ -23,8 +23,7 @@ No additional hardware is required. The display uses plain text and does not req
 | `seasonal_presence.bas`      | Seasonal presence model, describing detectability for species where activity is confined to a bounded window                                                                        |
 | `winter_visitor.bas`         | Winter visitor model, describing detectability for species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring           |
 | `resident_detectability.bas` | Resident detectability model, describing detectability for species present throughout the year but whose likelihood of being observed varies with seasonal conditions and behaviour |
-| `bat_behavioural_phase.bas   |
-| `                            | Bat behavioural phase analysis from bat call PRI and DPRI data                                                                                                                      |
+| `bat_behavioural_phase.bas`  | Bat behavioural phase analysis from bat call PRI and DPRI data                                                                                                                      |
 
 ## Running the Programs
 
