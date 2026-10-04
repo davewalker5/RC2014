@@ -23,6 +23,8 @@ No additional hardware is required. The display uses plain text and does not req
 | `seasonal_presence.bas`      | Seasonal presence model, describing detectability for species where activity is confined to a bounded window                                                                        |
 | `winter_visitor.bas`         | Winter visitor model, describing detectability for species whose seasonal activity extends across the year boundary, typically arriving in autumn and departing in spring           |
 | `resident_detectability.bas` | Resident detectability model, describing detectability for species present throughout the year but whose likelihood of being observed varies with seasonal conditions and behaviour |
+| `bat_behavioural_phase.bas   |
+| `                            | Bat behavioural phase analysis from bat call PRI and DPRI data                                                                                                                      |
 
 ## Running the Programs
 
@@ -136,6 +138,31 @@ The illustrated example simulates the resident detectability of the blackbird (_
 
 For a more detailed explanation of the model, its parameters and its relationship to observed wildlife data, see [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/) in Field Notes Journal.
 
+## Bat Behavioural Phase Analysis
+
+<img src="https://github.com/davewalker5/RC2014/blob/main/Programs/Ecology/bat-behavioural-phase.png" alt="Bat Behavioural Phase Analysis" width="600">
+
+The Bat Behavioural Phase Analysis program explores whether broad bat echolocation behaviour can be inferred from pulse timing information on the RC2014.
+
+It is derived from the wider [Bat Call Analysis](https://fieldnotesjournal.uk/wildlife/batcalls/) work developed for Field Notes Journal. In the full workflow, recorded bat calls are processed using spectrogram analysis and pulse detection to extract detailed acoustic measurements. Those measurements can then be reduced to timing information describing the sequence of calls.
+
+The RC2014 implementation begins at this later stage. It does not process audio recordings directly; instead, it accepts previously derived Pulse Repetition Interval (PRI) and delta-PRI (DPRI) data and analyses the structure of the resulting pulse sequence.
+
+Bat echolocation behaviour produces recognisable changes in pulse timing:
+
+- **Search:** relatively wide and stable pulse intervals
+- **Approach:** progressively compressed intervals as repetition rate increases
+- **Buzz:** a dense burst of very short intervals associated with prey interception
+- **Exit:** relaxation back towards wider pulse spacing following a buzz
+
+The program uses these timing patterns to divide the pulse sequence into behavioural regions and then performs a simple sequence-level classification. For example, a sequence containing a progression from SEARCH through APPROACH into BUZZ can be classified as containing a feeding buzz.
+
+Buzz detection uses the distribution of valid PRI values within the sequence to establish a baseline, while changes in PRI and DPRI are used to identify transitions between behavioural phases. The resulting analysis is deliberately heuristic rather than a definitive interpretation of bat behaviour.
+
+This implementation is itself derived from the [Bat Behavioural Phase Analysis](https://fieldnotesjournal.uk/wildlife/pocket/bat_phase_analysis.html) tools developed for the TI-84 Plus CE-T Python calculator as part of the Field Notes Journal _Pocket Ecology_ project. Moving the same analysis onto the RC2014 provides another experiment in constrained ecological computing: investigating how much useful behavioural interpretation can be recovered from compact timing data on an 8-bit computer.
+
+For a more detailed explanation of the original workflow and the portable implementation, see [Bat Call Analysis](https://fieldnotesjournal.uk/wildlife/batcalls/) and [Bat Behavioural Phase Analysis](https://fieldnotesjournal.uk/wildlife/pocket/bat_phase_analysis.html) in Field Notes Journal.
+
 ## Implementation Notes
 
 ### Seasonal Modelling Programs
@@ -154,6 +181,21 @@ The programs are split into distinct subroutines, as follows:
 | 4000 - 4999  | Text table implementation             |
 | 5000 - 5999  | Text chart implementation             |
 
+### Bat Behavioural Phase Analysis
+
+| Line Numbers | Purpose                                                                                         |
+| ------------ | ----------------------------------------------------------------------------------------------- |
+| 0001 - 0999  | Main program flow                                                                               |
+| 1000 - 1999  | Initialise the pulse repetition interval (PRI) and delta-PRI data                               |
+| 2000 - 2099  | Generate an array of valid-only PRI information for baseline calculation                        |
+| 2100 - 2299  | In-place sort the PRI values                                                                    |
+| 2300 - 2999  | Calculate the median of the upper half of PRI values to give a baseline for buzz identification |
+| 3000 - 3199  | Build phase regions from the detected behavioural phases                                        |
+| 3300 - 4499  | Detect behavioural phases within a bat pulse sequence                                           |
+| 4500 - 4999  | Classify the sequence from its phase regions                                                    |
+| 5000 - 5999  | Data tabulation subroutines                                                                     |
+| 6000 - 6999  | Table column generator                                                                          |
+
 ## References
 
 - [Differential Equations — Definitions](https://tutorial.math.lamar.edu/Classes/DE/Definitions.aspx), Paul’s Online Notes. An introduction to differential equations, their order, solutions and initial-value problems.
@@ -161,3 +203,6 @@ The programs are split into distinct subroutines, as follows:
 - [Heun’s Method](https://math.libretexts.org/Bookshelves/Differential_Equations/Numerically_Solving_Ordinary_Differential_Equations_%28Brorson%29/04%3A_Predictor-corrector_methods_and_Runge-Kutta/4.01%3A_Heuns_method), Stuart Brorson, Mathematics LibreTexts. Explains how an Euler prediction is corrected by averaging the starting and predicted endpoint slopes, with a diagram and algorithm.
 - [Runge-Kutta Methods](https://math.libretexts.org/Bookshelves/Differential_Equations/Numerically_Solving_Ordinary_Differential_Equations_%28Brorson%29/04%3A_Predictor-corrector_methods_and_Runge-Kutta/4.06%3A_Runge-Kutta_methods), Stuart Brorson, Mathematics LibreTexts. Introduces classical RK4 through its four slope estimates and weighted update formula.
 - [Wildlife Seasonal Modelling](https://fieldnotesjournal.uk/wildlife/modelling/), Dave Walker, Field Notes Journal
+- [Bat Call Analysis](https://fieldnotesjournal.uk/wildlife/batcalls/), Dave Walker, Field Notes Journal
+- [Bat Behavioural Phase Analysis](https://fieldnotesjournal.uk/wildlife/pocket/bat_phase_analysis.html), Dave Walker, Field Notes Journal
+- [Spectrogram Viewer, Audio Processor and Bat Call Analyser](https://github.com/davewalker5/SpectrogramViewer), Dave Walker. A command-line tool for analysing and visualising bat recordings, combining a simple noise-reduction pipeline with waveform, spectrogram, and pulse-level call analysis.
