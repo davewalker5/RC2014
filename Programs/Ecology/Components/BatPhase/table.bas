@@ -1,0 +1,35 @@
+6000 REM Numeric column: expand exponent before formatting
+6010 IF LEFT$(V$,1) = " " THEN V$ = MID$(V$,2)
+6020 GOSUB 6110
+6030 REM Format and print one column
+6040 IF LEFT$(V$,1) = " " THEN V$ = MID$(V$,2)
+6050 IF LEN(V$) <= CW THEN GOTO 6080
+6060 V$ = ""
+6070 IF LEN(V$) < CW THEN V$ = V$ + "*" : GOTO 6070
+6080 IF LEN(V$) < CW THEN V$ = PD$ + V$ : GOTO 6080
+6090 PRINT V$;
+6100 RETURN
+6110 REM Expand STR$ exponent notation without rounding
+6120 LET ZE = 1
+6130 IF ZE > LEN(V$) THEN RETURN
+6140 IF MID$(V$,ZE,1) <> "E" THEN ZE = ZE + 1 : GOTO 6130
+6150 LET ZP = VAL(MID$(V$,ZE+1))
+6160 LET ZM$ = LEFT$(V$,ZE-1) : LET ZS$ = ""
+6170 IF LEFT$(ZM$,1) = "-" THEN ZS$ = "-" : ZM$ = MID$(ZM$,2)
+6180 LET ZD$ = "" : LET ZB = LEN(ZM$)
+6190 FOR ZI = 1 TO LEN(ZM$)
+6200 LET ZC$ = MID$(ZM$,ZI,1)
+6210 IF ZC$ = "." THEN ZB = LEN(ZD$) : GOTO 6230
+6220 LET ZD$ = ZD$ + ZC$
+6230 NEXT ZI
+6240 LET ZP = ZB + ZP
+6250 IF ZP > 0 THEN GOTO 6300
+6260 IF ZP = 0 THEN GOTO 6290
+6270 LET ZD$ = "0" + ZD$ : LET ZP = ZP + 1
+6280 IF ZP < 0 THEN GOTO 6270
+6290 LET V$ = ZS$ + "0." + ZD$ : RETURN
+6300 IF ZP < LEN(ZD$) THEN GOTO 6330
+6310 IF LEN(ZD$) < ZP THEN ZD$ = ZD$ + "0" : GOTO 6310
+6320 LET V$ = ZS$ + ZD$ : RETURN
+6330 LET V$ = ZS$ + LEFT$(ZD$,ZP) + "." + MID$(ZD$,ZP+1)
+6340 RETURN
