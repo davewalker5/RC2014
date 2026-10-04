@@ -1,0 +1,7 @@
+2000 REM Create an array of valid PRI values
+2010 DIM VP(NP)
+2020 LET NV = 0
+2030 FOR X = 1 TO NP
+2040 IF PV(X) = 1 THEN LET NV = NV + 1 : LET VP(NV) = P(X)
+2050 NEXT X
+2060 RETURN

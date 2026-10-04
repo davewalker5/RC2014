@@ -1,0 +1,13 @@
+2100 REM Sort valid PRI values in ascending order, in place
+2110 REM using an "insertion sort". Scratch variables: SI,
+2120 REM SJ and ST
+2130 IF NV < 2 THEN RETURN
+2140 FOR SI = 2 TO NV
+2150 LET ST = VP(SI) : LET SJ = SI - 1
+2160 IF SJ < 1 THEN GOTO 2200
+2170 IF VP(SJ) <= ST THEN GOTO 2200
+2180 LET VP(SJ+1) = VP(SJ) : LET SJ = SJ - 1
+2190 GOTO 2160
+2200 LET VP(SJ+1) = ST
+2210 NEXT SI
+2220 RETURN
